@@ -19,6 +19,7 @@
 		C0BBE3A51F2E87D500E68524 /* MetaballsKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE38C1F2E81B600E68524 /* MetaballsKit.framework */; };
 		C0BBE3A81F2E893A00E68524 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE3A71F2E893A00E68524 /* MetalKit.framework */; };
 		C0BBE3AA1F2E91D900E68524 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3A91F2E91D900E68524 /* Shaders.metal */; };
+		C0BBE3AC1F2E941200E68524 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3AB1F2E941200E68524 /* Renderer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 		C0BBE3A31F2E81C700E68524 /* Metaballs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Metaballs.swift; sourceTree = "<group>"; };
 		C0BBE3A71F2E893A00E68524 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		C0BBE3A91F2E91D900E68524 /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
+		C0BBE3AB1F2E941200E68524 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +124,7 @@
 			children = (
 				C0BBE36A1F2E816500E68524 /* AppDelegate.swift */,
 				C0BBE36C1F2E816500E68524 /* ViewController.swift */,
+				C0BBE3AB1F2E941200E68524 /* Renderer.swift */,
 				C0BBE3A91F2E91D900E68524 /* Shaders.metal */,
 				C0BBE36E1F2E816500E68524 /* Assets.xcassets */,
 				C0BBE3701F2E816500E68524 /* Main.storyboard */,
@@ -344,6 +347,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0BBE3AC1F2E941200E68524 /* Renderer.swift in Sources */,
 				C0BBE3AA1F2E91D900E68524 /* Shaders.metal in Sources */,
 				C0BBE36D1F2E816500E68524 /* ViewController.swift in Sources */,
 				C0BBE36B1F2E816500E68524 /* AppDelegate.swift in Sources */,
