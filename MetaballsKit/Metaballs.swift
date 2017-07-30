@@ -29,7 +29,13 @@ public struct Ball {
 }
 
 public struct Field {
-    var size: CGSize
+    public var size: CGSize {
+        didSet {
+            // Remove balls that fall outside the new bounds.
+            balls = balls.filter { bounds.contains($0.bounds) }
+        }
+    }
+
     private(set) var balls = [Ball]()
 
     internal var bounds: CGRect {
