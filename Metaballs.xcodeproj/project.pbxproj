@@ -16,6 +16,9 @@
 		C0BBE39A1F2E81B600E68524 /* MetaballsKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3991F2E81B600E68524 /* MetaballsKitTests.swift */; };
 		C0BBE39C1F2E81B600E68524 /* MetaballsKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C0BBE38E1F2E81B600E68524 /* MetaballsKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C0BBE3A41F2E81C700E68524 /* Metaballs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3A31F2E81C700E68524 /* Metaballs.swift */; };
+		C0BBE3A51F2E87D500E68524 /* MetaballsKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE38C1F2E81B600E68524 /* MetaballsKit.framework */; };
+		C0BBE3A81F2E893A00E68524 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE3A71F2E893A00E68524 /* MetalKit.framework */; };
+		C0BBE3AA1F2E91D900E68524 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3A91F2E91D900E68524 /* Shaders.metal */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +55,8 @@
 		C0BBE3991F2E81B600E68524 /* MetaballsKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaballsKitTests.swift; sourceTree = "<group>"; };
 		C0BBE39B1F2E81B600E68524 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C0BBE3A31F2E81C700E68524 /* Metaballs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Metaballs.swift; sourceTree = "<group>"; };
+		C0BBE3A71F2E893A00E68524 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
+		C0BBE3A91F2E91D900E68524 /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +64,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0BBE3A81F2E893A00E68524 /* MetalKit.framework in Frameworks */,
+				C0BBE3A51F2E87D500E68524 /* MetaballsKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,6 +102,7 @@
 				C0BBE38D1F2E81B600E68524 /* MetaballsKit */,
 				C0BBE3981F2E81B600E68524 /* MetaballsKitTests */,
 				C0BBE3681F2E816500E68524 /* Products */,
+				C0BBE3A61F2E893A00E68524 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -114,6 +122,7 @@
 			children = (
 				C0BBE36A1F2E816500E68524 /* AppDelegate.swift */,
 				C0BBE36C1F2E816500E68524 /* ViewController.swift */,
+				C0BBE3A91F2E91D900E68524 /* Shaders.metal */,
 				C0BBE36E1F2E816500E68524 /* Assets.xcassets */,
 				C0BBE3701F2E816500E68524 /* Main.storyboard */,
 				C0BBE3731F2E816500E68524 /* Info.plist */,
@@ -147,6 +156,14 @@
 				C0BBE39B1F2E81B600E68524 /* Info.plist */,
 			);
 			path = MetaballsKitTests;
+			sourceTree = "<group>";
+		};
+		C0BBE3A61F2E893A00E68524 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C0BBE3A71F2E893A00E68524 /* MetalKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -327,6 +344,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0BBE3AA1F2E91D900E68524 /* Shaders.metal in Sources */,
 				C0BBE36D1F2E816500E68524 /* ViewController.swift in Sources */,
 				C0BBE36B1F2E816500E68524 /* AppDelegate.swift in Sources */,
 			);
