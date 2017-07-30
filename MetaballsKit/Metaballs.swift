@@ -36,7 +36,7 @@ public struct Field {
         return CGRect(origin: CGPoint(), size: size)
     }
 
-    init(size s: CGSize) {
+    public init(size s: CGSize) {
         size = s
     }
 
