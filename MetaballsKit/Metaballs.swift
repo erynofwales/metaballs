@@ -28,7 +28,7 @@ public struct Ball {
     }
 }
 
-public struct Field {
+public class Field {
     public var size: CGSize {
         didSet {
             // Remove balls that fall outside the new bounds.
@@ -70,11 +70,7 @@ public struct Field {
         }
     }
 
-    public func sample(at point: CGPoint) throws -> CGFloat {
-        return 0.0
-    }
-
-    public mutating func add(ball: Ball) throws {
+    public func add(ball: Ball) throws {
         guard bounds.contains(ball.bounds) else {
             /// TODO: Throw an error.
             return
