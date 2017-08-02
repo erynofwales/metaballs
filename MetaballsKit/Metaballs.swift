@@ -7,6 +7,11 @@
 //
 
 import Foundation
+import MetalKit
+
+public enum MetaballsError: Error {
+    case couldntAddBall
+}
 
 public struct Ball {
     let radius: CGFloat
@@ -72,9 +77,61 @@ public class Field {
 
     public func add(ball: Ball) throws {
         guard bounds.contains(ball.bounds) else {
-            /// TODO: Throw an error.
-            return
+            throw MetaballsError.couldntAddBall
         }
         balls.append(ball)
+    }
+
+    // MARK: - Metal Configuration
+
+    /// Create a Metal buffer containing the current set of metaballs.
+    /// @param device The Metal device to use to create the buffer.
+    /// @return A new buffer containing metaball data.
+    public func makeBallBuffer(withDevice device: MTLDevice) -> MTLBuffer? {
+        let sizeOfBall = MemoryLayout<Ball>.size
+        let length = balls.count * sizeOfBall
+        var ballBuffer: MTLBuffer? = nil
+        balls.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) in
+            if let bytes = buffer.baseAddress {
+                ballBuffer = device.makeBuffer(bytesNoCopy: bytes, length: length, options: [], deallocator: nil)
+            }
+        }
+        return ballBuffer
+    }
+
+    /// Create a Metal texture to hold sample values created by the sampling compute shader.
+    /// @param device The Metal device to use to create the texture.
+    /// @return A new texture.
+    public func makeSampleTexture(withDevice device: MTLDevice) -> MTLTexture? {
+        let desc = MTLTextureDescriptor()
+        desc.pixelFormat = .r16Float
+        desc.width = Int(size.width)
+        desc.height = Int(size.height)
+        desc.usage = .shaderWrite
+        let texture = device.makeTexture(descriptor: desc)
+        return texture
+    }
+
+    public func computePipelineStateForSamplingKernel(withDevice device: MTLDevice) throws -> MTLComputePipelineState? {
+        let library = device.newDefaultLibrary()
+        if let samplingKernel = library?.makeFunction(name: "samplingKernel") {
+            let computePipelineState = try device.makeComputePipelineState(function: samplingKernel)
+            return computePipelineState
+        }
+        else {
+            return nil
+        }
+    }
+
+    public func computeEncoderForSamplingKernel(withCommandBuffer buffer: MTLCommandBuffer, state: MTLComputePipelineState, balls: MTLBuffer, samples: MTLTexture) -> MTLComputeCommandEncoder {
+        let encoder = buffer.makeComputeCommandEncoder()
+        encoder.setComputePipelineState(state)
+        encoder.setBuffer(balls, offset: 0, at: 0)
+        encoder.setTexture(samples, at: 0)
+        // TODO: Decide on actual values for these
+        let threadgroupsPerGrid = MTLSize()
+        let threadsPerThreadgroup = MTLSize()
+        encoder.dispatchThreadgroups(threadgroupsPerGrid, threadsPerThreadgroup: threadsPerThreadgroup)
+        return encoder
     }
 }
