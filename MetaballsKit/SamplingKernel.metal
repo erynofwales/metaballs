@@ -16,9 +16,18 @@ typedef struct {
 } Ball;
 
 kernel void
-sampleFieldKernel(const device Ball* metaballs      [[buffer(0)]],
-                  texture2d<half, access::write>    [[texture(1)]],
-                  uint2 gid                         [[thread_position_in_grid]])
+sampleFieldKernel(constant Ball* balls                      [[buffer(0)]],
+                  texture2d<half, access::write> samples    [[texture(1)]],
+                  uint2 gid                                 [[thread_position_in_grid]])
 {
-    // TODO: Compute a sample for this pixel given the field data, and write it to the out texture.
+    float sample = 0.0;
+    // TODO: Get number of metaballs.
+    for (int i = 0; i < 2; i++) {
+        constant Ball& ball = metaballs[i];
+        float r2 = ball.radius * ball.radius;
+        float xDiff = gid[0] - ball.position[0];
+        float yDiff = gid[1] - ball.position[1];
+        sample += r2 / ((xDiff * xDiff) + (yDiff * yDiff));
+    }
+    samples.write(sample, gid);
 }
