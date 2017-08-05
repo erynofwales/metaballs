@@ -10,7 +10,7 @@ import Foundation
 import MetalKit
 
 public enum MetaballsError: Error {
-    case metalError
+    case metalError(String)
 }
 
 public struct Ball {
@@ -194,27 +194,17 @@ public class Field {
             return
         }
         self.device = device
-        do {
-            sampleComputeState = try computePipelineStateForSamplingKernel(withDevice: device)
-        } catch let e {
-            throw e
-        }
+        sampleComputeState = try computePipelineStateForSamplingKernel(withDevice: device)
     }
 
     public func computePipelineStateForSamplingKernel(withDevice device: MTLDevice) throws -> MTLComputePipelineState? {
-        do {
-            let bundle = Bundle(for: type(of: self))
-            let library = try device.makeDefaultLibrary(bundle: bundle)
-            guard let samplingKernel = library.makeFunction(name: "sampleFieldKernel") else {
-                return nil
-            }
-            let state = try device.makeComputePipelineState(function: samplingKernel)
-            return state
+        let bundle = Bundle(for: type(of: self))
+        let library = try device.makeDefaultLibrary(bundle: bundle)
+        guard let samplingKernel = library.makeFunction(name: "sampleFieldKernel") else {
+            throw MetaballsError.metalError("Unable to create sampling kernel function")
         }
-        catch let e {
-            print("\(e)")
-            throw e
-        }
+        let state = try device.makeComputePipelineState(function: samplingKernel)
+        return state
     }
 
     public func computeEncoderForSamplingKernel(withDevice device: MTLDevice, commandBuffer buffer: MTLCommandBuffer) throws -> MTLComputeCommandEncoder {
@@ -223,7 +213,7 @@ public class Field {
               let sampleTexture = makeSampleTextureIfNeeded(withDevice: device),
               let state = sampleComputeState
         else {
-            throw MetaballsError.metalError
+            throw MetaballsError.metalError("Missing Metal buffers or compute state")
         }
 
         let encoder = buffer.makeComputeCommandEncoder()
