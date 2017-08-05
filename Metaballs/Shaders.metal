@@ -11,14 +11,8 @@ using namespace metal;
 
 typedef struct {
     float2 position;
-    float radius;
-} Ball;
-
-
-typedef struct {
-    float2 position;
     float2 textureCoordinate;
-} VertexIn;
+} Vertex;
 
 // From HelloCompute sample code project.
 // Vertex shader outputs and per-fragmeht inputs. Includes clip-space position and vertex outputs interpolated by rasterizer and fed to each fragment genterated by clip-space primitives.
@@ -30,22 +24,26 @@ typedef struct {
     float2 textureCoordinate;
 } RasterizerData;
 
-//vertex RasterizerData
-//passthroughVertexShader(uint vertexID [[vertex_id]])
-//{
-//    // TODO: Nothing really. Just pass on through to the fragment shader.
-//}
+vertex RasterizerData
+passthroughVertexShader(uint vid                    [[vertex_id]],
+                        constant Vertex* vertexes   [[buffer(0)]])
+{
+    RasterizerData out;
+    Vertex v = vertexes[vid];
+    out.position = float4(v.position.xy, 0.0, 1.0);
+    out.textureCoordinate = v.textureCoordinate;
+    return out;
+}
 
 fragment float4
-sampleToColorShader(RasterizerData in       [[stage_in]],
-                    constant float* samples [[buffer(0)]],
-                    constant float2* size   [[buffer(1)]])
+sampleToColorShader(RasterizerData in           [[stage_in]],
+                    texture2d<half> samples     [[texture(0)]])
 {
-    int index = in.textureCoordinate.y * size->y + in.textureCoordinate.x;
-    float sample = samples[index];
+    constexpr sampler textureSampler(mag_filter::linear, min_filter::linear);
+    const half4 sample = samples.sample(textureSampler, in.textureCoordinate);
 
     float4 out;
-    if (sample > 1.0) {
+    if (sample.r > 1.0) {
         out = float4(0.0, 1.0, 0.0, 0.0);
     }
     else {
