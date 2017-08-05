@@ -40,6 +40,7 @@ public class Field {
 
                 // Update Metal state as needed.
                 updateThreadgroupSizes(withFieldSize: size)
+                parametersBuffer = nil
                 sampleTexture = nil
                 if numberOfBallsBeforeFilter != balls.count {
                     ballBuffer = nil
