@@ -19,22 +19,15 @@ class ViewController: NSViewController, RendererDelegate {
 
     private var renderer: Renderer!
 
-    private var metalView: MTKView! {
+    internal var metalView: MTKView {
         return self.view as! MTKView
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        guard let metalView = metalView else {
-            view = newErrorView()
-            print("self.view should be an MTKView; got \(type(of: self.view)) instead")
-            return
-        }
-
         do {
-            renderer = try Renderer(view: metalView, field: field)
-            renderer.delegate = self
+            renderer = try Renderer(delegate: self)
         } catch let e {
             print("\(e)")
             view = newErrorView()

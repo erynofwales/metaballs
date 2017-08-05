@@ -17,6 +17,7 @@ enum RendererError: Error {
 protocol RendererDelegate {
     var renderSize: CGSize { get set }
     var field: Field { get }
+    var metalView: MTKView { get }
 }
 
 struct Point {
@@ -30,23 +31,24 @@ struct Vertex {
 }
 
 class Renderer: NSObject, MTKViewDelegate {
-    var delegate: RendererDelegate?
+    var delegate: RendererDelegate
 
     private var device: MTLDevice
     private var commandQueue: MTLCommandQueue
     private var renderPipelineState: MTLRenderPipelineState
 
-    init(view: MTKView, field: Field) throws {
+    init(delegate: RendererDelegate) throws {
+        self.delegate = delegate
+
         guard let device = MTLCreateSystemDefaultDevice() else {
             throw RendererError.MetalError("Unable to create Metal system device")
         }
+        let view = delegate.metalView
+
         self.device = device
         view.device = device
-        do {
-            try field.setupMetal(withDevice: device)
-        } catch let e {
-            throw e
-        }
+
+        try delegate.field.setupMetal(withDevice: device)
 
         let library = try device.makeDefaultLibrary(bundle: Bundle.main)
         let vertexShader = library.makeFunction(name: "passthroughVertexShader")
@@ -66,14 +68,12 @@ class Renderer: NSObject, MTKViewDelegate {
     /// MARK: - MTKViewDelegate
 
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        delegate?.renderSize = size
+        delegate.renderSize = size
         // TODO: Reallocate the sample buffer and texture
     }
 
     func draw(in view: MTKView) {
-        guard let field = delegate?.field else {
-            return
-        }
+        let field = delegate.field
 
         // Two triangles, plus texture coordinates.
         let points: [Vertex] = [
