@@ -23,10 +23,6 @@ public struct Ball {
         return CGRect(x: position.x - radius, y: position.y - radius, width: diameter, height: diameter)
     }
 
-    init(radius r: CGFloat) {
-        radius = r
-    }
-
     internal mutating func update() {
         position.x += velocity.dx
         position.y += velocity.dy
@@ -86,8 +82,14 @@ public class Field {
         }
     }
 
-    public func add(ball: Ball) {
-        guard bounds.contains(ball.bounds) else { return }
+    public func add(ballWithRadius radius: CGFloat) {
+        print("Adding ball with r=\(radius)")
+        let insetBounds = bounds.insetBy(dx: radius, dy: radius)
+        let x = CGFloat(UInt32(insetBounds.minX) + arc4random_uniform(UInt32(insetBounds.width)))
+        let y = CGFloat(UInt32(insetBounds.minY) + arc4random_uniform(UInt32(insetBounds.height)))
+        let position = CGPoint(x: x, y: y)
+        // TODO: Randomly generate velocity too.
+        let ball = Ball(radius: radius, position: position, velocity: CGVector())
         balls.append(ball)
     }
 
@@ -118,11 +120,7 @@ public class Field {
         if ballBuffer == nil {
             let sizeOfBall = MemoryLayout<Ball>.size
             let length = balls.count * sizeOfBall
-            balls.withUnsafeMutableBytes { (buffer: UnsafeMutableRawBufferPointer) in
-                if let bytes = buffer.baseAddress {
-                    ballBuffer = device.makeBuffer(bytesNoCopy: bytes, length: length, options: [], deallocator: nil)
-                }
-            }
+            ballBuffer = device.makeBuffer(length: length, options: [])
         }
         return ballBuffer
     }
@@ -152,23 +150,43 @@ public class Field {
 
     /// Copy metaballs data into the parameters buffer.
     private func updateParametersBuffer() {
-        guard let parameters = parametersBuffer else {
+        guard let parameters = parametersBuffer,
+              let balls = ballBuffer
+        else {
             return
         }
 
         var ptr = parameters.contents()
-        let sizeOfInt = MemoryLayout<Int>.size
         
         var width = Int(size.width)
-        ptr.copyBytes(from: &width, count: sizeOfInt)
-        ptr = ptr.advanced(by: sizeOfInt)
-
+        ptr = writeValue(value: &width, to: ptr)
         var height = Int(size.height)
-        ptr.copyBytes(from: &height, count: sizeOfInt)
-        ptr = ptr.advanced(by: sizeOfInt)
+        ptr = writeValue(value: &height, to: ptr)
 
-        var numberOfBalls = balls.count
-        ptr.copyBytes(from: &numberOfBalls, count: sizeOfInt)
+        var numberOfBalls = self.balls.count
+        ptr = writeValue(value: &numberOfBalls, to: ptr)
+
+        ptr = balls.contents()
+        for ball in self.balls {
+            var radius = Float(ball.radius)
+            ptr = writeValue(value: &radius, to: ptr)
+
+            var posX = Float(ball.position.x)
+            ptr = writeValue(value: &posX, to: ptr)
+            var posY = Float(ball.position.y)
+            ptr = writeValue(value: &posY, to: ptr)
+
+            var dx = Float(ball.velocity.dx)
+            ptr = writeValue(value: &dx, to: ptr)
+            var dy = Float(ball.velocity.dy)
+            ptr = writeValue(value: &dy, to: ptr)
+        }
+    }
+
+    private func writeValue<T>(value: inout T, to ptr: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer {
+        let sizeOfType = MemoryLayout<T>.size
+        ptr.copyBytes(from: &value, count: sizeOfType)
+        return ptr.advanced(by: sizeOfType)
     }
 
     public func setupMetal(withDevice device: MTLDevice) throws {
@@ -178,25 +196,23 @@ public class Field {
         self.device = device
         do {
             sampleComputeState = try computePipelineStateForSamplingKernel(withDevice: device)
-        }
-        catch let e {
+        } catch let e {
             throw e
         }
     }
 
     public func computePipelineStateForSamplingKernel(withDevice device: MTLDevice) throws -> MTLComputePipelineState? {
         do {
-            guard let samplingKernelLibraryPath = Bundle.main.path(forResource: "SamplingKernel", ofType: "metal") else {
-                return nil
-            }
-            let library = try device.makeLibrary(filepath: samplingKernelLibraryPath)
-            guard let samplingKernel = library.makeFunction(name: "samplingKernel") else {
+            let bundle = Bundle(for: type(of: self))
+            let library = try device.makeDefaultLibrary(bundle: bundle)
+            guard let samplingKernel = library.makeFunction(name: "sampleFieldKernel") else {
                 return nil
             }
             let state = try device.makeComputePipelineState(function: samplingKernel)
             return state
         }
         catch let e {
+            print("\(e)")
             throw e
         }
     }
@@ -213,6 +229,7 @@ public class Field {
         let encoder = buffer.makeComputeCommandEncoder()
         encoder.setComputePipelineState(state)
         encoder.setBuffer(parametersBuffer, offset: 0, at: 0)
+        // TODO: Compute this size better.
         encoder.setBuffer(ballBuffer, offset: 0, at: 1)
         encoder.setTexture(sampleTexture, at: 0)
         encoder.dispatchThreadgroups(threadgroupCount, threadsPerThreadgroup: threadgroupSize)

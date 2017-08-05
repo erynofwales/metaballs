@@ -9,17 +9,17 @@
 #include <metal_stdlib>
 using namespace metal;
 
-typedef struct {
-    int2 size;
-    int numberOfBalls;
-} Parameters;
-
 // TODO: This is a dupe of the Ball struct. Is there a way to DRY this?
 typedef struct {
     float radius;
     float2 position;
     float2 velocity;
 } Ball;
+
+typedef struct {
+    int2 size;
+    int numberOfBalls;
+} Parameters;
 
 kernel void
 sampleFieldKernel(constant Parameters& parameters           [[buffer(0)]],
