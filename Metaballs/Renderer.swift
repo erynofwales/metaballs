@@ -19,11 +19,14 @@ protocol RendererDelegate {
     var field: Field { get }
 }
 
-struct Vertex {
+struct Point {
     let x: Float
     let y: Float
-    let texX: Float
-    let texY: Float
+}
+
+struct Vertex {
+    let position: Point
+    let textureCoordinate: Point
 }
 
 class Renderer: NSObject, MTKViewDelegate {
@@ -73,13 +76,15 @@ class Renderer: NSObject, MTKViewDelegate {
         }
 
         // Two triangles, plus texture coordinates.
-        let points: [Vertex] = [Vertex(x: 1, y: -1, texX: 1, texY: 0),
-                                Vertex(x: -1, y: -1, texX: 0, texY: 0),
-                                Vertex(x: -1, y: 1, texX: 0, texY: 1),
+        let points: [Vertex] = [
+            Vertex(position: Point(x:  1, y: -1), textureCoordinate: Point(x: 1, y: 0)),
+            Vertex(position: Point(x: -1, y: -1), textureCoordinate: Point(x: 0, y: 0)),
+            Vertex(position: Point(x: -1, y:  1), textureCoordinate: Point(x: 0, y: 1)),
 
-                                Vertex(x: 1, y: -1, texX: 1, texY: 0),
-                                Vertex(x: -1, y: 1, texX: 0, texY: 1),
-                                Vertex(x: 1, y: 1, texX: 1, texY: 1)]
+            Vertex(position: Point(x:  1, y: -1), textureCoordinate: Point(x: 1, y: 0)),
+            Vertex(position: Point(x: -1, y:  1), textureCoordinate: Point(x: 0, y: 1)),
+            Vertex(position: Point(x:  1, y:  1), textureCoordinate: Point(x: 1, y: 1))
+        ]
 
         let buffer = commandQueue.makeCommandBuffer()
         do {
