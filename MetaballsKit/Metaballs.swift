@@ -83,11 +83,11 @@ public class Field {
     }
 
     public func add(ballWithRadius radius: CGFloat) {
-        print("Adding ball with r=\(radius)")
+        NSLog("Adding ball with r=\(radius); fieldSize=\(size)")
         let insetBounds = bounds.insetBy(dx: radius, dy: radius)
-        let x = CGFloat(UInt32(insetBounds.minX) + arc4random_uniform(UInt32(insetBounds.width)))
-        let y = CGFloat(UInt32(insetBounds.minY) + arc4random_uniform(UInt32(insetBounds.height)))
-        let position = CGPoint(x: x, y: y)
+//        let x = CGFloat(UInt32(insetBounds.minX) + arc4random_uniform(UInt32(insetBounds.width)))
+//        let y = CGFloat(UInt32(insetBounds.minY) + arc4random_uniform(UInt32(insetBounds.height)))
+        let position = CGPoint(x: insetBounds.midX, y: insetBounds.midY)
         // TODO: Randomly generate velocity too.
         let ball = Ball(radius: radius, position: position, velocity: CGVector())
         balls.append(ball)
@@ -229,7 +229,6 @@ public class Field {
         let encoder = buffer.makeComputeCommandEncoder()
         encoder.setComputePipelineState(state)
         encoder.setBuffer(parametersBuffer, offset: 0, at: 0)
-        // TODO: Compute this size better.
         encoder.setBuffer(ballBuffer, offset: 0, at: 1)
         encoder.setTexture(sampleTexture, at: 0)
         encoder.dispatchThreadgroups(threadgroupCount, threadsPerThreadgroup: threadgroupSize)
