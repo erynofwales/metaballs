@@ -87,9 +87,10 @@ class Renderer: NSObject, MTKViewDelegate {
         ]
 
         let buffer = commandQueue.makeCommandBuffer()
+        buffer.label = "Compute + Render"
+
         do {
             let _ = try field.computeEncoderForSamplingKernel(withDevice: device, commandBuffer: buffer)
-            buffer.commit()
         } catch let e {
             print("\(e)")
         }
