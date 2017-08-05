@@ -99,7 +99,7 @@ public class Field {
     private var sampleComputeState: MTLComputePipelineState?
     private var parametersBuffer: MTLBuffer?
     private var ballBuffer: MTLBuffer?
-    private(set) var sampleTexture: MTLTexture?
+    public private(set) var sampleTexture: MTLTexture?
 
     private var threadgroupCount = MTLSize()
     // TODO: It might be possible to (more dynamically) right-size this.
@@ -134,7 +134,7 @@ public class Field {
             desc.pixelFormat = .r16Float
             desc.width = Int(size.width)
             desc.height = Int(size.height)
-            desc.usage = .shaderWrite
+            desc.usage = [.shaderWrite, .shaderRead]
             sampleTexture = device.makeTexture(descriptor: desc)
         }
         return sampleTexture
