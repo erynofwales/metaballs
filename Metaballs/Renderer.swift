@@ -86,11 +86,11 @@ class Renderer: NSObject, MTKViewDelegate {
             Vertex(position: Point(x:  1, y:  1), textureCoordinate: Point(x: 1, y: 1))
         ]
 
-        do {
-            try field.updateBuffers()
-        } catch let e {
-            NSLog("Error updating buffers: \(e)")
-        }
+//        do {
+//            try field.updateBuffers()
+//        } catch let e {
+//            NSLog("Error updating buffers: \(e)")
+//        }
 
         let buffer = commandQueue.makeCommandBuffer()
         buffer.label = "Render"

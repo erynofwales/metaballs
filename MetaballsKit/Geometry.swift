@@ -26,6 +26,12 @@ public struct Point {
     }
 }
 
+extension Point: CustomStringConvertible {
+    public var description: String {
+        return "(\(x), \(y))"
+    }
+}
+
 public struct Vector {
     var dx: Float
     var dy: Float
@@ -37,5 +43,11 @@ public struct Vector {
     init(dx: Float, dy: Float) {
         self.dx = dx
         self.dy = dy
+    }
+}
+
+extension Vector: CustomStringConvertible {
+    public var description: String {
+        return "(\(dx), \(dy))"
     }
 }

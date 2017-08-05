@@ -46,17 +46,10 @@ public class Field {
                 balls = balls.filter { bounds.contains($0.bounds) }
 
                 // Update Metal state as needed.
-//                updateThreadgroupSizes(withFieldSize: size)
-//                parametersBuffer = nil
-//                sampleTexture = nil
+                populateParametersBuffer()
                 if numberOfBallsBeforeFilter != balls.count {
                     ballBuffer = nil
-                }
-                do {
-                    try updateBuffers()
-                } catch let e {
-                    NSLog("Error updating size: \(e)")
-                    return
+                    populateBallBuffer()
                 }
             }
         }
@@ -105,6 +98,10 @@ public class Field {
         let ball = Ball(radius: radius, position: position, velocity: Vector())
         balls.append(ball)
         NSLog("Added ball \(ball); fieldSize=\(size)")
+
+        populateParametersBuffer()
+        ballBuffer = nil
+        populateBallBuffer()
     }
 
     // MARK: - Metal Configuration
@@ -120,23 +117,55 @@ public class Field {
 //    private var threadgroupSize = MTLSize(width: 16, height: 16, depth: 1)
 
     /// Create the Metal buffer containing basic parameters of the simulation.
-    private func makeParametersBufferIfNeeded(withDevice device: MTLDevice) -> MTLBuffer? {
+    private func populateParametersBuffer() {
         if parametersBuffer == nil {
-            parametersBuffer = device.makeBuffer(length: MemoryLayout<Int>.stride * 3, options: [])
+            guard let device = self.device else { return }
+            let length = 16     // A Parameters struct in shader-land is an int3, which takes 16 bytes.
+            parametersBuffer = device.makeBuffer(length: length, options: [])
+            NSLog("Making parameters buffer, length:\(length)")
         }
-        return parametersBuffer
+
+        if let parameters = parametersBuffer {
+            var ptr = parameters.contents()
+            var width = UInt32(size.width)
+            parameters.addDebugMarker("Width", range: NSRange(location: parameters.contents().distance(to: ptr), length: 4))
+            ptr = write(value: &width, to: ptr)
+            var height = UInt32(size.height)
+            parameters.addDebugMarker("Height", range: NSRange(location: parameters.contents().distance(to: ptr), length: 4))
+            ptr = write(value: &height, to: ptr)
+            var numberOfBalls = UInt32(self.balls.count)
+            parameters.addDebugMarker("Number Of Balls", range: NSRange(location: parameters.contents().distance(to: ptr), length: 4))
+            ptr = write(value: &numberOfBalls, to: ptr)
+            NSLog("Populated parameters: w:\(width), h:\(height), n:\(numberOfBalls)")
+        }
     }
 
     /// Create a Metal buffer containing the current set of metaballs.
     /// @param device The Metal device to use to create the buffer.
     /// @return A new buffer containing metaball data.
-    private func makeBallBufferIfNeeded(withDevice device: MTLDevice) -> MTLBuffer? {
+    private func populateBallBuffer() {
         if ballBuffer == nil && balls.count > 0 {
-            let sizeOfBall = MemoryLayout<Float>.stride * 3     // A Ball in shader-land is a float3.
+            guard let device = self.device else { return }
+            let sizeOfBall = 16     // A Ball in shader-land is a float3, which takes 16 bytes.
             let length = balls.count * sizeOfBall
+            NSLog("Making ball buffer, length:\(length)")
             ballBuffer = device.makeBuffer(length: length, options: [])
         }
-        return ballBuffer
+
+        if let ballBuffer = ballBuffer {
+            var ptr = ballBuffer.contents()
+            var idx = 0
+            for var ball in self.balls {
+                ballBuffer.addDebugMarker("Ball \(idx)", range: NSRange(location: ballBuffer.contents().distance(to: ptr), length: 16))
+                ptr = write(value: &ball.position.x, to: ptr)
+                ptr = write(value: &ball.position.y, to: ptr)
+                var r = ball.radius
+                ptr = write(value: &r, to: ptr)
+                ptr = ptr.advanced(by: 4)   // Skip 4 bytes to maintain alignment.
+                NSLog("Populated ball: x:\(ball.position.x), y:\(ball.position.y), r:\(r)")
+                idx += 1
+            }
+        }
     }
 
     /// Create a Metal texture to hold sample values created by the sampling compute shader.
@@ -162,37 +191,6 @@ public class Field {
 //        threadgroupCount = MTLSize(width: width + threadgroupSize.width - 1, height: height + threadgroupSize.height - 1, depth: 1)
 //    }
 
-    /// Copy metaballs data into the parameters buffer.
-    public func updateBuffers() throws {
-        guard let device = self.device else {
-            throw MetaballsError.metalError("Missing Metal device for update")
-        }
-
-        guard let parameters = makeParametersBufferIfNeeded(withDevice: device),
-              let balls = makeBallBufferIfNeeded(withDevice: device)
-        else {
-            throw MetaballsError.metalError("Couldn't create buffers")
-        }
-
-        var ptr = parameters.contents()
-        
-        var width = Int(size.width)
-        ptr = write(value: &width, to: ptr)
-        var height = Int(size.height)
-        ptr = write(value: &height, to: ptr)
-
-        var numberOfBalls = self.balls.count
-        ptr = write(value: &numberOfBalls, to: ptr)
-
-        ptr = balls.contents()
-        for var ball in self.balls {
-            ptr = write(value: &ball.position.x, to: ptr)
-            ptr = write(value: &ball.position.y, to: ptr)
-            var r = ball.radius
-            ptr = write(value: &r, to: ptr)
-        }
-    }
-
     private func write<T>(value: inout T, to ptr: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer {
         let sizeOfType = MemoryLayout<T>.stride
         ptr.copyBytes(from: &value, count: sizeOfType)
@@ -206,8 +204,8 @@ public class Field {
         NSLog("Setting up Metal")
         self.device = device
 //        sampleComputeState = try computePipelineStateForSamplingKernel(withDevice: device)
-        parametersBuffer = makeParametersBufferIfNeeded(withDevice: device)
-        ballBuffer = makeBallBufferIfNeeded(withDevice: device)
+        populateParametersBuffer()
+        populateBallBuffer()
     }
 
 //    public func computePipelineStateForSamplingKernel(withDevice device: MTLDevice) throws -> MTLComputePipelineState? {
