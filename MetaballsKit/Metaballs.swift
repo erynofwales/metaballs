@@ -36,9 +36,19 @@ public struct Ball {
 public class Field {
     public var size: CGSize {
         didSet {
-            // Remove balls that fall outside the new bounds.
-            balls = balls.filter { bounds.contains($0.bounds) }
-            updateThreadgroupSizes(withFieldSize: size)
+            if size != oldValue {
+                let numberOfBallsBeforeFilter = balls.count
+
+                // Remove balls that fall outside the new bounds.
+                balls = balls.filter { bounds.contains($0.bounds) }
+
+                // Update Metal state as needed.
+                updateThreadgroupSizes(withFieldSize: size)
+                sampleTexture = nil
+                if numberOfBallsBeforeFilter != balls.count {
+                    ballBuffer = nil
+                }
+            }
         }
     }
 
