@@ -11,7 +11,7 @@ import MetalKit
 import MetaballsKit
 
 class ViewController: NSViewController, RendererDelegate {
-    private var field = Field(size: CGSize()) {
+    internal var field = Field(size: CGSize()) {
         didSet {
             field.size = metalView.drawableSize
         }
@@ -34,6 +34,7 @@ class ViewController: NSViewController, RendererDelegate {
 
         do {
             renderer = try Renderer(view: metalView, field: field)
+            renderer.delegate = self
         } catch let e {
             print("\(e)")
             view = newErrorView()
@@ -46,6 +47,7 @@ class ViewController: NSViewController, RendererDelegate {
     override func viewWillAppear() {
         super.viewWillAppear()
         renderer.mtkView(metalView, drawableSizeWillChange: metalView.drawableSize)
+        field.add(ballWithRadius: 10.0)
     }
 
     private func newErrorView() -> NSView {
