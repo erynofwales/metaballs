@@ -67,22 +67,22 @@ public class Field {
 
     public func update() {
         let selfBounds = bounds
-        for var ball in balls {
+        for i in 0..<balls.count {
             // Update position of ball.
-            ball.update()
+            balls[i].update()
 
-            if !selfBounds.contains(ball.position.CGPoint) {
+            if !selfBounds.contains(balls[i].position.CGPoint) {
                 // Degenerate case. If the ball finds itself outside the bounds of the field, plop it back in the center.
-                ball.position = Point(x: Float(selfBounds.midX), y: Float(selfBounds.midY))
+                balls[i].position = Point(x: Float(selfBounds.midX), y: Float(selfBounds.midY))
             } else {
                 // Do collision detection with walls.
-                let ballBounds = ball.bounds
+                let ballBounds = balls[i].bounds
                 if !selfBounds.contains(ballBounds) {
                     if ballBounds.minX < selfBounds.minX || ballBounds.maxX > selfBounds.maxX {
-                        ball.velocity.dx *= -1
+                        balls[i].velocity.dx *= -1
                     }
                     if ballBounds.minY < selfBounds.minY || ballBounds.maxY > selfBounds.maxY {
-                        ball.velocity.dy *= -1
+                        balls[i].velocity.dy *= -1
                     }
                 }
             }
