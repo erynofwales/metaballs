@@ -40,7 +40,10 @@ class ViewController: NSViewController, RendererDelegate {
     override func viewWillAppear() {
         super.viewWillAppear()
         renderer.mtkView(metalView, drawableSizeWillChange: metalView.drawableSize)
-        field.add(ballWithRadius: 10.0)
+        for _ in 1...10 {
+            let r = Float(20 + arc4random_uniform(50))
+            field.add(ballWithRadius: r)
+        }
     }
 
     private func newErrorView() -> NSView {

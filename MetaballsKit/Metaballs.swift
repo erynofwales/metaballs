@@ -87,15 +87,21 @@ public class Field {
                 }
             }
         }
+        populateBallBuffer()
     }
 
     public func add(ballWithRadius radius: Float) {
         let insetBounds = bounds.insetBy(dx: CGFloat(radius), dy: CGFloat(radius))
-//        let x = CGFloat(UInt32(insetBounds.minX) + arc4random_uniform(UInt32(insetBounds.width)))
-//        let y = CGFloat(UInt32(insetBounds.minY) + arc4random_uniform(UInt32(insetBounds.height)))
-        let position = Point(x: Float(insetBounds.midX), y: Float(insetBounds.midY))
-        // TODO: Randomly generate velocity too.
-        let ball = Ball(radius: radius, position: position, velocity: Vector())
+
+        let x = Float(UInt32(insetBounds.minX) + arc4random_uniform(UInt32(insetBounds.width)))
+        let y = Float(UInt32(insetBounds.minY) + arc4random_uniform(UInt32(insetBounds.height)))
+        let position = Point(x: x, y: y)
+
+        let dx = Float(5 - Int(arc4random_uniform(10)))
+        let dy = Float(5 - Int(arc4random_uniform(10)))
+        let velocity = Vector(dx: dx, dy: dy)
+
+        let ball = Ball(radius: radius, position: position, velocity: velocity)
         balls.append(ball)
         NSLog("Added ball \(ball); fieldSize=\(size)")
 
