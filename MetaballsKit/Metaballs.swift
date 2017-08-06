@@ -168,7 +168,9 @@ public class Field {
                 var r = ball.radius
                 ptr = write(value: &r, to: ptr)
                 ptr = ptr.advanced(by: 4)   // Skip 4 bytes to maintain alignment.
-                NSLog("Populated ball: x:\(ball.position.x), y:\(ball.position.y), r:\(r)")
+//                if idx == 0 {
+//                    print("Populated ball \(idx): x:\(ball.position.x), y:\(ball.position.y), r:\(r)")
+//                }
                 idx += 1
             }
         }
