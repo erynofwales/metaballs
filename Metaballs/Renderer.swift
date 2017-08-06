@@ -86,21 +86,10 @@ class Renderer: NSObject, MTKViewDelegate {
             Vertex(position: Point(x:  1, y:  1), textureCoordinate: Point(x: 1, y: 1))
         ]
 
-//        do {
-//            try field.updateBuffers()
-//        } catch let e {
-//            NSLog("Error updating buffers: \(e)")
-//        }
         field.update()
 
         let buffer = commandQueue.makeCommandBuffer()
         buffer.label = "Render"
-
-//        do {
-//            let _ = try field.computeEncoderForSamplingKernel(withDevice: device, commandBuffer: buffer)
-//        } catch let e {
-//            print("\(e)")
-//        }
 
         if let renderPass = view.currentRenderPassDescriptor {
             let encoder = buffer.makeRenderCommandEncoder(descriptor: renderPass)
