@@ -91,6 +91,7 @@ class Renderer: NSObject, MTKViewDelegate {
 //        } catch let e {
 //            NSLog("Error updating buffers: \(e)")
 //        }
+        field.update()
 
         let buffer = commandQueue.makeCommandBuffer()
         buffer.label = "Render"
