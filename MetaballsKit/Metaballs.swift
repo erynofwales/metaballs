@@ -43,7 +43,16 @@ public class Field {
                 let numberOfBallsBeforeFilter = balls.count
 
                 // Remove balls that fall outside the new bounds.
-                balls = balls.filter { bounds.contains($0.bounds) }
+//                balls = balls.filter { bounds.contains($0.bounds) }
+
+                // Scale balls to new position and size.
+                let scale = Float(size.width / oldValue.width)
+                balls = balls.map {
+                    let r = $0.radius * scale
+                    let p = randomPoint(forBallWithRadius: r)
+                    let v = Vector(dx: $0.velocity.dx * scale, dy: $0.velocity.dy * scale)
+                    return Ball(radius: r, position: p, velocity: v)
+                }
 
                 // Update Metal state as needed.
                 populateParametersBuffer()
@@ -91,11 +100,7 @@ public class Field {
     }
 
     public func add(ballWithRadius radius: Float) {
-        let insetBounds = bounds.insetBy(dx: CGFloat(radius), dy: CGFloat(radius))
-
-        let x = Float(UInt32(insetBounds.minX) + arc4random_uniform(UInt32(insetBounds.width)))
-        let y = Float(UInt32(insetBounds.minY) + arc4random_uniform(UInt32(insetBounds.height)))
-        let position = Point(x: x, y: y)
+        let position = randomPoint(forBallWithRadius: radius)
 
         let dx = Float(5 - Int(arc4random_uniform(10)))
         let dy = Float(5 - Int(arc4random_uniform(10)))
@@ -112,6 +117,14 @@ public class Field {
 
     public func clear() {
         balls.removeAll(keepingCapacity: true)
+    }
+
+    private func randomPoint(forBallWithRadius radius: Float) -> Point {
+        let insetBounds = bounds.insetBy(dx: CGFloat(radius), dy: CGFloat(radius))
+        let x = Float(UInt32(insetBounds.minX) + arc4random_uniform(UInt32(insetBounds.width)))
+        let y = Float(UInt32(insetBounds.minY) + arc4random_uniform(UInt32(insetBounds.height)))
+        let position = Point(x: x, y: y)
+        return position
     }
 
     // MARK: - Metal Configuration
