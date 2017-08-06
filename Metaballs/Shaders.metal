@@ -48,11 +48,19 @@ sampleToColorShader(RasterizerData in               [[stage_in]],
     const uint numberOfBalls = parameters.z;
     const float sample = sampleAtPoint(in.position.xy, balls, numberOfBalls);
 
+    const float target = 1.0;
+//    const float variange = 0.08;
+//    const float halfVariance = variange / 2.0;
     float4 out;
-    if (sample > 1.0) {
-        out = float4(0.0, 1.0, 0.0, 1.0);
+//    if (sample >= (target - halfVariance) && sample <= (target + halfVariance)) {
+    if (sample > target) {
+        const float3 left = float3(0.50, 0.79, 1.00);
+        const float3 right = float3(0.88, 0.50, 1.00);
+        const float blend = in.position.x / parameters.x;
+        const float invBlend = 1.0 - blend;
+        out = float4((blend * left.x + invBlend * right.x) / 2.0, (blend * left.y + invBlend * right.y) / 2.0, (blend * left.z + invBlend * right.z) / 2.0, 1.0);
     } else {
-        out = float4(0.2, 0.2, 0.2, 1.0);
+        out = float4(0.0, 0.0, 0.0, 1.0);
     }
     return out;
 }
