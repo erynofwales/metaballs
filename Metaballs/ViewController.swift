@@ -11,9 +11,9 @@ import MetalKit
 import MetaballsKit
 
 class ViewController: NSViewController, RendererDelegate {
-    internal var field = Field(size: CGSize()) {
+    internal var field = Field(size: Size()) {
         didSet {
-            field.size = metalView.drawableSize
+            field.size = Size(size: metalView.drawableSize)
         }
     }
 
@@ -73,7 +73,7 @@ class ViewController: NSViewController, RendererDelegate {
 
     // MARK: - RendererDelegate
 
-    var renderSize: CGSize {
+    var renderSize: Size {
         get {
             return field.size
         }

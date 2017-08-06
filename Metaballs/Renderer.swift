@@ -15,7 +15,7 @@ enum RendererError: Error {
 }
 
 protocol RendererDelegate {
-    var renderSize: CGSize { get set }
+    var renderSize: Size { get set }
     var field: Field { get }
     var metalView: MTKView { get }
 }
@@ -68,7 +68,7 @@ class Renderer: NSObject, MTKViewDelegate {
     /// MARK: - MTKViewDelegate
 
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
-        delegate.renderSize = size
+        delegate.renderSize = Size(size: size)
     }
 
     func draw(in view: MTKView) {

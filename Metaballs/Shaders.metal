@@ -24,7 +24,11 @@ typedef struct {
     float2 textureCoordinate;
 } RasterizerData;
 
-typedef int3 Parameters;
+typedef struct {
+    short2 size;
+    ushort numberOfBalls;
+} Parameters;
+
 typedef float3 Ball;
 
 vertex RasterizerData
@@ -45,8 +49,7 @@ sampleToColorShader(RasterizerData in               [[stage_in]],
                     constant Parameters& parameters [[buffer(0)]],
                     constant Ball* balls            [[buffer(1)]])
 {
-    const uint numberOfBalls = parameters.z;
-    const float sample = sampleAtPoint(in.position.xy, balls, numberOfBalls);
+    const float sample = sampleAtPoint(in.position.xy, balls, parameters.numberOfBalls);
 
     const float target = 1.0;
 //    const float variange = 0.08;
@@ -56,7 +59,7 @@ sampleToColorShader(RasterizerData in               [[stage_in]],
     if (sample > target) {
         const float3 left = float3(0.50, 0.79, 1.00);
         const float3 right = float3(0.88, 0.50, 1.00);
-        const float blend = in.position.x / parameters.x;
+        const float blend = in.position.x / parameters.size.x;
         const float invBlend = 1.0 - blend;
         out = float4((blend * left.x + invBlend * right.x) / 2.0, (blend * left.y + invBlend * right.y) / 2.0, (blend * left.z + invBlend * right.z) / 2.0, 1.0);
     } else {
