@@ -69,7 +69,6 @@ class Renderer: NSObject, MTKViewDelegate {
 
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         delegate.renderSize = size
-        // TODO: Reallocate the sample buffer and texture
     }
 
     func draw(in view: MTKView) {
