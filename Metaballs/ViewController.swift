@@ -41,15 +41,34 @@ class ViewController: NSViewController, RendererDelegate {
         super.viewWillAppear()
         renderer.mtkView(metalView, drawableSizeWillChange: metalView.drawableSize)
         for _ in 1...10 {
-            let r = Float(20 + arc4random_uniform(50))
-            field.add(ballWithRadius: r)
+            addBallWithRandomRadius()
         }
     }
+
+    override func mouseDown(with event: NSEvent) {
+        addBallWithRandomRadius()
+    }
+
+    override func rightMouseDown(with event: NSEvent) {
+        field.clear()
+        for _ in 1...10 {
+            addBallWithRandomRadius()
+        }
+    }
+
+    // MARK: - Private
 
     private func newErrorView() -> NSView {
         let view = NSView()
         view.layer?.backgroundColor = NSColor.red.cgColor
         return view
+    }
+
+    private func addBallWithRandomRadius() {
+        let base = UInt32(view.bounds.width * 0.05)
+        let variance = UInt32(base * 2)
+        let r = Float(base + arc4random_uniform(variance))
+        field.add(ballWithRadius: r)
     }
 
     // MARK: - RendererDelegate

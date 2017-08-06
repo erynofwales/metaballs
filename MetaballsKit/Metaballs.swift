@@ -110,6 +110,10 @@ public class Field {
         populateBallBuffer()
     }
 
+    public func clear() {
+        balls.removeAll(keepingCapacity: true)
+    }
+
     // MARK: - Metal Configuration
 
     private var device: MTLDevice?
