@@ -58,7 +58,18 @@ class Renderer: NSObject, MTKViewDelegate {
         pipelineStateDescriptor.label = "Render Pipeline"
         pipelineStateDescriptor.vertexFunction = vertexShader
         pipelineStateDescriptor.fragmentFunction = fragmentShader
-        pipelineStateDescriptor.colorAttachments[0].pixelFormat = view.colorPixelFormat
+        if let renderAttachment = pipelineStateDescriptor.colorAttachments[0] {
+            renderAttachment.pixelFormat = view.colorPixelFormat
+            // Pulled all this from SO. I don't know what all this does...
+            // https://stackoverflow.com/q/43727335/1174185
+            renderAttachment.isBlendingEnabled = true
+            renderAttachment.alphaBlendOperation = .add
+            renderAttachment.rgbBlendOperation = .add
+            renderAttachment.sourceRGBBlendFactor = .sourceAlpha
+            renderAttachment.sourceAlphaBlendFactor = .sourceAlpha
+            renderAttachment.destinationRGBBlendFactor = .oneMinusSourceAlpha
+            renderAttachment.destinationAlphaBlendFactor = .oneMinusSourceAlpha
+        }
         renderPipelineState = try device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
 
         commandQueue = device.makeCommandQueue()

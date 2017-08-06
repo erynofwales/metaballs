@@ -42,6 +42,7 @@ passthroughVertexShader(uint vid                    [[vertex_id]],
     return out;
 }
 
+float mapValueFromRangeOntoRange(float, float, float, float, float);
 float sampleAtPoint(float2, constant Ball*, int);
 
 fragment float4
@@ -51,20 +52,19 @@ sampleToColorShader(RasterizerData in               [[stage_in]],
 {
     const float sample = sampleAtPoint(in.position.xy, balls, parameters.numberOfBalls);
 
+    const float3 left = float3(0.50, 0.79, 1.00);
+    const float3 right = float3(0.88, 0.50, 1.00);
+    const float blend = in.position.x / parameters.size.x;
+    const float invBlend = 1.0 - blend;
+
     const float target = 1.0;
-//    const float variange = 0.08;
-//    const float halfVariance = variange / 2.0;
-    float4 out;
-//    if (sample >= (target - halfVariance) && sample <= (target + halfVariance)) {
-    if (sample > target) {
-        const float3 left = float3(0.50, 0.79, 1.00);
-        const float3 right = float3(0.88, 0.50, 1.00);
-        const float blend = in.position.x / parameters.size.x;
-        const float invBlend = 1.0 - blend;
-        out = float4((blend * left.x + invBlend * right.x) / 2.0, (blend * left.y + invBlend * right.y) / 2.0, (blend * left.z + invBlend * right.z) / 2.0, 1.0);
-    } else {
-        out = float4(0.0, 0.0, 0.0, 1.0);
-    }
+
+    const float r = (blend * left.x + invBlend * right.x) / 2.0;
+    const float g = (blend * left.y + invBlend * right.y) / 2.0;
+    const float b = (blend * left.z + invBlend * right.z) / 2.0;
+    const float a = clamp(mapValueFromRangeOntoRange(sample, 0.75 * target, target, 0, 1), 0.0, 1.0);
+
+    float4 out = float4(r, g, b, a);
     return out;
 }
 
@@ -82,4 +82,16 @@ sampleAtPoint(float2 point,
         sample += r2 / ((xDiff * xDiff) + (yDiff * yDiff));
     }
     return sample;
+}
+
+float
+mapValueFromRangeOntoRange(float value,
+                           float inputStart,
+                           float inputEnd,
+                           float outputStart,
+                           float outputEnd)
+{
+    const float slope = (outputEnd - outputStart) / (inputEnd - inputStart);
+    float output = outputStart + slope * (value - inputStart);
+    return output;
 }
