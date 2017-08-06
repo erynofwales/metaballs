@@ -32,6 +32,50 @@ extension Point: CustomStringConvertible {
     }
 }
 
+public struct Size {
+    var width: UInt16
+    var height: UInt16
+
+    public init() {
+        self.init(width: 0, height: 0)
+    }
+
+    public init(width: UInt16, height: UInt16) {
+        self.width = width
+        self.height = height
+    }
+
+    public init(size: CGSize) {
+        self.init(width: UInt16(size.width), height: UInt16(size.height))
+    }
+}
+
+extension Size: CustomStringConvertible {
+    public var description: String {
+        return "(\(width), \(height))"
+    }
+}
+
+extension Size: Equatable {
+    /// Returns a Boolean value indicating whether two values are equal.
+    ///
+    /// Equality is the inverse of inequality. For any values `a` and `b`,
+    /// `a == b` implies that `a != b` is `false`.
+    ///
+    /// - Parameters:
+    ///   - lhs: A value to compare.
+    ///   - rhs: Another value to compare.
+    public static func ==(lhs: Size, rhs: Size) -> Bool {
+        return lhs.width == rhs.width && lhs.height == rhs.height
+    }
+}
+
+extension CGSize {
+    init(size: Size) {
+        self.init(width: CGFloat(size.width), height: CGFloat(size.height))
+    }
+}
+
 public struct Vector {
     var dx: Float
     var dy: Float

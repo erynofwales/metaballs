@@ -13,6 +13,63 @@ public enum MetaballsError: Error {
     case metalError(String)
 }
 
+public struct Parameters {
+    /// Metal's short type. 2 bytes, 2 byte aligned
+    typealias Short = UInt16
+    /// Metal's short2 type. 2 bytes per int, 4 bytes, 4 byte aligned
+    typealias Short2 = (UInt16, UInt16)
+    /// Metal's float4 type. 4 bytes per float, 16 bytes total, 16 byte aligned.
+    typealias Color4 = (r: Float, g: Float, b: Float, a: Float)
+
+    // Simulation parameters
+    var size: Size
+    var numberOfBalls: Short
+    // 4 bytes unused
+
+    // Color parameters
+    var topLeft: Color4
+    var topRight: Color4
+    var bottomLeft: Color4
+    var bottomRight: Color4
+
+    public static var size: Int {
+        var size = 0
+        size += MemoryLayout<Size>.stride
+        size += MemoryLayout<Short>.stride
+        size += 2+8
+        size += 4 * MemoryLayout<Color4>.stride
+        return size
+    }
+
+    public init() {
+        size = Size(width: 0, height: 0)
+        numberOfBalls = 0
+        topLeft = (0, 0, 0, 0)
+        topRight = (0, 0, 0, 0)
+        bottomLeft = (0, 0, 0, 0)
+        bottomRight = (0, 0, 0, 0)
+    }
+
+    public mutating func write(to buffer: MTLBuffer, offset: Int = 0) {
+        let start = buffer.contents().advanced(by: offset)
+        var ptr = start
+
+        let simBegin = ptr
+        ptr = ptr.writeAndAdvance(value: &size)
+        ptr = ptr.writeAndAdvance(value: &numberOfBalls)
+        ptr = ptr.advanced(by: 2+8)   // Skip 10 bytes to maintain alignment.
+        let simLength = simBegin.distance(to: ptr)
+        buffer.addDebugMarker("Simulation Parameters", range: NSRange(location: start.distance(to: simBegin), length: simLength))
+
+        ptr = ptr.writeAndAdvance(value: &topLeft)
+        ptr = ptr.writeAndAdvance(value: &topRight)
+        ptr = ptr.writeAndAdvance(value: &bottomLeft)
+        ptr = ptr.writeAndAdvance(value: &bottomRight)
+
+        NSLog("Populated parameters: size:\(size), n:\(numberOfBalls)")
+    }
+}
+
 public struct Ball {
     let radius: Float
     var position = Point()
@@ -36,17 +93,16 @@ extension Ball: CustomStringConvertible {
 }
 
 public class Field {
-    public var size: CGSize {
-        didSet {
-            if size != oldValue {
-                NSLog("Updating size of field: old:\(oldValue), new:\(size)")
-                let numberOfBallsBeforeFilter = balls.count
-
-                // Remove balls that fall outside the new bounds.
-//                balls = balls.filter { bounds.contains($0.bounds) }
+    public var size: Size {
+        get {
+            return parameters.size
+        }
+        set {
+            if parameters.size != newValue {
+                NSLog("Updating size of field: old:\(parameters.size), new:\(newValue)")
 
                 // Scale balls to new position and size.
-                let scale = Float(size.width / oldValue.width)
+                let scale = parameters.size.width != 0 ? Float(newValue.width / parameters.size.width) : 1
                 balls = balls.map {
                     let r = $0.radius * scale
                     let p = randomPoint(forBallWithRadius: r)
@@ -56,21 +112,22 @@ public class Field {
 
                 // Update Metal state as needed.
                 populateParametersBuffer()
-                if numberOfBallsBeforeFilter != balls.count {
-                    ballBuffer = nil
-                    populateBallBuffer()
-                }
+                populateBallBuffer()
+
+                parameters.size = newValue
             }
         }
     }
 
     private(set) var balls = [Ball]()
 
+    private var parameters = Parameters()
+
     internal var bounds: CGRect {
-        return CGRect(origin: CGPoint(), size: size)
+        return CGRect(origin: CGPoint(), size: CGSize(size: size))
     }
 
-    public init(size s: CGSize) {
+    public init(size s: Size) {
         size = s
     }
 
@@ -137,23 +194,14 @@ public class Field {
     private func populateParametersBuffer() {
         if parametersBuffer == nil {
             guard let device = self.device else { return }
-            let length = 16     // A Parameters struct in shader-land is an int3, which takes 16 bytes.
+            let length = Parameters.size
             parametersBuffer = device.makeBuffer(length: length, options: [])
             NSLog("Making parameters buffer, length:\(length)")
         }
 
-        if let parameters = parametersBuffer {
-            var ptr = parameters.contents()
-            var width = UInt32(size.width)
-            parameters.addDebugMarker("Width", range: NSRange(location: parameters.contents().distance(to: ptr), length: 4))
-            ptr = write(value: &width, to: ptr)
-            var height = UInt32(size.height)
-            parameters.addDebugMarker("Height", range: NSRange(location: parameters.contents().distance(to: ptr), length: 4))
-            ptr = write(value: &height, to: ptr)
-            var numberOfBalls = UInt32(self.balls.count)
-            parameters.addDebugMarker("Number Of Balls", range: NSRange(location: parameters.contents().distance(to: ptr), length: 4))
-            ptr = write(value: &numberOfBalls, to: ptr)
-            NSLog("Populated parameters: w:\(width), h:\(height), n:\(numberOfBalls)")
+        if let parametersBuffer = parametersBuffer {
+            parameters.numberOfBalls = Parameters.Short(balls.count)
+            self.parameters.write(to: parametersBuffer)
         }
     }
 
