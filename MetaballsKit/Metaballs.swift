@@ -13,58 +13,47 @@ public enum MetaballsError: Error {
     case metalError(String)
 }
 
+public enum ColorStyle: UInt16 {
+    /// Single flat color
+    case singleColor = 1
+    /// Two color horizontal gradient
+    case gradient2Horizontal = 2
+    /// Two color vertical gradient
+    case gradient2Vertical = 3
+    /// Four color gradient from corners
+    case gradient4Corners = 4
+    /// Four color gradient from middle of sides
+    case gradient4Sides = 5
+}
+
 public struct Parameters {
-    /// Metal's short type. 2 bytes, 2 byte aligned
-    typealias Short = UInt16
-    /// Metal's short2 type. 2 bytes per int, 4 bytes, 4 byte aligned
-    typealias Short2 = (UInt16, UInt16)
-    /// Metal's float4 type. 4 bytes per float, 16 bytes total, 16 byte aligned.
-    typealias Color4 = (r: Float, g: Float, b: Float, a: Float)
-
-    // Simulation parameters
-    var size: Size
-    var numberOfBalls: Short
-    // 4 bytes unused
-
-    // Color parameters
-    var topLeft: Color4
-    var topRight: Color4
-    var bottomLeft: Color4
-    var bottomRight: Color4
-
     public static var size: Int {
-        var size = 0
-        size += MemoryLayout<Size>.stride
-        size += MemoryLayout<Short>.stride
-        size += 2+8
-        size += 4 * MemoryLayout<Color4>.stride
+        let size = MemoryLayout<Parameters>.stride
         return size
     }
 
-    public init() {
-        size = Size(width: 0, height: 0)
-        numberOfBalls = 0
-        topLeft = (0, 0, 0, 0)
-        topRight = (0, 0, 0, 0)
-        bottomLeft = (0, 0, 0, 0)
-        bottomRight = (0, 0, 0, 0)
-    }
+    // Simulation parameters
+    var size = Size(width: 0, height: 0)
+    var numberOfBalls: Short = 0
+
+    let unused1: UInt16 = 0xAB
+    let unused2: UInt32 = 0xCDEF
+    let unused3: UInt16 = 0xBA
+
+    // Color parameters
+    var colorStyle = ColorStyle.gradient2Horizontal
+    var color0 = Float4()
+    var color1 = Float4()
+    var color2 = Float4()
+    var color3 = Float4()
 
     public mutating func write(to buffer: MTLBuffer, offset: Int = 0) {
-        let start = buffer.contents().advanced(by: offset)
-        var ptr = start
+        let head = buffer.contents()
+        let start = head.advanced(by: offset)
 
-        let simBegin = ptr
-        ptr = ptr.writeAndAdvance(value: &size)
-        ptr = ptr.writeAndAdvance(value: &numberOfBalls)
-        ptr = ptr.advanced(by: 2+8)   // Skip 10 bytes to maintain alignment.
-        let simLength = simBegin.distance(to: ptr)
-        buffer.addDebugMarker("Simulation Parameters", range: NSRange(location: start.distance(to: simBegin), length: simLength))
+        let stride = MemoryLayout.stride(ofValue: self)
+        start.copyBytes(from: &self, count: stride)
 
-        ptr = ptr.writeAndAdvance(value: &topLeft)
-        ptr = ptr.writeAndAdvance(value: &topRight)
-        ptr = ptr.writeAndAdvance(value: &bottomLeft)
-        ptr = ptr.writeAndAdvance(value: &bottomRight)
 
         NSLog("Populated parameters: size:\(size), n:\(numberOfBalls)")
     }
@@ -200,7 +189,7 @@ public class Field {
         }
 
         if let parametersBuffer = parametersBuffer {
-            parameters.numberOfBalls = Parameters.Short(balls.count)
+            parameters.numberOfBalls = Short(balls.count)
             self.parameters.write(to: parametersBuffer)
         }
     }
