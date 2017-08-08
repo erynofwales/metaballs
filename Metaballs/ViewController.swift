@@ -11,7 +11,15 @@ import MetalKit
 import MetaballsKit
 
 class ViewController: NSViewController, RendererDelegate {
-    internal var field = Field(size: Size()) {
+    private static func defaultParameters() -> Parameters {
+        var p = Parameters()
+        p.colorStyle = .gradient2Horizontal
+        p.color0 = Float4(0.50, 0.79, 1, 1)
+        p.color1 = Float4(0.88, 0.50, 1, 1)
+        return p
+    }
+
+    internal var field: Field {
         didSet {
             field.size = Size(size: metalView.drawableSize)
         }
@@ -21,6 +29,18 @@ class ViewController: NSViewController, RendererDelegate {
 
     internal var metalView: MTKView {
         return self.view as! MTKView
+    }
+
+    override init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        let params = ViewController.defaultParameters()
+        field = Field(parameters: params)
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+
+    required init?(coder: NSCoder) {
+        let params = ViewController.defaultParameters()
+        field = Field(parameters: params)
+        super.init(coder: coder)
     }
 
     override func viewDidLoad() {
