@@ -41,20 +41,18 @@ public struct Parameters {
     let unused3: UInt16 = 0xBA
 
     // Color parameters
-    var colorStyle = ColorStyle.gradient2Horizontal
-    var color0 = Float4()
-    var color1 = Float4()
-    var color2 = Float4()
-    var color3 = Float4()
+    public var colorStyle = ColorStyle.gradient2Horizontal
+    public var color0 = Float4()
+    public var color1 = Float4()
+    public var color2 = Float4()
+    public var color3 = Float4()
+
+    public init() { }
 
     public mutating func write(to buffer: MTLBuffer, offset: Int = 0) {
-        let head = buffer.contents()
-        let start = head.advanced(by: offset)
-
+        let start = buffer.contents().advanced(by: offset)
         let stride = MemoryLayout.stride(ofValue: self)
         start.copyBytes(from: &self, count: stride)
-
-
         NSLog("Populated parameters: size:\(size), n:\(numberOfBalls)")
     }
 }
@@ -110,14 +108,14 @@ public class Field {
 
     private(set) var balls = [Ball]()
 
-    private var parameters = Parameters()
+    private var parameters: Parameters
 
     internal var bounds: CGRect {
         return CGRect(origin: CGPoint(), size: CGSize(size: size))
     }
 
-    public init(size s: Size) {
-        size = s
+    public init(parameters p: Parameters) {
+        parameters = p
     }
 
     public func update() {
