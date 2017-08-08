@@ -24,6 +24,19 @@ typedef struct {
     float2 textureCoordinate;
 } RasterizerData;
 
+typedef enum {
+    /// Single flat color
+    SingleColor = 1,
+    /// Two color horizontal gradient
+    Gradient2Horizontal = 2,
+    /// Two color vertical gradient
+    Gradient2Vertical = 3,
+    /// Four color gradient from corners
+    Gradient4Corners = 4,
+    /// Four color gradient from middle of sides
+    Gradient4Sides = 5,
+} ColorStyle;
+
 typedef struct {
     short2 size;
     ushort numberOfBalls;
@@ -49,8 +62,15 @@ passthroughVertexShader(uint vid                    [[vertex_id]],
     return out;
 }
 
-float mapValueFromRangeOntoRange(float, float, float, float, float);
 float sampleAtPoint(float2, constant Ball*, int);
+
+// Color samplers
+float4 singleColor(float, float4);
+float4 gradient2(float, float, float4, float4);
+
+// Helpers
+float mapValueFromRangeOntoRange(float, float, float, float, float);
+float4 averageTwoColors(float, float4, float4);
 
 fragment float4
 sampleToColorShader(RasterizerData in               [[stage_in]],
@@ -58,20 +78,23 @@ sampleToColorShader(RasterizerData in               [[stage_in]],
                     constant Ball* balls            [[buffer(1)]])
 {
     const float sample = sampleAtPoint(in.position.xy, balls, parameters.numberOfBalls);
-
-    const float3 left = float3(0.50, 0.79, 1.00);
-    const float3 right = float3(0.88, 0.50, 1.00);
     const float blend = in.position.x / parameters.size.x;
-    const float invBlend = 1.0 - blend;
 
+    float4 out;
+    switch (parameters.colorStyle) {
+        case SingleColor:
+            out = singleColor(sample, parameters.colors[0]);
+            break;
+        case Gradient2Horizontal:
+            out = gradient2(sample, blend, parameters.colors[0], parameters.colors[1]);
+            break;
+    }
+
+    // Feather the alpha.
     const float target = 1.0;
-
-    const float r = (blend * left.x + invBlend * right.x) / 2.0;
-    const float g = (blend * left.y + invBlend * right.y) / 2.0;
-    const float b = (blend * left.z + invBlend * right.z) / 2.0;
     const float a = clamp(mapValueFromRangeOntoRange(sample, 0.75 * target, target, 0, 1), 0.0, 1.0);
+    out.w = a;
 
-    float4 out = float4(r, g, b, a);
     return out;
 }
 
@@ -91,6 +114,24 @@ sampleAtPoint(float2 point,
     return sample;
 }
 
+float4
+singleColor(float sample,
+            float4 color)
+{
+    return sample > 1.0 ? color : float4();
+}
+
+float4
+gradient2(float sample,
+          float normalizedBlend,
+          float4 fromColor,
+          float4 toColor)
+{
+    float4 blendedColor = averageTwoColors(normalizedBlend, fromColor, toColor);
+    float4 out = singleColor(sample, blendedColor);
+    return out;
+}
+
 float
 mapValueFromRangeOntoRange(float value,
                            float inputStart,
@@ -101,4 +142,21 @@ mapValueFromRangeOntoRange(float value,
     const float slope = (outputEnd - outputStart) / (inputEnd - inputStart);
     float output = outputStart + slope * (value - inputStart);
     return output;
+}
+
+/// Compute the color at a given point along a 1-dimensional gradient. This averages the two colors. This function doesn't treat alpha. The returned color will have an alpha of 1.
+/// @param coordinate A value between 0 and 1, a point along the gradient.
+/// @param leftColor The color at the extreme left of the gradient.
+/// @param rightColor The color at the extreme right of the gradient.
+/// @return A color, a blend of `leftColor` and `rightColor` at the given point along the axis.
+float4
+averageTwoColors(float coordinate,
+                 float4 leftColor,
+                 float4 rightColor)
+{
+    const float invCoordinate = 1.0 - coordinate;
+    const float r = (coordinate * leftColor.x + invCoordinate * rightColor.x) / 2.0;
+    const float g = (coordinate * leftColor.y + invCoordinate * rightColor.y) / 2.0;
+    const float b = (coordinate * leftColor.z + invCoordinate * rightColor.z) / 2.0;
+    return float4(r, g, b, 1.0);
 }
