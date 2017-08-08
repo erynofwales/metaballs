@@ -34,7 +34,7 @@ public struct Parameters {
 
     // Simulation parameters
     var size = Size(width: 0, height: 0)
-    var numberOfBalls: Short = 0
+    var numberOfBalls: UInt16 = 0
 
     let unused1: UInt16 = 0xAB
     let unused2: UInt32 = 0xCDEF
@@ -187,7 +187,7 @@ public class Field {
         }
 
         if let parametersBuffer = parametersBuffer {
-            parameters.numberOfBalls = Short(balls.count)
+            parameters.numberOfBalls = UInt16(balls.count)
             self.parameters.write(to: parametersBuffer)
         }
     }
