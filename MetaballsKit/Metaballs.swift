@@ -41,11 +41,20 @@ public struct Parameters {
     let unused3: UInt16 = 0xBA
 
     // Color parameters
-    public var colorStyle = ColorStyle.gradient2Horizontal
-    public var color0 = Float4()
+    private var _colorStyle = ColorStyle.singleColor.rawValue
+    public var color0 = Float4(r: 0, g: 1, b: 0, a: 1)
     public var color1 = Float4()
     public var color2 = Float4()
     public var color3 = Float4()
+
+    public var colorStyle: ColorStyle {
+        get {
+            return ColorStyle(rawValue: _colorStyle)!
+        }
+        set {
+            _colorStyle = newValue.rawValue
+        }
+    }
 
     public init() { }
 
@@ -53,7 +62,7 @@ public struct Parameters {
         let start = buffer.contents().advanced(by: offset)
         let stride = MemoryLayout.stride(ofValue: self)
         start.copyBytes(from: &self, count: stride)
-        NSLog("Populated parameters: size:\(size), n:\(numberOfBalls)")
+        NSLog("Populated parameters: size:\(size), n:\(numberOfBalls), style:\(colorStyle)(\(_colorStyle))")
     }
 }
 
