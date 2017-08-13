@@ -31,7 +31,9 @@ class PreferencesViewController: NSViewController {
 
         let menu = NSMenu()
         for item in PreferencesViewController.styleItems {
+            // TODO: Set action here.
             let menuItem = NSMenuItem(title: item.name, action: nil, keyEquivalent: "")
+            menuItem.target = self
             menuItem.tag = item.tag
             menu.addItem(menuItem)
         }
