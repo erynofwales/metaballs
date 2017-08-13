@@ -8,7 +8,18 @@
 
 import Cocoa
 
+internal let PreferencesDidChange_Color = Notification.Name("PreferencesDidChange_Color")
+
 class PreferencesViewController: NSViewController {
+    private static var styleItems: [(name: String, tag: Int)] {
+        return [
+            (name: NSLocalizedString("Single Color", comment: "single color menu item"),
+             tag: Int(ColorStyle.singleColor.rawValue)),
+            (name: NSLocalizedString("Two Color Gradient — Horizontal", comment: "two color horizontal gradient menu item"),
+             tag: Int(ColorStyle.gradient2Horizontal.rawValue)),
+        ]
+    }
+
     public var defaults = UserDefaults.standard
 
     private var colorStackView = NSStackView()
@@ -19,8 +30,11 @@ class PreferencesViewController: NSViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
 
         let menu = NSMenu()
-        menu.addItem(withTitle: NSLocalizedString("Single Color", comment: "single color menu item"), action: nil, keyEquivalent: "")
-        menu.addItem(withTitle: NSLocalizedString("Two Color Gradient — Horizontal", comment: "two color horizontal gradient menu item"), action: nil, keyEquivalent: "")
+        for item in PreferencesViewController.styleItems {
+            let menuItem = NSMenuItem(title: item.name, action: nil, keyEquivalent: "")
+            menuItem.tag = item.tag
+            menu.addItem(menuItem)
+        }
         button.menu = menu
 
         return button
@@ -66,6 +80,12 @@ class PreferencesViewController: NSViewController {
     override func viewWillAppear() {
         super.viewWillAppear()
         prepareColorViews()
+        prepareColorPanel()
+    }
+
+    override func viewWillDisappear() {
+        super.viewWillDisappear()
+        NSColorPanel.shared().close()
     }
 
     private func prepareColorViews() {
@@ -78,6 +98,31 @@ class PreferencesViewController: NSViewController {
                 cv.colorWell.color = color
             }
         }
+    }
+
+    private func prepareColorPanel() {
+        let colorPanel = NSColorPanel.shared()
+        colorPanel.isContinuous = true
+        colorPanel.setTarget(self)
+        colorPanel.setAction(#selector(PreferencesViewController.colorPanelDidUpdateValue))
+    }
+
+    func colorPanelDidUpdateValue(_ colorPanel: NSColorPanel) {
+        // TODO: Post a notification about color change.
+        print("color panel did update: \(colorPanel.color)")
+        var info = [String:Any]()
+        if let currentStyleItem = styleMenu.selectedItem {
+            info["style"] = ColorStyle(rawValue: UInt16(currentStyleItem.tag))!
+        }
+        for (idx, cv) in colorViews.enumerated() {
+            let key = "color\(idx)"
+            if cv.colorWell.isActive {
+                info[key] = colorPanel.color
+            } else {
+                info[key] = cv.colorWell.color
+            }
+        }
+        NotificationCenter.default.post(name: PreferencesDidChange_Color, object: self, userInfo: info)
     }
 }
 
