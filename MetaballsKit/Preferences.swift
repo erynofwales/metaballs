@@ -6,4 +6,10 @@
 //  Copyright © 2017 Eryn Wells. All rights reserved.
 //
 
-import Foundation
+import Cocoa
+
+class PreferencesWindowController: NSWindowController {
+    override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
+        print("prepare for segue:\(segue), sender:\(String(describing: sender))")
+    }
+}
