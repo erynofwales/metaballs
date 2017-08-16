@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C03904B31F43CF3F00C74022 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03904B11F43CF3700C74022 /* PreferencesWindowController.swift */; };
 		C09161701F3F5AE6009C4263 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */; };
 		C0BBE36B1F2E816500E68524 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE36A1F2E816500E68524 /* AppDelegate.swift */; };
 		C0BBE36D1F2E816500E68524 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE36C1F2E816500E68524 /* ViewController.swift */; };
@@ -44,6 +45,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C03904B11F43CF3700C74022 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
 		C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
 		C0BBE3671F2E816500E68524 /* Metaballs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Metaballs.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0BBE36A1F2E816500E68524 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 				C0BBE3A31F2E81C700E68524 /* Metaballs.swift */,
 				C0CE7BFF1F362C3F001516B6 /* Geometry.swift */,
 				C0DF1D781F3789DC0038B0A0 /* Memory.swift */,
+				C03904B11F43CF3700C74022 /* PreferencesWindowController.swift */,
 				C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */,
 			);
 			path = MetaballsKit;
@@ -377,6 +380,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C03904B31F43CF3F00C74022 /* PreferencesWindowController.swift in Sources */,
 				C0DF1D791F3789DC0038B0A0 /* Memory.swift in Sources */,
 				C0BBE3A41F2E81C700E68524 /* Metaballs.swift in Sources */,
 				C0CE7C001F362C3F001516B6 /* Geometry.swift in Sources */,
