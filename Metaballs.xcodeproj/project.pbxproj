@@ -11,6 +11,8 @@
 		C0B906D51F45432700B5F89B /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B906D41F45432700B5F89B /* Preferences.swift */; };
 		C0B906DE1F455AD000B5F89B /* MetaballsSaverView.h in Headers */ = {isa = PBXBuildFile; fileRef = C0B906DD1F455AD000B5F89B /* MetaballsSaverView.h */; };
 		C0B906E01F455AD000B5F89B /* MetaballsSaverView.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B906DF1F455AD000B5F89B /* MetaballsSaverView.m */; };
+		C0B906E51F455B7C00B5F89B /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3AB1F2E941200E68524 /* Renderer.swift */; };
+		C0B906E61F455B7E00B5F89B /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3A91F2E91D900E68524 /* Shaders.metal */; };
 		C0BBE36B1F2E816500E68524 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE36A1F2E816500E68524 /* AppDelegate.swift */; };
 		C0BBE36D1F2E816500E68524 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE36C1F2E816500E68524 /* ViewController.swift */; };
 		C0BBE36F1F2E816500E68524 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0BBE36E1F2E816500E68524 /* Assets.xcassets */; };
@@ -22,8 +24,6 @@
 		C0BBE3A41F2E81C700E68524 /* Metaballs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3A31F2E81C700E68524 /* Metaballs.swift */; };
 		C0BBE3A51F2E87D500E68524 /* MetaballsKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE38C1F2E81B600E68524 /* MetaballsKit.framework */; };
 		C0BBE3A81F2E893A00E68524 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE3A71F2E893A00E68524 /* MetalKit.framework */; };
-		C0BBE3AA1F2E91D900E68524 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3A91F2E91D900E68524 /* Shaders.metal */; };
-		C0BBE3AC1F2E941200E68524 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3AB1F2E941200E68524 /* Renderer.swift */; };
 		C0BBE3AD1F30CD7E00E68524 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE3A71F2E893A00E68524 /* MetalKit.framework */; };
 		C0CE7C001F362C3F001516B6 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CE7BFF1F362C3F001516B6 /* Geometry.swift */; };
 		C0DF1D791F3789DC0038B0A0 /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DF1D781F3789DC0038B0A0 /* Memory.swift */; };
@@ -159,8 +159,6 @@
 			children = (
 				C0BBE36A1F2E816500E68524 /* AppDelegate.swift */,
 				C0BBE36C1F2E816500E68524 /* ViewController.swift */,
-				C0BBE3AB1F2E941200E68524 /* Renderer.swift */,
-				C0BBE3A91F2E91D900E68524 /* Shaders.metal */,
 				C0BBE36E1F2E816500E68524 /* Assets.xcassets */,
 				C0BBE3701F2E816500E68524 /* Main.storyboard */,
 				C0BBE3731F2E816500E68524 /* Info.plist */,
@@ -185,6 +183,8 @@
 				C0BBE3A31F2E81C700E68524 /* Metaballs.swift */,
 				C0CE7BFF1F362C3F001516B6 /* Geometry.swift */,
 				C0DF1D781F3789DC0038B0A0 /* Memory.swift */,
+				C0BBE3AB1F2E941200E68524 /* Renderer.swift */,
+				C0BBE3A91F2E91D900E68524 /* Shaders.metal */,
 				C0B906D41F45432700B5F89B /* Preferences.swift */,
 				C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */,
 			);
@@ -433,8 +433,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C0BBE3AC1F2E941200E68524 /* Renderer.swift in Sources */,
-				C0BBE3AA1F2E91D900E68524 /* Shaders.metal in Sources */,
 				C0BBE36D1F2E816500E68524 /* ViewController.swift in Sources */,
 				C0BBE36B1F2E816500E68524 /* AppDelegate.swift in Sources */,
 			);
@@ -453,9 +451,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0DF1D791F3789DC0038B0A0 /* Memory.swift in Sources */,
+				C0B906E61F455B7E00B5F89B /* Shaders.metal in Sources */,
 				C0B906D51F45432700B5F89B /* Preferences.swift in Sources */,
 				C0BBE3A41F2E81C700E68524 /* Metaballs.swift in Sources */,
 				C0CE7C001F362C3F001516B6 /* Geometry.swift in Sources */,
+				C0B906E51F455B7C00B5F89B /* Renderer.swift in Sources */,
 				C09161701F3F5AE6009C4263 /* PreferencesViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

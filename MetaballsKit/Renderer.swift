@@ -7,22 +7,16 @@
 //
 
 import Foundation
-import MetaballsKit
 import MetalKit
 
-enum RendererError: Error {
+public enum RendererError: Error {
     case MetalError(String)
 }
 
-protocol RendererDelegate {
+public protocol RendererDelegate {
     var renderSize: Size { get set }
     var field: Field { get }
     var metalView: MTKView { get }
-}
-
-struct Point {
-    let x: Float
-    let y: Float
 }
 
 struct Vertex {
@@ -30,14 +24,14 @@ struct Vertex {
     let textureCoordinate: Point
 }
 
-class Renderer: NSObject, MTKViewDelegate {
+public class Renderer: NSObject, MTKViewDelegate {
     var delegate: RendererDelegate
 
     private var device: MTLDevice
     private var commandQueue: MTLCommandQueue
     private var renderPipelineState: MTLRenderPipelineState
 
-    init(delegate: RendererDelegate) throws {
+    public init(delegate: RendererDelegate) throws {
         self.delegate = delegate
 
         guard let device = MTLCreateSystemDefaultDevice() else {
@@ -78,11 +72,11 @@ class Renderer: NSObject, MTKViewDelegate {
 
     /// MARK: - MTKViewDelegate
 
-    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+    public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         delegate.renderSize = Size(size: size)
     }
 
-    func draw(in view: MTKView) {
+    public func draw(in view: MTKView) {
         let field = delegate.field
 
         // Two triangles, plus texture coordinates.
