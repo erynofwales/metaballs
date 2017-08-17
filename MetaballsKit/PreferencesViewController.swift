@@ -10,13 +10,22 @@ import Cocoa
 
 internal let PreferencesDidChange_Color = Notification.Name("PreferencesDidChange_Color")
 
+private struct StyleItem {
+    let name: String
+    let tag: Int
+    let colorNames: [String]
+}
+
 class PreferencesViewController: NSViewController {
-    private static var styleItems: [(name: String, tag: Int)] {
+    private static var styleItems: [StyleItem] {
         return [
-            (name: NSLocalizedString("Single Color", comment: "single color menu item"),
-             tag: Int(ColorStyle.singleColor.rawValue)),
-            (name: NSLocalizedString("Two Color Gradient — Horizontal", comment: "two color horizontal gradient menu item"),
-             tag: Int(ColorStyle.gradient2Horizontal.rawValue)),
+            StyleItem(name: NSLocalizedString("Single Color", comment: "single color menu item"),
+                      tag: Int(ColorStyle.singleColor.rawValue),
+                      colorNames: [NSLocalizedString("Color", comment: "single color name")]),
+            StyleItem(name: NSLocalizedString("Two Color Gradient — Horizontal", comment: "two color horizontal gradient menu item"),
+                      tag: Int(ColorStyle.gradient2Horizontal.rawValue),
+                      colorNames: [NSLocalizedString("Right", comment: "two color horizontal gradient, color 1"),
+                                   NSLocalizedString("Left", comment: "two color horizontal gradient, color 2")]),
         ]
     }
 
@@ -32,7 +41,7 @@ class PreferencesViewController: NSViewController {
         let menu = NSMenu()
         for item in PreferencesViewController.styleItems {
             // TODO: Set action here.
-            let menuItem = NSMenuItem(title: item.name, action: nil, keyEquivalent: "")
+            let menuItem = NSMenuItem(title: item.name, action: #selector(PreferencesViewController.styleDidUpdate(sender:)), keyEquivalent: "")
             menuItem.target = self
             menuItem.tag = item.tag
             menu.addItem(menuItem)
@@ -106,9 +115,9 @@ class PreferencesViewController: NSViewController {
         colorPanel.setAction(#selector(PreferencesViewController.colorPanelDidUpdateValue))
     }
 
+    // MARK: - Actions
+
     func colorPanelDidUpdateValue(_ colorPanel: NSColorPanel) {
-        // TODO: Post a notification about color change.
-//        print("color panel did update: \(colorPanel.color)")
         var info = [String:NSColor]()
         for (idx, cv) in colorViews.enumerated() {
             if cv.colorWell.isActive {
@@ -118,6 +127,21 @@ class PreferencesViewController: NSViewController {
             }
         }
         NotificationCenter.default.post(name: PreferencesDidChange_Color, object: nil, userInfo: info)
+    }
+
+    func styleDidUpdate(sender: NSMenuItem) {
+        guard let menu = styleMenu.menu else { return }
+        let idx = menu.index(of: sender)
+        guard idx != -1 && idx < PreferencesViewController.styleItems.count else { return }
+        let styleItem = PreferencesViewController.styleItems[idx]
+        for (idx, colorView) in colorViews.enumerated() {
+            if idx < styleItem.colorNames.count {
+                colorView.isHidden = false
+                colorView.label.stringValue = styleItem.colorNames[idx]
+            } else {
+                colorView.isHidden = true
+            }
+        }
     }
 }
 
