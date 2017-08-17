@@ -38,6 +38,20 @@ public struct Float4 {
         z = b
         w = a
     }
+
+    init(color: NSColor) {
+        if let convertedColor = color.usingColorSpace(NSColorSpace.deviceRGB) {
+            self.init(Float(convertedColor.redComponent), Float(convertedColor.greenComponent), Float(convertedColor.blueComponent), Float(convertedColor.alphaComponent))
+        } else {
+            self.init()
+        }
+    }
+}
+
+extension NSColor {
+    convenience init(float4: Float4) {
+        self.init(deviceRed: CGFloat(float4.x), green: CGFloat(float4.y), blue: CGFloat(float4.z), alpha: CGFloat(float4.w))
+    }
 }
 
 extension Array where Element == Float {
