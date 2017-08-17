@@ -11,15 +11,6 @@ import Cocoa
 internal let PreferencesDidChange_Color = Notification.Name("PreferencesDidChange_Color")
 
 class PreferencesViewController: NSViewController {
-    private static var styleItems: [(name: String, tag: Int)] {
-        return [
-            (name: NSLocalizedString("Single Color", comment: "single color menu item"),
-             tag: Int(ColorStyle.singleColor.rawValue)),
-            (name: NSLocalizedString("Two Color Gradient — Horizontal", comment: "two color horizontal gradient menu item"),
-             tag: Int(ColorStyle.gradient2Horizontal.rawValue)),
-        ]
-    }
-
     public var defaults = UserDefaults.standard
 
     private var colorStackView = NSStackView()
@@ -30,13 +21,8 @@ class PreferencesViewController: NSViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
 
         let menu = NSMenu()
-        for item in PreferencesViewController.styleItems {
-            // TODO: Set action here.
-            let menuItem = NSMenuItem(title: item.name, action: nil, keyEquivalent: "")
-            menuItem.target = self
-            menuItem.tag = item.tag
-            menu.addItem(menuItem)
-        }
+        menu.addItem(withTitle: NSLocalizedString("Single Color", comment: "single color menu item"), action: nil, keyEquivalent: "")
+        menu.addItem(withTitle: NSLocalizedString("Two Color Gradient — Horizontal", comment: "two color horizontal gradient menu item"), action: nil, keyEquivalent: "")
         button.menu = menu
 
         return button
