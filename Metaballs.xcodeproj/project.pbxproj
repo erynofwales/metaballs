@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		C09161701F3F5AE6009C4263 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */; };
 		C0B906D51F45432700B5F89B /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B906D41F45432700B5F89B /* Preferences.swift */; };
+		C0B906DE1F455AD000B5F89B /* MetaballsSaverView.h in Headers */ = {isa = PBXBuildFile; fileRef = C0B906DD1F455AD000B5F89B /* MetaballsSaverView.h */; };
+		C0B906E01F455AD000B5F89B /* MetaballsSaverView.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B906DF1F455AD000B5F89B /* MetaballsSaverView.m */; };
 		C0BBE36B1F2E816500E68524 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE36A1F2E816500E68524 /* AppDelegate.swift */; };
 		C0BBE36D1F2E816500E68524 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE36C1F2E816500E68524 /* ViewController.swift */; };
 		C0BBE36F1F2E816500E68524 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0BBE36E1F2E816500E68524 /* Assets.xcassets */; };
@@ -47,6 +49,10 @@
 /* Begin PBXFileReference section */
 		C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
 		C0B906D41F45432700B5F89B /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		C0B906DB1F455AD000B5F89B /* MetaballsSaver.saver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MetaballsSaver.saver; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0B906DD1F455AD000B5F89B /* MetaballsSaverView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetaballsSaverView.h; sourceTree = "<group>"; };
+		C0B906DF1F455AD000B5F89B /* MetaballsSaverView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MetaballsSaverView.m; sourceTree = "<group>"; };
+		C0B906E11F455AD000B5F89B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C0BBE3671F2E816500E68524 /* Metaballs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Metaballs.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0BBE36A1F2E816500E68524 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C0BBE36C1F2E816500E68524 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -71,6 +77,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		C0B906D71F455AD000B5F89B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C0BBE3641F2E816500E68524 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -106,6 +119,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C0B906DC1F455AD000B5F89B /* MetaballsSaver */ = {
+			isa = PBXGroup;
+			children = (
+				C0B906DD1F455AD000B5F89B /* MetaballsSaverView.h */,
+				C0B906DF1F455AD000B5F89B /* MetaballsSaverView.m */,
+				C0B906E11F455AD000B5F89B /* Info.plist */,
+			);
+			path = MetaballsSaver;
+			sourceTree = "<group>";
+		};
 		C0BBE35E1F2E816500E68524 = {
 			isa = PBXGroup;
 			children = (
@@ -113,6 +136,7 @@
 				C0BBE37B1F2E816500E68524 /* MetaballsTests */,
 				C0BBE38D1F2E81B600E68524 /* MetaballsKit */,
 				C0BBE3981F2E81B600E68524 /* MetaballsKitTests */,
+				C0B906DC1F455AD000B5F89B /* MetaballsSaver */,
 				C0BBE3681F2E816500E68524 /* Products */,
 				C0BBE3A61F2E893A00E68524 /* Frameworks */,
 			);
@@ -125,6 +149,7 @@
 				C0BBE3781F2E816500E68524 /* MetaballsTests.xctest */,
 				C0BBE38C1F2E81B600E68524 /* MetaballsKit.framework */,
 				C0BBE3941F2E81B600E68524 /* MetaballsKitTests.xctest */,
+				C0B906DB1F455AD000B5F89B /* MetaballsSaver.saver */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -186,6 +211,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		C0B906D81F455AD000B5F89B /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0B906DE1F455AD000B5F89B /* MetaballsSaverView.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C0BBE3891F2E81B600E68524 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -197,6 +230,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		C0B906DA1F455AD000B5F89B /* MetaballsSaver */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0B906E21F455AD000B5F89B /* Build configuration list for PBXNativeTarget "MetaballsSaver" */;
+			buildPhases = (
+				C0B906D61F455AD000B5F89B /* Sources */,
+				C0B906D71F455AD000B5F89B /* Frameworks */,
+				C0B906D81F455AD000B5F89B /* Headers */,
+				C0B906D91F455AD000B5F89B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MetaballsSaver;
+			productName = MetaballsSaver;
+			productReference = C0B906DB1F455AD000B5F89B /* MetaballsSaver.saver */;
+			productType = "com.apple.product-type.bundle";
+		};
 		C0BBE3661F2E816500E68524 /* Metaballs */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C0BBE3811F2E816500E68524 /* Build configuration list for PBXNativeTarget "Metaballs" */;
@@ -278,6 +329,11 @@
 				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = "Eryn Wells";
 				TargetAttributes = {
+					C0B906DA1F455AD000B5F89B = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = 78372RE6B4;
+						ProvisioningStyle = Automatic;
+					};
 					C0BBE3661F2E816500E68524 = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = 78372RE6B4;
@@ -319,11 +375,19 @@
 				C0BBE3771F2E816500E68524 /* MetaballsTests */,
 				C0BBE38B1F2E81B600E68524 /* MetaballsKit */,
 				C0BBE3931F2E81B600E68524 /* MetaballsKitTests */,
+				C0B906DA1F455AD000B5F89B /* MetaballsSaver */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		C0B906D91F455AD000B5F89B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C0BBE3651F2E816500E68524 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -357,6 +421,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		C0B906D61F455AD000B5F89B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0B906E01F455AD000B5F89B /* MetaballsSaverView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C0BBE3631F2E816500E68524 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -423,6 +495,32 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		C0B906E31F455AD000B5F89B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 78372RE6B4;
+				INFOPLIST_FILE = MetaballsSaver/Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Screen Savers";
+				PRODUCT_BUNDLE_IDENTIFIER = me.erynwells.MetaballsSaver;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = saver;
+			};
+			name = Debug;
+		};
+		C0B906E41F455AD000B5F89B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 78372RE6B4;
+				INFOPLIST_FILE = MetaballsSaver/Info.plist;
+				INSTALL_PATH = "$(HOME)/Library/Screen Savers";
+				PRODUCT_BUNDLE_IDENTIFIER = me.erynwells.MetaballsSaver;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = saver;
+			};
+			name = Release;
+		};
 		C0BBE37F1F2E816500E68524 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -657,6 +755,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		C0B906E21F455AD000B5F89B /* Build configuration list for PBXNativeTarget "MetaballsSaver" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0B906E31F455AD000B5F89B /* Debug */,
+				C0B906E41F455AD000B5F89B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		C0BBE3621F2E816500E68524 /* Build configuration list for PBXProject "Metaballs" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
