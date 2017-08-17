@@ -13,6 +13,9 @@
 		C0B906E01F455AD000B5F89B /* MetaballsSaverView.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B906DF1F455AD000B5F89B /* MetaballsSaverView.m */; };
 		C0B906E51F455B7C00B5F89B /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3AB1F2E941200E68524 /* Renderer.swift */; };
 		C0B906E61F455B7E00B5F89B /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3A91F2E91D900E68524 /* Shaders.metal */; };
+		C0B906E71F455C2F00B5F89B /* MetaballsKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE38C1F2E81B600E68524 /* MetaballsKit.framework */; };
+		C0B906E91F455D1A00B5F89B /* MetaballsSaverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B906E81F455D1A00B5F89B /* MetaballsSaverView.swift */; };
+		C0B906EA1F455EB300B5F89B /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE3A71F2E893A00E68524 /* MetalKit.framework */; };
 		C0BBE36B1F2E816500E68524 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE36A1F2E816500E68524 /* AppDelegate.swift */; };
 		C0BBE36D1F2E816500E68524 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE36C1F2E816500E68524 /* ViewController.swift */; };
 		C0BBE36F1F2E816500E68524 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0BBE36E1F2E816500E68524 /* Assets.xcassets */; };
@@ -53,6 +56,7 @@
 		C0B906DD1F455AD000B5F89B /* MetaballsSaverView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetaballsSaverView.h; sourceTree = "<group>"; };
 		C0B906DF1F455AD000B5F89B /* MetaballsSaverView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MetaballsSaverView.m; sourceTree = "<group>"; };
 		C0B906E11F455AD000B5F89B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C0B906E81F455D1A00B5F89B /* MetaballsSaverView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetaballsSaverView.swift; sourceTree = "<group>"; };
 		C0BBE3671F2E816500E68524 /* Metaballs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Metaballs.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0BBE36A1F2E816500E68524 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C0BBE36C1F2E816500E68524 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -81,6 +85,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0B906EA1F455EB300B5F89B /* MetalKit.framework in Frameworks */,
+				C0B906E71F455C2F00B5F89B /* MetaballsKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,6 +130,7 @@
 			children = (
 				C0B906DD1F455AD000B5F89B /* MetaballsSaverView.h */,
 				C0B906DF1F455AD000B5F89B /* MetaballsSaverView.m */,
+				C0B906E81F455D1A00B5F89B /* MetaballsSaverView.swift */,
 				C0B906E11F455AD000B5F89B /* Info.plist */,
 			);
 			path = MetaballsSaver;
@@ -332,6 +339,7 @@
 					C0B906DA1F455AD000B5F89B = {
 						CreatedOnToolsVersion = 8.3.3;
 						DevelopmentTeam = 78372RE6B4;
+						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
 					};
 					C0BBE3661F2E816500E68524 = {
@@ -425,6 +433,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0B906E91F455D1A00B5F89B /* MetaballsSaverView.swift in Sources */,
 				C0B906E01F455AD000B5F89B /* MetaballsSaverView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -498,12 +507,16 @@
 		C0B906E31F455AD000B5F89B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 78372RE6B4;
 				INFOPLIST_FILE = MetaballsSaver/Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Screen Savers";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.erynwells.MetaballsSaver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				WRAPPER_EXTENSION = saver;
 			};
 			name = Debug;
@@ -511,12 +524,15 @@
 		C0B906E41F455AD000B5F89B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 78372RE6B4;
 				INFOPLIST_FILE = MetaballsSaver/Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Screen Savers";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.erynwells.MetaballsSaver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				WRAPPER_EXTENSION = saver;
 			};
 			name = Release;

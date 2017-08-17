@@ -8,6 +8,6 @@
 
 #import <ScreenSaver/ScreenSaver.h>
 
-@interface MetaballsSaverView : ScreenSaverView
+@interface MetaballsSaverViewX : ScreenSaverView
 
 @end

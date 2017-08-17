@@ -6,9 +6,11 @@
 //  Copyright © 2017 Eryn Wells. All rights reserved.
 //
 
+@import MetaballsKit;
+
 #import "MetaballsSaverView.h"
 
-@implementation MetaballsSaverView
+@implementation MetaballsSaverViewX
 
 - (instancetype)initWithFrame:(NSRect)frame isPreview:(BOOL)isPreview
 {
