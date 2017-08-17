@@ -13,9 +13,13 @@ import MetaballsKit
 class ViewController: NSViewController, RendererDelegate {
     private static func defaultParameters() -> Parameters {
         var p = Parameters()
-        p.colorStyle = .gradient2Horizontal
-        p.color0 = Float4(0.50, 0.79, 1, 1)
-        p.color1 = Float4(0.88, 0.50, 1, 1)
+        let defaults = UserDefaults.standard
+        let style = defaults.colorStyle ?? .gradient2Horizontal
+        p.colorStyle = style
+        let color0 = defaults.color0 ?? Float4(0.50, 0.79, 1, 1)
+        p.color0 = color0
+        let color1 = defaults.color1 ?? Float4(0.88, 0.50, 1, 1)
+        p.color1 = color1
         return p
     }
 
