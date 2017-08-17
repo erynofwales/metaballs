@@ -8,8 +8,51 @@
 
 import Cocoa
 
-class PreferencesWindowController: NSWindowController {
-    override func prepare(for segue: NSStoryboardSegue, sender: Any?) {
-        print("prepare for segue:\(segue), sender:\(String(describing: sender))")
+extension UserDefaults {
+    var color0: Float4? {
+        get {
+            return float4(forKey: "color0")
+        }
+        set {
+            set(newValue, forKey: "color0")
+        }
+    }
+
+    var color1: Float4? {
+        get {
+            return float4(forKey: "color1")
+        }
+        set {
+            set(newValue, forKey: "color1")
+        }
+    }
+
+    var color2: Float4? {
+        get {
+            return float4(forKey: "color2")
+        }
+        set {
+            set(newValue, forKey: "color2")
+        }
+    }
+
+    var color3: Float4? {
+        get {
+            return float4(forKey: "color3")
+        }
+        set {
+            set(newValue, forKey: "color3")
+        }
+    }
+
+    func float4(forKey key: String) -> Float4? {
+        guard let values = array(forKey: key) as? [Float], values.count >= 4 else {
+            return nil
+        }
+        return Float4(values[0], values[1], values[2], values[3])
+    }
+
+    func set(value: Float4, forKey key: String) {
+        set([Float](float4: value), forKey: key)
     }
 }
