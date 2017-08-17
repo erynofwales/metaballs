@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C03904B31F43CF3F00C74022 /* PreferencesWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C03904B11F43CF3700C74022 /* PreferencesWindowController.swift */; };
 		C09161701F3F5AE6009C4263 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */; };
 		C0B906D51F45432700B5F89B /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B906D41F45432700B5F89B /* Preferences.swift */; };
 		C0BBE36B1F2E816500E68524 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE36A1F2E816500E68524 /* AppDelegate.swift */; };
@@ -46,7 +45,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		C03904B11F43CF3700C74022 /* PreferencesWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesWindowController.swift; sourceTree = "<group>"; };
 		C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
 		C0B906D41F45432700B5F89B /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		C0BBE3671F2E816500E68524 /* Metaballs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Metaballs.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -164,7 +162,6 @@
 				C0DF1D781F3789DC0038B0A0 /* Memory.swift */,
 				C0B906D41F45432700B5F89B /* Preferences.swift */,
 				C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */,
-				C03904B11F43CF3700C74022 /* PreferencesWindowController.swift */,
 			);
 			path = MetaballsKit;
 			sourceTree = "<group>";
@@ -383,7 +380,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C03904B31F43CF3F00C74022 /* PreferencesWindowController.swift in Sources */,
 				C0DF1D791F3789DC0038B0A0 /* Memory.swift in Sources */,
 				C0B906D51F45432700B5F89B /* Preferences.swift in Sources */,
 				C0BBE3A41F2E81C700E68524 /* Metaballs.swift in Sources */,

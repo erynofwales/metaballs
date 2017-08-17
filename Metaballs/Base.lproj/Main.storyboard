@@ -224,7 +224,7 @@
         <!--Window Controller-->
         <scene sceneID="wc9-ue-Eil">
             <objects>
-                <windowController showSeguePresentationStyle="single" id="UFt-7I-hit" customClass="PreferencesWindowController" customModule="MetaballsKit" sceneMemberID="viewController">
+                <windowController showSeguePresentationStyle="single" id="UFt-7I-hit" sceneMemberID="viewController">
                     <window key="window" title="Preferences" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="5zN-Bj-JVR" userLabel="Preferences">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
