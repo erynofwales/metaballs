@@ -117,6 +117,7 @@ public class Field {
 
     private(set) var balls = [Ball]()
 
+    public var defaults = UserDefaults.standard
     private var parameters: Parameters
 
     internal var bounds: CGRect {
@@ -125,6 +126,11 @@ public class Field {
 
     public init(parameters p: Parameters) {
         parameters = p
+        NotificationCenter.default.addObserver(self, selector: #selector(Field.preferencesDidChange(note:)), name: PreferencesDidChange_Color, object: nil)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: PreferencesDidChange_Color, object: nil)
     }
 
     public func update() {
@@ -245,5 +251,41 @@ public class Field {
         self.device = device
         populateParametersBuffer()
         populateBallBuffer()
+    }
+
+    // MARK: - Notifications
+
+    @objc
+    func preferencesDidChange(note: Notification) {
+        guard let userInfo = note.userInfo else { return }
+        var didChange = false
+        if let color = userInfo["color0"] as? NSColor {
+            let cf = Float4(color: color)
+            parameters.color0 = cf
+            defaults.color0 = cf
+            didChange = true
+        }
+        if let color = userInfo["color1"] as? NSColor {
+            let cf = Float4(color: color)
+            parameters.color1 = cf
+            defaults.color1 = cf
+            didChange = true
+        }
+        if let color = userInfo["color2"] as? NSColor {
+            let cf = Float4(color: color)
+            parameters.color2 = cf
+            defaults.color2 = cf
+            didChange = true
+        }
+        if let color = userInfo["color3"] as? NSColor {
+            let cf = Float4(color: color)
+            parameters.color3 = cf
+            defaults.color3 = cf
+            didChange = true
+        }
+
+        if didChange {
+            populateParametersBuffer()
+        }
     }
 }

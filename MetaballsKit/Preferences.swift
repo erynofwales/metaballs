@@ -52,7 +52,11 @@ extension UserDefaults {
         return Float4(values[0], values[1], values[2], values[3])
     }
 
-    func set(value: Float4, forKey key: String) {
-        set([Float](float4: value), forKey: key)
+    func set(_ value: Float4?, forKey key: String) {
+        if let value = value {
+            set([Float](float4: value), forKey: key)
+        } else {
+            set(nil as Any?, forKey: key)
+        }
     }
 }

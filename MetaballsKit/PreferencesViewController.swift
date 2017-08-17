@@ -91,12 +91,9 @@ class PreferencesViewController: NSViewController {
     }
 
     private func prepareColorViews() {
-        guard let colors = defaults.array(forKey: "colors") else { return }
         for (idx, cv) in colorViews.enumerated() {
-            if idx >= colors.count {
-                continue
-            }
-            if let color = colors[idx] as? NSColor {
+            if let fColor = defaults.float4(forKey: "color\(idx)") {
+                let color = NSColor(float4: fColor)
                 cv.colorWell.color = color
             }
         }
@@ -111,20 +108,16 @@ class PreferencesViewController: NSViewController {
 
     func colorPanelDidUpdateValue(_ colorPanel: NSColorPanel) {
         // TODO: Post a notification about color change.
-        print("color panel did update: \(colorPanel.color)")
-        var info = [String:Any]()
-        if let currentStyleItem = styleMenu.selectedItem {
-            info["style"] = ColorStyle(rawValue: UInt16(currentStyleItem.tag))!
-        }
+//        print("color panel did update: \(colorPanel.color)")
+        var info = [String:NSColor]()
         for (idx, cv) in colorViews.enumerated() {
-            let key = "color\(idx)"
             if cv.colorWell.isActive {
-                info[key] = colorPanel.color
+                info["color\(idx)"] = colorPanel.color
             } else {
-                info[key] = cv.colorWell.color
+                info["color\(idx)"] = cv.colorWell.color
             }
         }
-        NotificationCenter.default.post(name: PreferencesDidChange_Color, object: self, userInfo: info)
+        NotificationCenter.default.post(name: PreferencesDidChange_Color, object: nil, userInfo: info)
     }
 }
 
