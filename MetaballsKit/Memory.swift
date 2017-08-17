@@ -39,3 +39,9 @@ public struct Float4 {
         w = a
     }
 }
+
+extension Array where Element == Float {
+    init(float4: Float4) {
+        self.init(arrayLiteral: float4.x, float4.y, float4.z, float4.w)
+    }
+}
