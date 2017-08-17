@@ -9,7 +9,24 @@
 import Cocoa
 
 extension UserDefaults {
-    var color0: Float4? {
+    public var colorStyle: ColorStyle? {
+        get {
+            let value = integer(forKey: "colorStyle")
+            if let colorStyle = ColorStyle(rawValue: UInt16(value)) {
+                return colorStyle
+            }
+            return nil
+        }
+        set {
+            if let style = newValue {
+                set(style.rawValue, forKey: "colorStyle")
+            } else {
+                set(nil as Any?, forKey: "colorStyle")
+            }
+        }
+    }
+
+    public var color0: Float4? {
         get {
             return float4(forKey: "color0")
         }
@@ -18,7 +35,7 @@ extension UserDefaults {
         }
     }
 
-    var color1: Float4? {
+    public var color1: Float4? {
         get {
             return float4(forKey: "color1")
         }
@@ -27,7 +44,7 @@ extension UserDefaults {
         }
     }
 
-    var color2: Float4? {
+    public var color2: Float4? {
         get {
             return float4(forKey: "color2")
         }
@@ -36,7 +53,7 @@ extension UserDefaults {
         }
     }
 
-    var color3: Float4? {
+    public var color3: Float4? {
         get {
             return float4(forKey: "color3")
         }

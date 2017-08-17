@@ -118,20 +118,18 @@ class PreferencesViewController: NSViewController {
     // MARK: - Actions
 
     func colorPanelDidUpdateValue(_ colorPanel: NSColorPanel) {
-        var info = [String:NSColor]()
-        for (idx, cv) in colorViews.enumerated() {
-            if cv.colorWell.isActive {
-                info["color\(idx)"] = colorPanel.color
-            } else {
-                info["color\(idx)"] = cv.colorWell.color
-            }
-        }
-        NotificationCenter.default.post(name: PreferencesDidChange_Color, object: nil, userInfo: info)
+        postColorNotification()
     }
 
     func styleDidUpdate(sender: NSMenuItem) {
-        guard let menu = styleMenu.menu else { return }
-        let idx = menu.index(of: sender)
+        updateColorViewVisibility()
+        postColorNotification()
+    }
+
+    // MARK: - Private
+
+    func updateColorViewVisibility() {
+        let idx = styleMenu.indexOfSelectedItem
         guard idx != -1 && idx < PreferencesViewController.styleItems.count else { return }
         let styleItem = PreferencesViewController.styleItems[idx]
         for (idx, colorView) in colorViews.enumerated() {
@@ -142,6 +140,17 @@ class PreferencesViewController: NSViewController {
                 colorView.isHidden = true
             }
         }
+    }
+
+    func postColorNotification() {
+        var info = [String:Any]()
+        if let item = styleMenu.selectedItem {
+            info["colorStyle"] = ColorStyle(rawValue: UInt16(item.tag))
+        }
+        for (idx, cv) in colorViews.enumerated() {
+            info["color\(idx)"] = cv.colorWell.color
+        }
+        NotificationCenter.default.post(name: PreferencesDidChange_Color, object: nil, userInfo: info)
     }
 }
 

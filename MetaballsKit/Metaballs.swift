@@ -259,6 +259,11 @@ public class Field {
     func preferencesDidChange(note: Notification) {
         guard let userInfo = note.userInfo else { return }
         var didChange = false
+        if let style = userInfo["colorStyle"] as? ColorStyle {
+            parameters.colorStyle = style
+            defaults.colorStyle = style
+            didChange = true
+        }
         if let color = userInfo["color0"] as? NSColor {
             let cf = Float4(color: color)
             parameters.color0 = cf
