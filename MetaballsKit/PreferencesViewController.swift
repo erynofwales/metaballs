@@ -76,13 +76,23 @@ class PreferencesViewController: NSViewController {
         ])
 
         colorStackView.addArrangedSubview(styleMenu)
+        var firstColorView: ColorView? = nil
+        var constraints = [NSLayoutConstraint]()
         for i in 0..<4 {
             let colorView = ColorView()
             colorView.translatesAutoresizingMaskIntoConstraints = false
             colorView.label.stringValue = "Color \(i+1)"
             colorStackView.addArrangedSubview(colorView)
             colorViews.append(colorView)
+
+            if let firstColorView = firstColorView {
+                let constraint = colorView.widthAnchor.constraint(equalTo: firstColorView.widthAnchor, multiplier: 1)
+                constraints.append(constraint)
+            } else {
+                firstColorView = colorView
+            }
         }
+        NSLayoutConstraint.activate(constraints)
 
         self.view = view
     }
