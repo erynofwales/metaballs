@@ -90,6 +90,10 @@ class PreferencesViewController: NSViewController {
 
     override func viewWillAppear() {
         super.viewWillAppear()
+        if let style = defaults.colorStyle {
+            styleMenu.selectItem(withTag: Int(style.rawValue))
+            updateColorViewVisibility()
+        }
         prepareColorViews()
         prepareColorPanel()
     }
