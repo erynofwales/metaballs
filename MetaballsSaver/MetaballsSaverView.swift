@@ -11,7 +11,7 @@ import MetaballsKit
 import MetalKit
 import ScreenSaver
 
-class MetaballsSaverView: ScreenSaverView, RendererDelegate {
+public class MetaballsSaverView: ScreenSaverView, RendererDelegate {
     private static func defaultParameters() -> Parameters {
         var p = Parameters()
         let defaults = UserDefaults.standard
@@ -32,56 +32,51 @@ class MetaballsSaverView: ScreenSaverView, RendererDelegate {
         }
     }
 
-    internal var renderer: RendererDelegate
+    internal var renderer: Renderer
 
-    override init?(frame: NSRect, isPreview: Bool) {
+    override public init?(frame: NSRect, isPreview: Bool) {
         let params = MetaballsSaverView.defaultParameters()
         field = Field(parameters: params)
-
         metalView = MTKView()
-        metalView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(metalView)
-        NSLayoutConstraint.activate([
-            metalView.topAnchor.constraint(equalTo: topAnchor),
-            metalView.leftAnchor.constraint(equalTo: leftAnchor),
-            metalView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            metalView.rightAnchor.constraint(equalTo: rightAnchor),
-        ])
-
-        do {
-            renderer = try Renderer(delegate: self)
-        } catch let e {
-            fatalError("\(e)")
-        }
+        renderer = Renderer()
 
         super.init(frame: frame, isPreview: isPreview)
+
+        animationTimeInterval = 1 / 30.0
     }
     
-    required init?(coder: NSCoder) {
-        let params = MetaballsSaverView.defaultParameters()
-        field = Field(parameters: params)
-
-        metalView = MTKView()
-        metalView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(metalView)
-        NSLayoutConstraint.activate([
-            metalView.topAnchor.constraint(equalTo: topAnchor),
-            metalView.leftAnchor.constraint(equalTo: leftAnchor),
-            metalView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            metalView.rightAnchor.constraint(equalTo: rightAnchor),
-        ])
-
-        do {
-            renderer = try Renderer(delegate: self)
-        } catch let e {
-            fatalError("\(e)")
-        }
-
-        super.init(coder: coder)
+    required public init?(coder: NSCoder) {
+        fatalError("initWithCoder: not implemented")
     }
 
-    override func animateOneFrame() {
+    override public func startAnimation() {
+        if metalView.superview == nil {
+            metalView.isPaused = true   // Don't use the Metal View's internal timer.
+            metalView.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(metalView)
+            NSLayoutConstraint.activate([
+                metalView.topAnchor.constraint(equalTo: topAnchor),
+                metalView.leftAnchor.constraint(equalTo: leftAnchor),
+                metalView.bottomAnchor.constraint(equalTo: bottomAnchor),
+                metalView.rightAnchor.constraint(equalTo: rightAnchor),
+            ])
+            renderer.delegate = self
+        }
+        super.startAnimation()
+    }
 
+    override public func animateOneFrame() {
+        metalView.draw()
+    }
+
+    override public func hasConfigureSheet() -> Bool {
+        return true
+    }
+
+    override public func configureSheet() -> NSWindow? {
+        let preferencesViewController = PreferencesViewController()
+        let window = NSWindow(contentViewController: preferencesViewController)
+        return window
     }
 
     // MARK: - RendererDelegate
