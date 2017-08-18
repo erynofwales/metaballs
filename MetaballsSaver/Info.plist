@@ -21,6 +21,6 @@
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2017 Eryn Wells. All rights reserved.</string>
 	<key>NSPrincipalClass</key>
-	<string>MetaballsSaverView</string>
+	<string>${PRODUCT_MODULE_NAME}.MetaballsSaverView</string>
 </dict>
 </plist>
