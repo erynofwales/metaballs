@@ -14,6 +14,7 @@
 		C0B906E71F455C2F00B5F89B /* MetaballsKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE38C1F2E81B600E68524 /* MetaballsKit.framework */; };
 		C0B906E91F455D1A00B5F89B /* MetaballsSaverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B906E81F455D1A00B5F89B /* MetaballsSaverView.swift */; };
 		C0B906EA1F455EB300B5F89B /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE3A71F2E893A00E68524 /* MetalKit.framework */; };
+		C0B906ED1F473E1000B5F89B /* MetaballsKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE38C1F2E81B600E68524 /* MetaballsKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C0BBE36B1F2E816500E68524 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE36A1F2E816500E68524 /* AppDelegate.swift */; };
 		C0BBE36D1F2E816500E68524 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE36C1F2E816500E68524 /* ViewController.swift */; };
 		C0BBE36F1F2E816500E68524 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0BBE36E1F2E816500E68524 /* Assets.xcassets */; };
@@ -251,6 +252,7 @@
 				C0B906D61F455AD000B5F89B /* Sources */,
 				C0B906D71F455AD000B5F89B /* Frameworks */,
 				C0B906D81F455AD000B5F89B /* Headers */,
+				C0B906EC1F473E0400B5F89B /* Copy Frameworks */,
 				C0B906D91F455AD000B5F89B /* Resources */,
 			);
 			buildRules = (
