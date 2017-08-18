@@ -16,7 +16,7 @@ private struct StyleItem {
     let colorNames: [String]
 }
 
-class PreferencesViewController: NSViewController {
+public class PreferencesViewController: NSViewController {
     private static var styleItems: [StyleItem] {
         return [
             StyleItem(name: NSLocalizedString("Single Color", comment: "single color menu item"),
@@ -51,7 +51,7 @@ class PreferencesViewController: NSViewController {
         return button
     }()
 
-    override func loadView() {
+    override public func loadView() {
         let view = NSView()
         view.translatesAutoresizingMaskIntoConstraints = false
 
@@ -88,7 +88,7 @@ class PreferencesViewController: NSViewController {
     }
 
 
-    override func viewWillAppear() {
+    override public func viewWillAppear() {
         super.viewWillAppear()
         if let style = defaults.colorStyle {
             styleMenu.selectItem(withTag: Int(style.rawValue))
@@ -98,7 +98,7 @@ class PreferencesViewController: NSViewController {
         prepareColorPanel()
     }
 
-    override func viewWillDisappear() {
+    override public func viewWillDisappear() {
         super.viewWillDisappear()
         NSColorPanel.shared().close()
     }
