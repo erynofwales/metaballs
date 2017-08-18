@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		C09161701F3F5AE6009C4263 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */; };
 		C0B906D51F45432700B5F89B /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B906D41F45432700B5F89B /* Preferences.swift */; };
-		C0B906DE1F455AD000B5F89B /* MetaballsSaverView.h in Headers */ = {isa = PBXBuildFile; fileRef = C0B906DD1F455AD000B5F89B /* MetaballsSaverView.h */; };
-		C0B906E01F455AD000B5F89B /* MetaballsSaverView.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B906DF1F455AD000B5F89B /* MetaballsSaverView.m */; };
 		C0B906E51F455B7C00B5F89B /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3AB1F2E941200E68524 /* Renderer.swift */; };
 		C0B906E61F455B7E00B5F89B /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3A91F2E91D900E68524 /* Shaders.metal */; };
 		C0B906E71F455C2F00B5F89B /* MetaballsKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE38C1F2E81B600E68524 /* MetaballsKit.framework */; };
@@ -53,8 +51,6 @@
 		C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
 		C0B906D41F45432700B5F89B /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		C0B906DB1F455AD000B5F89B /* MetaballsSaver.saver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MetaballsSaver.saver; sourceTree = BUILT_PRODUCTS_DIR; };
-		C0B906DD1F455AD000B5F89B /* MetaballsSaverView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetaballsSaverView.h; sourceTree = "<group>"; };
-		C0B906DF1F455AD000B5F89B /* MetaballsSaverView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MetaballsSaverView.m; sourceTree = "<group>"; };
 		C0B906E11F455AD000B5F89B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C0B906E81F455D1A00B5F89B /* MetaballsSaverView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetaballsSaverView.swift; sourceTree = "<group>"; };
 		C0BBE3671F2E816500E68524 /* Metaballs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Metaballs.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -128,8 +124,6 @@
 		C0B906DC1F455AD000B5F89B /* MetaballsSaver */ = {
 			isa = PBXGroup;
 			children = (
-				C0B906DD1F455AD000B5F89B /* MetaballsSaverView.h */,
-				C0B906DF1F455AD000B5F89B /* MetaballsSaverView.m */,
 				C0B906E81F455D1A00B5F89B /* MetaballsSaverView.swift */,
 				C0B906E11F455AD000B5F89B /* Info.plist */,
 			);
@@ -222,7 +216,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C0B906DE1F455AD000B5F89B /* MetaballsSaverView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -434,7 +427,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0B906E91F455D1A00B5F89B /* MetaballsSaverView.swift in Sources */,
-				C0B906E01F455AD000B5F89B /* MetaballsSaverView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
