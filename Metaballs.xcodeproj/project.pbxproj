@@ -47,10 +47,24 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		C0B906EC1F473E0400B5F89B /* Copy Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				C0B906ED1F473E1000B5F89B /* MetaballsKit.framework in Copy Frameworks */,
+			);
+			name = "Copy Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
 		C0B906D41F45432700B5F89B /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
-		C0B906DB1F455AD000B5F89B /* MetaballsSaver.saver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MetaballsSaver.saver; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0B906DB1F455AD000B5F89B /* Metaballs.saver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Metaballs.saver; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0B906E11F455AD000B5F89B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C0B906E81F455D1A00B5F89B /* MetaballsSaverView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetaballsSaverView.swift; sourceTree = "<group>"; };
 		C0BBE3671F2E816500E68524 /* Metaballs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Metaballs.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -150,7 +164,7 @@
 				C0BBE3781F2E816500E68524 /* MetaballsTests.xctest */,
 				C0BBE38C1F2E81B600E68524 /* MetaballsKit.framework */,
 				C0BBE3941F2E81B600E68524 /* MetaballsKitTests.xctest */,
-				C0B906DB1F455AD000B5F89B /* MetaballsSaver.saver */,
+				C0B906DB1F455AD000B5F89B /* Metaballs.saver */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -245,7 +259,7 @@
 			);
 			name = MetaballsSaver;
 			productName = MetaballsSaver;
-			productReference = C0B906DB1F455AD000B5F89B /* MetaballsSaver.saver */;
+			productReference = C0B906DB1F455AD000B5F89B /* Metaballs.saver */;
 			productType = "com.apple.product-type.bundle";
 		};
 		C0BBE3661F2E816500E68524 /* Metaballs */ = {
