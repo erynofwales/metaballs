@@ -94,9 +94,8 @@ public class Field {
             return parameters.size
         }
         set {
+            NSLog("Updating size of field: old:\(parameters.size), new:\(newValue)")
             if parameters.size != newValue {
-                NSLog("Updating size of field: old:\(parameters.size), new:\(newValue)")
-
                 // Scale balls to new position and size.
                 let scale = parameters.size.width != 0 ? Float(newValue.width / parameters.size.width) : 1
                 balls = balls.map {
