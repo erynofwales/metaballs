@@ -71,6 +71,10 @@ public class MetaballsSaverView: ScreenSaverView, RendererDelegate {
         super.startAnimation()
     }
 
+    override public func stopAnimation() {
+        super.stopAnimation()
+    }
+
     override public func animateOneFrame() {
         metalView.draw()
     }
