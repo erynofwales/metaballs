@@ -36,8 +36,9 @@ public class MetaballsSaverView: ScreenSaverView, RendererDelegate {
 
     override public init?(frame: NSRect, isPreview: Bool) {
         let params = MetaballsSaverView.defaultParameters()
+        metalView = MetalView()
         field = Field(parameters: params)
-        metalView = MTKView()
+        field.size = Size(size: frame.size)
         renderer = Renderer()
 
         super.init(frame: frame, isPreview: isPreview)
@@ -88,5 +89,11 @@ public class MetaballsSaverView: ScreenSaverView, RendererDelegate {
         set {
             field.size = newValue
         }
+    }
+}
+
+class MetalView: MTKView {
+    override var isOpaque: Bool {
+        return true
     }
 }
