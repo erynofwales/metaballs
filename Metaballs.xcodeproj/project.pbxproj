@@ -134,12 +134,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		C0B906DC1F455AD000B5F89B /* MetaballsSaver */ = {
+		C0B906DC1F455AD000B5F89B /* Screensaver */ = {
 			isa = PBXGroup;
 			children = (
 				C0B906E81F455D1A00B5F89B /* MetaballsSaverView.swift */,
 				C0B906E11F455AD000B5F89B /* Info.plist */,
 			);
+			name = Screensaver;
 			path = MetaballsSaver;
 			sourceTree = "<group>";
 		};
@@ -147,10 +148,10 @@
 			isa = PBXGroup;
 			children = (
 				C0BBE3691F2E816500E68524 /* Metaballs */,
+				C0B906DC1F455AD000B5F89B /* Screensaver */,
+				C0BBE38D1F2E81B600E68524 /* Kit */,
 				C0BBE37B1F2E816500E68524 /* MetaballsTests */,
-				C0BBE38D1F2E81B600E68524 /* MetaballsKit */,
 				C0BBE3981F2E81B600E68524 /* MetaballsKitTests */,
-				C0B906DC1F455AD000B5F89B /* MetaballsSaver */,
 				C0BBE3681F2E816500E68524 /* Products */,
 				C0BBE3A61F2E893A00E68524 /* Frameworks */,
 			);
@@ -189,7 +190,7 @@
 			path = MetaballsTests;
 			sourceTree = "<group>";
 		};
-		C0BBE38D1F2E81B600E68524 /* MetaballsKit */ = {
+		C0BBE38D1F2E81B600E68524 /* Kit */ = {
 			isa = PBXGroup;
 			children = (
 				C0BBE38E1F2E81B600E68524 /* MetaballsKit.h */,
@@ -202,6 +203,7 @@
 				C0B906D41F45432700B5F89B /* Preferences.swift */,
 				C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */,
 			);
+			name = Kit;
 			path = MetaballsKit;
 			sourceTree = "<group>";
 		};
