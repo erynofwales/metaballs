@@ -790,6 +790,7 @@
 				C0B906E41F455AD000B5F89B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C0BBE3621F2E816500E68524 /* Build configuration list for PBXProject "Metaballs" */ = {
 			isa = XCConfigurationList;
