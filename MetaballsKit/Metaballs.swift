@@ -64,7 +64,6 @@ public struct Parameters {
         let start = buffer.contents().advanced(by: offset)
         let stride = MemoryLayout.stride(ofValue: self)
         start.copyBytes(from: &self, count: stride)
-        NSLog("Populated parameters: size:\(size), n:\(numberOfBalls), style:\(colorStyle)(\(_colorStyle))")
     }
 }
 
