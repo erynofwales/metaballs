@@ -63,6 +63,11 @@ public class MetaballsSaverView: ScreenSaverView, RendererDelegate {
             ])
             renderer.delegate = self
         }
+
+        for _ in 1...10 {
+            addBallWithRandomRadius()
+        }
+
         super.startAnimation()
     }
 
@@ -78,6 +83,15 @@ public class MetaballsSaverView: ScreenSaverView, RendererDelegate {
         let preferencesViewController = PreferencesViewController()
         let window = NSWindow(contentViewController: preferencesViewController)
         return window
+    }
+
+    // MARK: - Private
+
+    private func addBallWithRandomRadius() {
+        let base = UInt32(bounds.width * 0.05)
+        let variance = UInt32(base * 2)
+        let r = Float(base + arc4random_uniform(variance))
+        field.add(ballWithRadius: r)
     }
 
     // MARK: - RendererDelegate
