@@ -90,6 +90,13 @@ public class MetaballsSaverView: ScreenSaverView, RendererDelegate {
         return window
     }
 
+    // MARK: - NSView
+
+    override public func setFrameSize(_ newSize: NSSize) {
+        super.setFrameSize(newSize)
+        NSLog("Resizing: \(newSize)")
+    }
+
     // MARK: - Private
 
     private func addBallWithRandomRadius() {
