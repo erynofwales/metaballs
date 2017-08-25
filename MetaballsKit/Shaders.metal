@@ -50,6 +50,8 @@ typedef struct {
 
 typedef float3 Ball;
 
+#pragma mark - Vertex
+
 vertex RasterizerData
 passthroughVertexShader(uint vid                    [[vertex_id]],
                         constant Vertex* vertexes   [[buffer(0)]])
@@ -63,13 +65,15 @@ passthroughVertexShader(uint vid                    [[vertex_id]],
 
 float sampleAtPoint(float2, constant Ball*, int);
 
-// Color samplers
+#pragma mark - Color Samplers
 float4 singleColor(float, float, float, float4);
 float4 gradient2(float, float, float, float, float4, float4);
 
-// Helpers
+#pragma mark - Helpers
 float mapValueFromRangeOntoRange(float, float, float, float, float);
 float4 averageTwoColors(float, float4, float4);
+
+#pragma mark - Fragment
 
 fragment float4
 sampleToColorShader(RasterizerData in               [[stage_in]],
