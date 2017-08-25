@@ -41,7 +41,6 @@ public class PreferencesViewController: NSViewController {
 
     private lazy var targetSlider: SliderView = {
         let targetSlider = SliderView(label: NSLocalizedString("Target", comment: "name of the target slider"))
-        targetSlider.slider.tag = Slider.target.rawValue
         if #available(OSX 10.12.2, *) {
             targetSlider.slider.trackFillColor = nil
         }
@@ -55,7 +54,6 @@ public class PreferencesViewController: NSViewController {
 
     private lazy var featherSlider: SliderView = {
         let featherSlider = SliderView(label: NSLocalizedString("Feather", comment: "name of the feather slider"))
-        featherSlider.slider.tag = Slider.feather.rawValue
         if #available(OSX 10.12.2, *) {
             featherSlider.slider.trackFillColor = nil
         }
