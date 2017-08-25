@@ -178,6 +178,9 @@ public class Field {
     }
 
     private func randomPoint(forBallWithRadius radius: Float) -> Point {
+        guard Float(bounds.width) > radius && Float(bounds.height) > radius else {
+            return Point()
+        }
         let insetBounds = bounds.insetBy(dx: CGFloat(radius), dy: CGFloat(radius))
         let x = Float(UInt32(insetBounds.minX) + arc4random_uniform(UInt32(insetBounds.width)))
         let y = Float(UInt32(insetBounds.minY) + arc4random_uniform(UInt32(insetBounds.height)))
