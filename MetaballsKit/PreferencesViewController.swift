@@ -254,14 +254,14 @@ class ParameterView: NSView {
         stackView.orientation = .horizontal
         stackView.spacing = 8
         stackView.alignment = .centerY
-        stackView.distribution = .equalSpacing
+        stackView.distribution = .fill
+
+        label.translatesAutoresizingMaskIntoConstraints = false
+        stackView.addArrangedSubview(label)
 
         control.translatesAutoresizingMaskIntoConstraints = false
         control.setContentHuggingPriority(251, for: .horizontal)
         stackView.addArrangedSubview(control)
-
-        label.translatesAutoresizingMaskIntoConstraints = false
-        stackView.addArrangedSubview(label)
 
         addSubview(stackView)
         NSLayoutConstraint.activate([
