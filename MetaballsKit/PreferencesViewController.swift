@@ -30,6 +30,11 @@ public class PreferencesViewController: NSViewController {
     }
 
     public var defaults = UserDefaults.standard
+    public var showsCloseButton: Bool = true {
+        didSet {
+            showCloseButtonIfNeeded()
+        }
+    }
 
     private var colorStackView = NSStackView()
     private var colorViews = [ColorView]()
@@ -49,6 +54,24 @@ public class PreferencesViewController: NSViewController {
         button.menu = menu
 
         return button
+    }()
+
+    private lazy var closeView: NSView = {
+        let container = NSView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+
+        let buttonTitle = NSLocalizedString("Close", comment: "close button label")
+        let button = NSButton(title: buttonTitle, target: self, action: #selector(PreferencesViewController.closeWindow))
+        button.translatesAutoresizingMaskIntoConstraints = false
+
+        container.addSubview(button)
+        NSLayoutConstraint.activate([
+            button.topAnchor.constraint(equalTo: container.topAnchor),
+            button.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+            button.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+        ])
+
+        return container
     }()
 
     override public func loadView() {
@@ -83,6 +106,8 @@ public class PreferencesViewController: NSViewController {
             colorStackView.addArrangedSubview(colorView)
             colorViews.append(colorView)
         }
+
+        showCloseButtonIfNeeded()
 
         self.view = view
     }
@@ -119,6 +144,14 @@ public class PreferencesViewController: NSViewController {
         colorPanel.setAction(#selector(PreferencesViewController.colorPanelDidUpdateValue))
     }
 
+    private func showCloseButtonIfNeeded() {
+        if showsCloseButton {
+            colorStackView.addArrangedSubview(closeView)
+        } else {
+            colorStackView.removeArrangedSubview(closeView)
+        }
+    }
+
     // MARK: - Actions
 
     func colorPanelDidUpdateValue(_ colorPanel: NSColorPanel) {
@@ -128,6 +161,10 @@ public class PreferencesViewController: NSViewController {
     func styleDidUpdate(sender: NSMenuItem) {
         updateColorViewVisibility()
         postColorNotification()
+    }
+
+    func closeWindow() {
+        self.view.window?.close()
     }
 
     // MARK: - Private
