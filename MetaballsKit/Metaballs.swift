@@ -36,12 +36,14 @@ public struct Parameters {
     var size = Size(width: 0, height: 0)
     var numberOfBalls: UInt16 = 0
 
-    let unused1: UInt16 = 0xAB
-    let unused2: UInt32 = 0xCDEF
-    let unused3: UInt16 = 0xBA
+    private var _colorStyle = ColorStyle.singleColor.rawValue
+
+    /// The target sample value. Above this value results in a colored pixel; below is a dark pixel.
+    var target: Float = 1.0
+    /// The amount to feather the alpha of each ball. A value between 0.0 and 1.0.
+    var feather: Float = 0.0
 
     // Color parameters
-    private var _colorStyle = ColorStyle.singleColor.rawValue
     public var color0 = Float4(r: 0, g: 1, b: 0, a: 1)
     public var color1 = Float4()
     public var color2 = Float4()

@@ -41,11 +41,10 @@ typedef struct {
     short2 size;
     ushort numberOfBalls;
 
-    ushort unused1;
-    uint unused2;
-    ushort unused3;
-
     ushort colorStyle;
+    float target;
+    float feather;
+
     float4 colors[4];
 } Parameters;
 
