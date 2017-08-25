@@ -35,7 +35,8 @@ public class Renderer: NSObject, MTKViewDelegate {
             view.device = device
 
             do {
-                let library = try device.makeDefaultLibrary(bundle: Bundle.main)
+                let bundle = Bundle(for: type(of: self))
+                let library = try device.makeDefaultLibrary(bundle: bundle)
                 let vertexShader = library.makeFunction(name: "passthroughVertexShader")
                 let fragmentShader = library.makeFunction(name: "sampleToColorShader")
 
