@@ -84,8 +84,9 @@ public class MetaballsSaverView: ScreenSaverView, RendererDelegate {
     }
 
     override public func configureSheet() -> NSWindow? {
-        let preferencesViewController = PreferencesViewController()
-        let window = NSWindow(contentViewController: preferencesViewController)
+        let prefs = PreferencesViewController()
+        prefs.showsCloseButton = true
+        let window = NSWindow(contentViewController: prefs)
         return window
     }
 
