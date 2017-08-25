@@ -9,6 +9,36 @@
 import Cocoa
 
 extension UserDefaults {
+    public var target: Float {
+        get {
+            if let obj = object(forKey: "target") as? NSNumber {
+                return obj.floatValue
+            } else {
+                let defaultValue: Float = 1.0
+                set(defaultValue, forKey: "target")
+                return defaultValue
+            }
+        }
+        set {
+            set(newValue, forKey: "target")
+        }
+    }
+
+    public var feather: Float {
+        get {
+            if let obj = object(forKey: "feather") as? NSNumber {
+                return obj.floatValue
+            } else {
+                let defaultValue: Float = 0.25
+                set(defaultValue, forKey: "target")
+                return defaultValue
+            }
+        }
+        set {
+            set(newValue, forKey: "feather")
+        }
+    }
+
     public var colorStyle: ColorStyle? {
         get {
             let value = integer(forKey: "colorStyle")

@@ -39,6 +39,34 @@ public class PreferencesViewController: NSViewController {
     private var colorStackView = NSStackView()
     private var colorViews = [ColorView]()
 
+    private lazy var targetSlider: SliderView = {
+        let targetSlider = SliderView(label: NSLocalizedString("Target", comment: "name of the target slider"))
+        targetSlider.slider.tag = Slider.target.rawValue
+        if #available(OSX 10.12.2, *) {
+            targetSlider.slider.trackFillColor = nil
+        }
+        targetSlider.slider.minValue = 0
+        targetSlider.slider.maxValue = 1
+        targetSlider.slider.target = self
+        targetSlider.slider.action = #selector(PreferencesViewController.sliderDidUpdate(sender:))
+        targetSlider.slider.floatValue = self.defaults.target
+        return targetSlider
+    }()
+
+    private lazy var featherSlider: SliderView = {
+        let featherSlider = SliderView(label: NSLocalizedString("Feather", comment: "name of the feather slider"))
+        featherSlider.slider.tag = Slider.feather.rawValue
+        if #available(OSX 10.12.2, *) {
+            featherSlider.slider.trackFillColor = nil
+        }
+        featherSlider.slider.minValue = 0
+        featherSlider.slider.maxValue = 1
+        featherSlider.slider.target = self
+        featherSlider.slider.action = #selector(PreferencesViewController.sliderDidUpdate(sender:))
+        featherSlider.slider.floatValue = self.defaults.feather
+        return featherSlider
+    }()
+
     private lazy var styleMenu: NSPopUpButton = {
         let button = NSPopUpButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -100,12 +128,14 @@ public class PreferencesViewController: NSViewController {
 
         colorStackView.addArrangedSubview(styleMenu)
         for i in 0..<4 {
-            let colorView = ColorView()
+            let colorView = ColorView(label: "Color \(i+1)")
             colorView.translatesAutoresizingMaskIntoConstraints = false
-            colorView.label.stringValue = "Color \(i+1)"
             colorStackView.addArrangedSubview(colorView)
             colorViews.append(colorView)
         }
+
+        colorStackView.addArrangedSubview(targetSlider)
+        colorStackView.addArrangedSubview(featherSlider)
 
         showCloseButtonIfNeeded()
 
@@ -163,6 +193,10 @@ public class PreferencesViewController: NSViewController {
         postColorNotification()
     }
 
+    func sliderDidUpdate(sender: NSSlider) {
+        postColorNotification()
+    }
+
     func closeWindow() {
         self.view.window?.close()
     }
@@ -191,23 +225,30 @@ public class PreferencesViewController: NSViewController {
         for (idx, cv) in colorViews.enumerated() {
             info["color\(idx)"] = cv.colorWell.color
         }
+        info["target"] = targetSlider.slider.floatValue
+        info["feather"] = featherSlider.slider.floatValue
         NotificationCenter.default.post(name: PreferencesDidChange_Color, object: nil, userInfo: info)
     }
 }
 
-class ColorView: NSView {
+class ParameterView: NSView {
     private let stackView = NSStackView()
-    internal let colorWell = NSColorWell()
-    internal let label = NSTextField(labelWithString: "Hello")
+    internal let control: NSControl
+    internal let label: NSTextField
 
-    override init(frame frameRect: NSRect) {
-        super.init(frame: frameRect)
+    init(frame f: NSRect, control c: NSControl, label: String = "Hello") {
+        control = c
+        self.label = NSTextField(labelWithString: label)
+        super.init(frame: f)
         commonInit()
     }
 
+    convenience init(control c: NSControl) {
+        self.init(frame: NSRect(), control: c)
+    }
+    
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        commonInit()
+        fatalError("init(coder:) has not been implemented")
     }
 
     private func commonInit() {
@@ -217,9 +258,9 @@ class ColorView: NSView {
         stackView.alignment = .centerY
         stackView.distribution = .equalSpacing
 
-        colorWell.translatesAutoresizingMaskIntoConstraints = false
-        colorWell.setContentHuggingPriority(251, for: .horizontal)
-        stackView.addArrangedSubview(colorWell)
+        control.translatesAutoresizingMaskIntoConstraints = false
+        control.setContentHuggingPriority(251, for: .horizontal)
+        stackView.addArrangedSubview(control)
 
         label.translatesAutoresizingMaskIntoConstraints = false
         stackView.addArrangedSubview(label)
@@ -231,5 +272,33 @@ class ColorView: NSView {
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
             stackView.rightAnchor.constraint(equalTo: rightAnchor),
         ])
+    }
+}
+
+class ColorView: ParameterView {
+    var colorWell: NSColorWell {
+        return control as! NSColorWell
+    }
+
+    init(label: String) {
+        super.init(frame: NSRect(), control: NSColorWell(), label: label)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+class SliderView: ParameterView {
+    var slider: NSSlider {
+        return control as! NSSlider
+    }
+
+    init(label: String) {
+        super.init(frame: NSRect(), control: NSSlider(), label: label)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

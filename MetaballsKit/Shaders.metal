@@ -64,8 +64,8 @@ passthroughVertexShader(uint vid                    [[vertex_id]],
 float sampleAtPoint(float2, constant Ball*, int);
 
 // Color samplers
-float4 singleColor(float, float, float4);
-float4 gradient2(float, float, float, float4, float4);
+float4 singleColor(float, float, float, float4);
+float4 gradient2(float, float, float, float, float4, float4);
 
 // Helpers
 float mapValueFromRangeOntoRange(float, float, float, float, float);
@@ -76,17 +76,18 @@ sampleToColorShader(RasterizerData in               [[stage_in]],
                     constant Parameters& parameters [[buffer(0)]],
                     constant Ball* balls            [[buffer(1)]])
 {
-    const float target = 1.0;
+    const float target = parameters.target;
+    const float feather = parameters.feather;
     const float sample = sampleAtPoint(in.position.xy, balls, parameters.numberOfBalls);
     const float blend = in.position.x / parameters.size.x;
 
     float4 out;
     switch (parameters.colorStyle) {
         case SingleColor:
-            out = singleColor(sample, target, parameters.colors[0]);
+            out = singleColor(sample, target, feather, parameters.colors[0]);
             break;
         case Gradient2Horizontal:
-            out = gradient2(sample, target, blend, parameters.colors[0], parameters.colors[1]);
+            out = gradient2(sample, target, feather, blend, parameters.colors[0], parameters.colors[1]);
             break;
     }
 
@@ -112,15 +113,17 @@ sampleAtPoint(float2 point,
 float4
 singleColor(float sample,
             float target,
+            float feather,
             float4 color)
 {
     float4 out;
-    if (sample > 1.0) {
+    if (sample > target) {
         out = color;
     }
 
     // Feather the alpha value.
-    const float a = clamp(mapValueFromRangeOntoRange(sample, 0.75 * target, target, 0, 1), 0.0, 1.0);
+    const float mappedAlpha = mapValueFromRangeOntoRange(sample, (1.0 - feather) * target, target, 0, 1);
+    const float a = clamp(mappedAlpha, 0.0, 1.0);
     out = float4(out.xyz, a);
 
     return out;
@@ -129,12 +132,13 @@ singleColor(float sample,
 float4
 gradient2(float sample,
           float target,
+          float feather,
           float normalizedBlend,
           float4 fromColor,
           float4 toColor)
 {
     float4 blendedColor = averageTwoColors(normalizedBlend, fromColor, toColor);
-    float4 out = singleColor(sample, target, blendedColor);
+    float4 out = singleColor(sample, target, feather, blendedColor);
     return out;
 }
 

@@ -293,6 +293,17 @@ public class Field {
             didChange = true
         }
 
+        if let target = userInfo["target"] as? Float {
+            parameters.target = target
+            defaults.target = target
+            didChange = true
+        }
+        if let feather = userInfo["feather"] as? Float {
+            parameters.feather = feather
+            defaults.feather = feather
+            didChange = true
+        }
+
         if didChange {
             populateParametersBuffer()
         }
