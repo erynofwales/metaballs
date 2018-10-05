@@ -11,7 +11,7 @@ import MetaballsKit
 import MetalKit
 import ScreenSaver
 
-@objc public class MetaballsSaverView: ScreenSaverView, RendererDelegate {
+public class MetaballsSaverView: ScreenSaverView, RendererDelegate {
     private static func defaultParameters() -> Parameters {
         var p = Parameters()
         let defaults = UserDefaults.standard

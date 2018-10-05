@@ -260,8 +260,7 @@ public class Field {
 
     // MARK: - Notifications
 
-    @objc
-    func preferencesDidChange(note: Notification) {
+    @objc func preferencesDidChange(note: Notification) {
         guard let userInfo = note.userInfo else { return }
         var didChange = false
         if let style = userInfo["colorStyle"] as? ColorStyle {
