@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import MetaballsKit
 import MetalKit
 import ScreenSaver
 

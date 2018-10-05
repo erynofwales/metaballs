@@ -8,7 +8,6 @@
 
 import Cocoa
 import MetalKit
-import MetaballsKit
 
 class ViewController: NSViewController, RendererDelegate {
     private static func defaultParameters() -> Parameters {

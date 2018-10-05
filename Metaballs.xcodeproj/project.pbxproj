@@ -7,28 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C09161701F3F5AE6009C4263 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */; };
 		C0ABCC411F50A560004A0290 /* ScreenSaver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0ABCC401F50A560004A0290 /* ScreenSaver.framework */; };
-		C0B906D51F45432700B5F89B /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B906D41F45432700B5F89B /* Preferences.swift */; };
-		C0B906E51F455B7C00B5F89B /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3AB1F2E941200E68524 /* Renderer.swift */; };
-		C0B906E61F455B7E00B5F89B /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3A91F2E91D900E68524 /* Shaders.metal */; };
-		C0B906E71F455C2F00B5F89B /* MetaballsKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE38C1F2E81B600E68524 /* MetaballsKit.framework */; };
 		C0B906E91F455D1A00B5F89B /* MetaballsSaverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B906E81F455D1A00B5F89B /* MetaballsSaverView.swift */; };
 		C0B906EA1F455EB300B5F89B /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE3A71F2E893A00E68524 /* MetalKit.framework */; };
-		C0B906ED1F473E1000B5F89B /* MetaballsKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE38C1F2E81B600E68524 /* MetaballsKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C0BBE36B1F2E816500E68524 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE36A1F2E816500E68524 /* AppDelegate.swift */; };
 		C0BBE36D1F2E816500E68524 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE36C1F2E816500E68524 /* ViewController.swift */; };
 		C0BBE36F1F2E816500E68524 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0BBE36E1F2E816500E68524 /* Assets.xcassets */; };
 		C0BBE3721F2E816500E68524 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0BBE3701F2E816500E68524 /* Main.storyboard */; };
 		C0BBE37D1F2E816500E68524 /* MetaballsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE37C1F2E816500E68524 /* MetaballsTests.swift */; };
-		C0BBE3951F2E81B600E68524 /* MetaballsKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE38C1F2E81B600E68524 /* MetaballsKit.framework */; };
-		C0BBE39A1F2E81B600E68524 /* MetaballsKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3991F2E81B600E68524 /* MetaballsKitTests.swift */; };
-		C0BBE39C1F2E81B600E68524 /* MetaballsKit.h in Headers */ = {isa = PBXBuildFile; fileRef = C0BBE38E1F2E81B600E68524 /* MetaballsKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C0BBE3A41F2E81C700E68524 /* Metaballs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3A31F2E81C700E68524 /* Metaballs.swift */; };
-		C0BBE3A51F2E87D500E68524 /* MetaballsKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE38C1F2E81B600E68524 /* MetaballsKit.framework */; };
-		C0BBE3AD1F30CD7E00E68524 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE3A71F2E893A00E68524 /* MetalKit.framework */; };
-		C0CE7C001F362C3F001516B6 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CE7BFF1F362C3F001516B6 /* Geometry.swift */; };
-		C0DF1D791F3789DC0038B0A0 /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DF1D781F3789DC0038B0A0 /* Memory.swift */; };
+		C0FF7C8E2168062B0081B781 /* Metaballs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3A31F2E81C700E68524 /* Metaballs.swift */; };
+		C0FF7C8F2168062B0081B781 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CE7BFF1F362C3F001516B6 /* Geometry.swift */; };
+		C0FF7C902168062B0081B781 /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DF1D781F3789DC0038B0A0 /* Memory.swift */; };
+		C0FF7C912168062B0081B781 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3AB1F2E941200E68524 /* Renderer.swift */; };
+		C0FF7C922168062B0081B781 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3A91F2E91D900E68524 /* Shaders.metal */; };
+		C0FF7C932168062B0081B781 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B906D41F45432700B5F89B /* Preferences.swift */; };
+		C0FF7C942168062B0081B781 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */; };
+		C0FF7C952168062C0081B781 /* Metaballs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3A31F2E81C700E68524 /* Metaballs.swift */; };
+		C0FF7C962168062C0081B781 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CE7BFF1F362C3F001516B6 /* Geometry.swift */; };
+		C0FF7C972168062C0081B781 /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DF1D781F3789DC0038B0A0 /* Memory.swift */; };
+		C0FF7C982168062C0081B781 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3AB1F2E941200E68524 /* Renderer.swift */; };
+		C0FF7C992168062C0081B781 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3A91F2E91D900E68524 /* Shaders.metal */; };
+		C0FF7C9A2168062C0081B781 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B906D41F45432700B5F89B /* Preferences.swift */; };
+		C0FF7C9B2168062C0081B781 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,13 +39,6 @@
 			remoteGlobalIDString = C0BBE3661F2E816500E68524;
 			remoteInfo = Metaballs;
 		};
-		C0BBE3961F2E81B600E68524 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C0BBE35F1F2E816500E68524 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = C0BBE38B1F2E81B600E68524;
-			remoteInfo = MetaballsKit;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -55,7 +48,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				C0B906ED1F473E1000B5F89B /* MetaballsKit.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -78,10 +70,6 @@
 		C0BBE3781F2E816500E68524 /* MetaballsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MetaballsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0BBE37C1F2E816500E68524 /* MetaballsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaballsTests.swift; sourceTree = "<group>"; };
 		C0BBE37E1F2E816500E68524 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C0BBE38C1F2E81B600E68524 /* MetaballsKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MetaballsKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		C0BBE38E1F2E81B600E68524 /* MetaballsKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetaballsKit.h; sourceTree = "<group>"; };
-		C0BBE38F1F2E81B600E68524 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C0BBE3941F2E81B600E68524 /* MetaballsKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MetaballsKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0BBE3991F2E81B600E68524 /* MetaballsKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaballsKitTests.swift; sourceTree = "<group>"; };
 		C0BBE39B1F2E81B600E68524 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C0BBE3A31F2E81C700E68524 /* Metaballs.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Metaballs.swift; sourceTree = "<group>"; };
@@ -99,7 +87,6 @@
 			files = (
 				C0ABCC411F50A560004A0290 /* ScreenSaver.framework in Frameworks */,
 				C0B906EA1F455EB300B5F89B /* MetalKit.framework in Frameworks */,
-				C0B906E71F455C2F00B5F89B /* MetaballsKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,7 +94,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C0BBE3A51F2E87D500E68524 /* MetaballsKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -115,22 +101,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C0BBE3881F2E81B600E68524 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C0BBE3AD1F30CD7E00E68524 /* MetalKit.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C0BBE3911F2E81B600E68524 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C0BBE3951F2E81B600E68524 /* MetaballsKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,7 +122,7 @@
 			children = (
 				C0BBE3691F2E816500E68524 /* Metaballs */,
 				C0B906DC1F455AD000B5F89B /* Screensaver */,
-				C0BBE38D1F2E81B600E68524 /* Kit */,
+				C0BBE38D1F2E81B600E68524 /* Shared */,
 				C0BBE37B1F2E816500E68524 /* MetaballsTests */,
 				C0BBE3981F2E81B600E68524 /* MetaballsKitTests */,
 				C0BBE3681F2E816500E68524 /* Products */,
@@ -165,8 +135,6 @@
 			children = (
 				C0BBE3671F2E816500E68524 /* Metaballs.app */,
 				C0BBE3781F2E816500E68524 /* MetaballsTests.xctest */,
-				C0BBE38C1F2E81B600E68524 /* MetaballsKit.framework */,
-				C0BBE3941F2E81B600E68524 /* MetaballsKitTests.xctest */,
 				C0B906DB1F455AD000B5F89B /* MetaballsSaver.saver */,
 			);
 			name = Products;
@@ -193,11 +161,9 @@
 			path = MetaballsTests;
 			sourceTree = "<group>";
 		};
-		C0BBE38D1F2E81B600E68524 /* Kit */ = {
+		C0BBE38D1F2E81B600E68524 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				C0BBE38E1F2E81B600E68524 /* MetaballsKit.h */,
-				C0BBE38F1F2E81B600E68524 /* Info.plist */,
 				C0BBE3A31F2E81C700E68524 /* Metaballs.swift */,
 				C0CE7BFF1F362C3F001516B6 /* Geometry.swift */,
 				C0DF1D781F3789DC0038B0A0 /* Memory.swift */,
@@ -206,7 +172,7 @@
 				C0B906D41F45432700B5F89B /* Preferences.swift */,
 				C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */,
 			);
-			name = Kit;
+			name = Shared;
 			path = MetaballsKit;
 			sourceTree = "<group>";
 		};
@@ -235,14 +201,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C0BBE3891F2E81B600E68524 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C0BBE39C1F2E81B600E68524 /* MetaballsKit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,42 +261,6 @@
 			productReference = C0BBE3781F2E816500E68524 /* MetaballsTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		C0BBE38B1F2E81B600E68524 /* MetaballsKit */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C0BBE39D1F2E81B600E68524 /* Build configuration list for PBXNativeTarget "MetaballsKit" */;
-			buildPhases = (
-				C0BBE3871F2E81B600E68524 /* Sources */,
-				C0BBE3881F2E81B600E68524 /* Frameworks */,
-				C0BBE3891F2E81B600E68524 /* Headers */,
-				C0BBE38A1F2E81B600E68524 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = MetaballsKit;
-			productName = MetaballsKit;
-			productReference = C0BBE38C1F2E81B600E68524 /* MetaballsKit.framework */;
-			productType = "com.apple.product-type.framework";
-		};
-		C0BBE3931F2E81B600E68524 /* MetaballsKitTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C0BBE3A01F2E81B600E68524 /* Build configuration list for PBXNativeTarget "MetaballsKitTests" */;
-			buildPhases = (
-				C0BBE3901F2E81B600E68524 /* Sources */,
-				C0BBE3911F2E81B600E68524 /* Frameworks */,
-				C0BBE3921F2E81B600E68524 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				C0BBE3971F2E81B600E68524 /* PBXTargetDependency */,
-			);
-			name = MetaballsKitTests;
-			productName = MetaballsKitTests;
-			productReference = C0BBE3941F2E81B600E68524 /* MetaballsKitTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -368,17 +290,6 @@
 						ProvisioningStyle = Automatic;
 						TestTargetID = C0BBE3661F2E816500E68524;
 					};
-					C0BBE38B1F2E81B600E68524 = {
-						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = 78372RE6B4;
-						LastSwiftMigration = 1000;
-						ProvisioningStyle = Automatic;
-					};
-					C0BBE3931F2E81B600E68524 = {
-						CreatedOnToolsVersion = 8.3.3;
-						DevelopmentTeam = 78372RE6B4;
-						ProvisioningStyle = Automatic;
-					};
 				};
 			};
 			buildConfigurationList = C0BBE3621F2E816500E68524 /* Build configuration list for PBXProject "Metaballs" */;
@@ -396,8 +307,6 @@
 			targets = (
 				C0BBE3661F2E816500E68524 /* Metaballs */,
 				C0BBE3771F2E816500E68524 /* MetaballsTests */,
-				C0BBE38B1F2E81B600E68524 /* MetaballsKit */,
-				C0BBE3931F2E81B600E68524 /* MetaballsKitTests */,
 				C0B906DA1F455AD000B5F89B /* MetaballsSaver */,
 			);
 		};
@@ -427,20 +336,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C0BBE38A1F2E81B600E68524 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C0BBE3921F2E81B600E68524 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -448,7 +343,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0FF7C992168062C0081B781 /* Shaders.metal in Sources */,
+				C0FF7C9A2168062C0081B781 /* Preferences.swift in Sources */,
+				C0FF7C972168062C0081B781 /* Memory.swift in Sources */,
+				C0FF7C9B2168062C0081B781 /* PreferencesViewController.swift in Sources */,
 				C0B906E91F455D1A00B5F89B /* MetaballsSaverView.swift in Sources */,
+				C0FF7C962168062C0081B781 /* Geometry.swift in Sources */,
+				C0FF7C982168062C0081B781 /* Renderer.swift in Sources */,
+				C0FF7C952168062C0081B781 /* Metaballs.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -456,7 +358,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0FF7C8E2168062B0081B781 /* Metaballs.swift in Sources */,
+				C0FF7C922168062B0081B781 /* Shaders.metal in Sources */,
+				C0FF7C942168062B0081B781 /* PreferencesViewController.swift in Sources */,
+				C0FF7C8F2168062B0081B781 /* Geometry.swift in Sources */,
 				C0BBE36D1F2E816500E68524 /* ViewController.swift in Sources */,
+				C0FF7C902168062B0081B781 /* Memory.swift in Sources */,
+				C0FF7C912168062B0081B781 /* Renderer.swift in Sources */,
+				C0FF7C932168062B0081B781 /* Preferences.swift in Sources */,
 				C0BBE36B1F2E816500E68524 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -469,28 +378,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C0BBE3871F2E81B600E68524 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C0DF1D791F3789DC0038B0A0 /* Memory.swift in Sources */,
-				C0B906E61F455B7E00B5F89B /* Shaders.metal in Sources */,
-				C0B906D51F45432700B5F89B /* Preferences.swift in Sources */,
-				C0BBE3A41F2E81C700E68524 /* Metaballs.swift in Sources */,
-				C0CE7C001F362C3F001516B6 /* Geometry.swift in Sources */,
-				C0B906E51F455B7C00B5F89B /* Renderer.swift in Sources */,
-				C09161701F3F5AE6009C4263 /* PreferencesViewController.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C0BBE3901F2E81B600E68524 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C0BBE39A1F2E81B600E68524 /* MetaballsKitTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -498,11 +385,6 @@
 			isa = PBXTargetDependency;
 			target = C0BBE3661F2E816500E68524 /* Metaballs */;
 			targetProxy = C0BBE3791F2E816500E68524 /* PBXContainerItemProxy */;
-		};
-		C0BBE3971F2E81B600E68524 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = C0BBE38B1F2E81B600E68524 /* MetaballsKit */;
-			targetProxy = C0BBE3961F2E81B600E68524 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -729,89 +611,6 @@
 			};
 			name = Release;
 		};
-		C0BBE39E1F2E81B600E68524 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 78372RE6B4;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = MetaballsKit/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = me.erynwells.MetaballsKit;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.2;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		C0BBE39F1F2E81B600E68524 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 78372RE6B4;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				FRAMEWORK_VERSION = A;
-				INFOPLIST_FILE = MetaballsKit/Info.plist;
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
-				PRODUCT_BUNDLE_IDENTIFIER = me.erynwells.MetaballsKit;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				SWIFT_SWIFT3_OBJC_INFERENCE = On;
-				SWIFT_VERSION = 4.2;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		C0BBE3A11F2E81B600E68524 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 78372RE6B4;
-				INFOPLIST_FILE = MetaballsKitTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = me.erynwells.MetaballsKitTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-			};
-			name = Debug;
-		};
-		C0BBE3A21F2E81B600E68524 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 78372RE6B4;
-				INFOPLIST_FILE = MetaballsKitTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = me.erynwells.MetaballsKitTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -847,24 +646,6 @@
 			buildConfigurations = (
 				C0BBE3851F2E816500E68524 /* Debug */,
 				C0BBE3861F2E816500E68524 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C0BBE39D1F2E81B600E68524 /* Build configuration list for PBXNativeTarget "MetaballsKit" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C0BBE39E1F2E81B600E68524 /* Debug */,
-				C0BBE39F1F2E81B600E68524 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C0BBE3A01F2E81B600E68524 /* Build configuration list for PBXNativeTarget "MetaballsKitTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C0BBE3A11F2E81B600E68524 /* Debug */,
-				C0BBE3A21F2E81B600E68524 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
