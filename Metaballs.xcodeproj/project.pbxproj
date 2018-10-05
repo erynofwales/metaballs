@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C09161701F3F5AE6009C4263 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */; };
+		C0ABCC411F50A560004A0290 /* ScreenSaver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0ABCC401F50A560004A0290 /* ScreenSaver.framework */; };
 		C0B906D51F45432700B5F89B /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B906D41F45432700B5F89B /* Preferences.swift */; };
 		C0B906E51F455B7C00B5F89B /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3AB1F2E941200E68524 /* Renderer.swift */; };
 		C0B906E61F455B7E00B5F89B /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3A91F2E91D900E68524 /* Shaders.metal */; };
@@ -63,6 +64,7 @@
 
 /* Begin PBXFileReference section */
 		C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
+		C0ABCC401F50A560004A0290 /* ScreenSaver.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScreenSaver.framework; path = System/Library/Frameworks/ScreenSaver.framework; sourceTree = SDKROOT; };
 		C0B906D41F45432700B5F89B /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		C0B906DB1F455AD000B5F89B /* MetaballsSaver.saver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MetaballsSaver.saver; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0B906E11F455AD000B5F89B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0ABCC411F50A560004A0290 /* ScreenSaver.framework in Frameworks */,
 				C0B906EA1F455EB300B5F89B /* MetalKit.framework in Frameworks */,
 				C0B906E71F455C2F00B5F89B /* MetaballsKit.framework in Frameworks */,
 			);
@@ -219,6 +222,7 @@
 		C0BBE3A61F2E893A00E68524 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C0ABCC401F50A560004A0290 /* ScreenSaver.framework */,
 				C0BBE3A71F2E893A00E68524 /* MetalKit.framework */,
 			);
 			name = Frameworks;
@@ -515,14 +519,16 @@
 		C0B906E31F455AD000B5F89B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 78372RE6B4;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = MetaballsSaver/Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Screen Savers";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = me.erynwells.MetaballsSaver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -534,14 +540,16 @@
 		C0B906E41F455AD000B5F89B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 78372RE6B4;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = MetaballsSaver/Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Screen Savers";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = me.erynwells.MetaballsSaver;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
@@ -717,6 +725,7 @@
 				INFOPLIST_FILE = MetaballsKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = me.erynwells.MetaballsKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -743,6 +752,7 @@
 				INFOPLIST_FILE = MetaballsKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = me.erynwells.MetaballsKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

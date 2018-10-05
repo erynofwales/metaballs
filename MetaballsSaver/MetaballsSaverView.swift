@@ -11,7 +11,7 @@ import MetaballsKit
 import MetalKit
 import ScreenSaver
 
-public class MetaballsSaverView: ScreenSaverView, RendererDelegate {
+@objc public class MetaballsSaverView: ScreenSaverView, RendererDelegate {
     private static func defaultParameters() -> Parameters {
         var p = Parameters()
         let defaults = UserDefaults.standard
@@ -77,6 +77,10 @@ public class MetaballsSaverView: ScreenSaverView, RendererDelegate {
 
     override public func animateOneFrame() {
         metalView.draw()
+    }
+
+    override public func draw(_ rect: NSRect) {
+        super.draw(rect)
     }
 
     override public func hasConfigureSheet() -> Bool {
