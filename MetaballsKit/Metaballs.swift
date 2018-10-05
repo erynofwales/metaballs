@@ -63,7 +63,7 @@ public struct Parameters {
     public mutating func write(to buffer: MTLBuffer, offset: Int = 0) {
         let start = buffer.contents().advanced(by: offset)
         let stride = MemoryLayout.stride(ofValue: self)
-        start.copyBytes(from: &self, count: stride)
+        start.copyMemory(from: &self, byteCount: stride)
     }
 }
 
@@ -226,7 +226,9 @@ public class Field {
             var ptr = ballBuffer.contents()
             var idx = 0
             for var ball in self.balls {
-                ballBuffer.addDebugMarker("Ball \(idx)", range: NSRange(location: ballBuffer.contents().distance(to: ptr), length: 16))
+                if let range = Range(NSRange(location: ballBuffer.contents().distance(to: ptr), length: 16)) {
+                    ballBuffer.addDebugMarker("Ball \(idx)", range: range)
+                }
                 ptr = write(value: &ball.position.x, to: ptr)
                 ptr = write(value: &ball.position.y, to: ptr)
                 var r = ball.radius
@@ -242,7 +244,7 @@ public class Field {
 
     private func write<T>(value: inout T, to ptr: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer {
         let sizeOfType = MemoryLayout<T>.stride
-        ptr.copyBytes(from: &value, count: sizeOfType)
+        ptr.copyMemory(from: &value, byteCount: sizeOfType)
         return ptr.advanced(by: sizeOfType)
     }
 

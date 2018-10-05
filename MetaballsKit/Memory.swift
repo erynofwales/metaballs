@@ -11,7 +11,7 @@ import Foundation
 extension UnsafeMutableRawPointer {
     func writeAndAdvance<T>(value: inout T) -> UnsafeMutableRawPointer {
         let stride = MemoryLayout.stride(ofValue: value)
-        copyBytes(from: &value, count: stride)
+        copyMemory(from: &value, byteCount: stride)
         return advanced(by: stride)
     }
 }

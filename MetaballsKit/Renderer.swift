@@ -73,9 +73,12 @@ public class Renderer: NSObject, MTKViewDelegate {
         guard let device = MTLCreateSystemDefaultDevice() else {
             fatalError("Unable to create Metal system device")
         }
+        guard let queue = device.makeCommandQueue() else {
+            fatalError("Unable to create Metal command queue")
+        }
 
         self.device = device
-        commandQueue = device.makeCommandQueue()
+        commandQueue = queue
 
         super.init()
     }
@@ -109,24 +112,24 @@ public class Renderer: NSObject, MTKViewDelegate {
 
         field.update()
 
-        let buffer = commandQueue.makeCommandBuffer()
-        buffer.label = "Render"
+        if let buffer = commandQueue.makeCommandBuffer() {
+            buffer.label = "Render"
 
-        if let renderPass = view.currentRenderPassDescriptor, let renderPipelineState = renderPipelineState {
-            let encoder = buffer.makeRenderCommandEncoder(descriptor: renderPass)
-            encoder.label = "Render Pass"
-            encoder.setViewport(MTLViewport(originX: 0.0, originY: 0.0, width: Double(view.drawableSize.width), height: Double(view.drawableSize.height), znear: -1.0, zfar: 1.0))
-            encoder.setRenderPipelineState(renderPipelineState)
-            encoder.setVertexBytes(points, length: points.count * MemoryLayout<Vertex>.stride, index: 0)
-            encoder.setFragmentBuffer(field.parametersBuffer, offset: 0, index: 0)
-            encoder.setFragmentBuffer(field.ballBuffer, offset: 0, index: 1)
-            encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
-            encoder.endEncoding()
+            if let renderPass = view.currentRenderPassDescriptor, let renderPipelineState = renderPipelineState, let encoder = buffer.makeRenderCommandEncoder(descriptor: renderPass) {
+                encoder.label = "Render Pass"
+                encoder.setViewport(MTLViewport(originX: 0.0, originY: 0.0, width: Double(view.drawableSize.width), height: Double(view.drawableSize.height), znear: -1.0, zfar: 1.0))
+                encoder.setRenderPipelineState(renderPipelineState)
+                encoder.setVertexBytes(points, length: points.count * MemoryLayout<Vertex>.stride, index: 0)
+                encoder.setFragmentBuffer(field.parametersBuffer, offset: 0, index: 0)
+                encoder.setFragmentBuffer(field.ballBuffer, offset: 0, index: 1)
+                encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
+                encoder.endEncoding()
 
-            if let drawable = view.currentDrawable {
-                buffer.present(drawable)
+                if let drawable = view.currentDrawable {
+                    buffer.present(drawable)
+                }
             }
+            buffer.commit()
         }
-        buffer.commit()
     }
 }
