@@ -117,9 +117,9 @@ public class Renderer: NSObject, MTKViewDelegate {
             encoder.label = "Render Pass"
             encoder.setViewport(MTLViewport(originX: 0.0, originY: 0.0, width: Double(view.drawableSize.width), height: Double(view.drawableSize.height), znear: -1.0, zfar: 1.0))
             encoder.setRenderPipelineState(renderPipelineState)
-            encoder.setVertexBytes(points, length: points.count * MemoryLayout<Vertex>.stride, at: 0)
-            encoder.setFragmentBuffer(field.parametersBuffer, offset: 0, at: 0)
-            encoder.setFragmentBuffer(field.ballBuffer, offset: 0, at: 1)
+            encoder.setVertexBytes(points, length: points.count * MemoryLayout<Vertex>.stride, index: 0)
+            encoder.setFragmentBuffer(field.parametersBuffer, offset: 0, index: 0)
+            encoder.setFragmentBuffer(field.ballBuffer, offset: 0, index: 1)
             encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
             encoder.endEncoding()
 

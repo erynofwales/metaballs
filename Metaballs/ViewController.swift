@@ -35,7 +35,7 @@ class ViewController: NSViewController, RendererDelegate {
         return self.view as! MTKView
     }
 
-    override init?(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         let params = ViewController.defaultParameters()
         field = Field(parameters: params)
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)

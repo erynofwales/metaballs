@@ -113,9 +113,9 @@ public class PreferencesViewController: NSViewController {
         view.addSubview(colorStackView)
 
         let centerX = colorStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-        centerX.priority = 999
+        centerX.priority = NSLayoutConstraint.Priority(rawValue: 999)
         let centerY = colorStackView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        centerY.priority = 999
+        centerY.priority = NSLayoutConstraint.Priority(rawValue: 999)
         NSLayoutConstraint.activate([
             centerX, centerY,
             colorStackView.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor, constant: 8),
@@ -153,7 +153,7 @@ public class PreferencesViewController: NSViewController {
 
     override public func viewWillDisappear() {
         super.viewWillDisappear()
-        NSColorPanel.shared().close()
+        NSColorPanel.shared.close()
     }
 
     private func prepareColorViews() {
@@ -166,7 +166,7 @@ public class PreferencesViewController: NSViewController {
     }
 
     private func prepareColorPanel() {
-        let colorPanel = NSColorPanel.shared()
+        let colorPanel = NSColorPanel.shared
         colorPanel.isContinuous = true
         colorPanel.setTarget(self)
         colorPanel.setAction(#selector(PreferencesViewController.colorPanelDidUpdateValue))
@@ -182,20 +182,20 @@ public class PreferencesViewController: NSViewController {
 
     // MARK: - Actions
 
-    func colorPanelDidUpdateValue(_ colorPanel: NSColorPanel) {
+    @objc func colorPanelDidUpdateValue(_ colorPanel: NSColorPanel) {
         postColorNotification()
     }
 
-    func styleDidUpdate(sender: NSMenuItem) {
+    @objc func styleDidUpdate(sender: NSMenuItem) {
         updateColorViewVisibility()
         postColorNotification()
     }
 
-    func sliderDidUpdate(sender: NSSlider) {
+    @objc func sliderDidUpdate(sender: NSSlider) {
         postColorNotification()
     }
 
-    func closeWindow() {
+    @objc func closeWindow() {
         self.view.window?.close()
     }
 
@@ -260,7 +260,7 @@ class ParameterView: NSView {
         stackView.addArrangedSubview(label)
 
         control.translatesAutoresizingMaskIntoConstraints = false
-        control.setContentHuggingPriority(251, for: .horizontal)
+        control.setContentHuggingPriority(NSLayoutConstraint.Priority(rawValue: 251), for: .horizontal)
         stackView.addArrangedSubview(control)
 
         addSubview(stackView)
