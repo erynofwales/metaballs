@@ -10,7 +10,7 @@ import Foundation
 import MetalKit
 import ScreenSaver
 
-public class MetaballsSaverView: ScreenSaverView, RendererDelegate {
+@objc public class MetaballsSaverView: ScreenSaverView, RendererDelegate {
     private static func defaultParameters() -> Parameters {
         var p = Parameters()
         let defaults = UserDefaults.standard
@@ -35,14 +35,30 @@ public class MetaballsSaverView: ScreenSaverView, RendererDelegate {
 
     override public init?(frame: NSRect, isPreview: Bool) {
         let params = MetaballsSaverView.defaultParameters()
-        metalView = MetalView()
         field = Field(parameters: params)
         field.size = Size(size: frame.size)
+
+        metalView = MetalView()
+        metalView.isPaused = true   // Don't use the Metal View's internal timer.
+        metalView.translatesAutoresizingMaskIntoConstraints = false
+
         renderer = Renderer()
+        metalView.delegate = renderer
 
         super.init(frame: frame, isPreview: isPreview)
 
+        addSubview(metalView)
+        NSLayoutConstraint.activate([
+            metalView.topAnchor.constraint(equalTo: topAnchor),
+            metalView.leftAnchor.constraint(equalTo: leftAnchor),
+            metalView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            metalView.rightAnchor.constraint(equalTo: rightAnchor),
+        ])
+
+        renderer.delegate = self
+
         animationTimeInterval = 1 / 30.0
+        metalView.preferredFramesPerSecond = 30
     }
     
     required public init?(coder: NSCoder) {
@@ -50,23 +66,9 @@ public class MetaballsSaverView: ScreenSaverView, RendererDelegate {
     }
 
     override public func startAnimation() {
-        if metalView.superview == nil {
-            metalView.isPaused = true   // Don't use the Metal View's internal timer.
-            metalView.translatesAutoresizingMaskIntoConstraints = false
-            addSubview(metalView)
-            NSLayoutConstraint.activate([
-                metalView.topAnchor.constraint(equalTo: topAnchor),
-                metalView.leftAnchor.constraint(equalTo: leftAnchor),
-                metalView.bottomAnchor.constraint(equalTo: bottomAnchor),
-                metalView.rightAnchor.constraint(equalTo: rightAnchor),
-            ])
-            renderer.delegate = self
-        }
-
         for _ in 1...10 {
             addBallWithRandomRadius()
         }
-
         super.startAnimation()
     }
 
@@ -79,14 +81,14 @@ public class MetaballsSaverView: ScreenSaverView, RendererDelegate {
     }
 
     override public func draw(_ rect: NSRect) {
-        super.draw(rect)
+        metalView.draw()
     }
 
-    override public func hasConfigureSheet() -> Bool {
+    override public var hasConfigureSheet: Bool {
         return true
     }
 
-    override public func configureSheet() -> NSWindow? {
+    override public var configureSheet: NSWindow? {
         let prefs = PreferencesViewController()
         prefs.showsCloseButton = true
         let window = NSWindow(contentViewController: prefs)
