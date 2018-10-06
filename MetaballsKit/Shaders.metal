@@ -83,16 +83,22 @@ sampleToColorShader(RasterizerData in               [[stage_in]],
     const float target = parameters.target;
     const float feather = parameters.feather;
     const float sample = sampleAtPoint(in.position.xy, balls, parameters.numberOfBalls);
-    const float blend = in.position.x / parameters.size.x;
 
     float4 out;
     switch (parameters.colorStyle) {
         case SingleColor:
             out = singleColor(sample, target, feather, parameters.colors[0]);
             break;
-        case Gradient2Horizontal:
+        case Gradient2Horizontal: {
+            const float blend = in.position.x / parameters.size.x;
             out = gradient2(sample, target, feather, blend, parameters.colors[0], parameters.colors[1]);
             break;
+        }
+        case Gradient2Vertical: {
+            const float blend = in.position.y / parameters.size.y;
+            out = gradient2(sample, target, feather, blend, parameters.colors[0], parameters.colors[1]);
+            break;
+        }
     }
 
     return out;

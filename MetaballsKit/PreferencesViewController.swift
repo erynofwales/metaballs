@@ -26,6 +26,10 @@ public class PreferencesViewController: NSViewController {
                       tag: Int(ColorStyle.gradient2Horizontal.rawValue),
                       colorNames: [NSLocalizedString("Right", comment: "two color horizontal gradient, color 1"),
                                    NSLocalizedString("Left", comment: "two color horizontal gradient, color 2")]),
+            StyleItem(name: NSLocalizedString("Two Color Gradient — Vertical", comment: "two color vertical gradient menu item"),
+                      tag: Int(ColorStyle.gradient2Vertical.rawValue),
+                      colorNames: [NSLocalizedString("Top", comment: "two color vertical gradient, color 1"),
+                                   NSLocalizedString("Bottom", comment: "two color vertical gradient, color 2")]),
         ]
     }
 
@@ -252,7 +256,7 @@ class ParameterView: NSView {
     private func commonInit() {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.orientation = .horizontal
-        stackView.spacing = 8
+        stackView.spacing = 12
         stackView.alignment = .centerY
         stackView.distribution = .fill
 
