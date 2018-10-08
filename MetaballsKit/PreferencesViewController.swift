@@ -222,7 +222,7 @@ public class PreferencesViewController: NSViewController {
     func postColorNotification() {
         var info = [String:Any]()
         if let item = styleMenu.selectedItem {
-            info["colorStyle"] = ColorStyle(rawValue: UInt16(item.tag))
+            info["colorStyle"] = ColorStyle(rawValue: UInt32(item.tag))
         }
         for (idx, cv) in colorViews.enumerated() {
             info["color\(idx)"] = cv.colorWell.color

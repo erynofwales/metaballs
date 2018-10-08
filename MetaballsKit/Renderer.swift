@@ -20,8 +20,8 @@ public protocol RendererDelegate {
 }
 
 struct Vertex {
-    let position: Point
-    let textureCoordinate: Point
+    let position: Float2
+    let textureCoordinate: Float2
 }
 
 public class Renderer: NSObject, MTKViewDelegate {
@@ -101,13 +101,13 @@ public class Renderer: NSObject, MTKViewDelegate {
 
         // Two triangles, plus texture coordinates.
         let points: [Vertex] = [
-            Vertex(position: Point(x:  1, y: -1), textureCoordinate: Point(x: 1, y: 0)),
-            Vertex(position: Point(x: -1, y: -1), textureCoordinate: Point(x: 0, y: 0)),
-            Vertex(position: Point(x: -1, y:  1), textureCoordinate: Point(x: 0, y: 1)),
+            Vertex(position: Float2(x:  1, y: -1), textureCoordinate: Float2(x: 1, y: 0)),
+            Vertex(position: Float2(x: -1, y: -1), textureCoordinate: Float2(x: 0, y: 0)),
+            Vertex(position: Float2(x: -1, y:  1), textureCoordinate: Float2(x: 0, y: 1)),
 
-            Vertex(position: Point(x:  1, y: -1), textureCoordinate: Point(x: 1, y: 0)),
-            Vertex(position: Point(x: -1, y:  1), textureCoordinate: Point(x: 0, y: 1)),
-            Vertex(position: Point(x:  1, y:  1), textureCoordinate: Point(x: 1, y: 1))
+            Vertex(position: Float2(x:  1, y: -1), textureCoordinate: Float2(x: 1, y: 0)),
+            Vertex(position: Float2(x: -1, y:  1), textureCoordinate: Float2(x: 0, y: 1)),
+            Vertex(position: Float2(x:  1, y:  1), textureCoordinate: Float2(x: 1, y: 1))
         ]
 
         field.update()

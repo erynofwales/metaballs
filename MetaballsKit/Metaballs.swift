@@ -13,7 +13,7 @@ public enum MetaballsError: Error {
     case metalError(String)
 }
 
-public enum ColorStyle: UInt16 {
+public enum ColorStyle: UInt32 {
     /// Single flat color
     case singleColor = 1
     /// Two color horizontal gradient
@@ -33,8 +33,8 @@ public struct Parameters {
     }
 
     // Simulation parameters
-    var size = Size(width: 0, height: 0)
-    var numberOfBalls: UInt16 = 0
+    var size = Size(0, 0)
+    var numberOfBalls: UInt32 = 0
 
     private var _colorStyle = ColorStyle.singleColor.rawValue
 
@@ -69,8 +69,8 @@ public struct Parameters {
 
 public struct Ball {
     let radius: Float
-    var position = Point()
-    var velocity = Vector()
+    var position = Float2()
+    var velocity = Float2()
 
     internal var bounds: CGRect {
         let diameter = CGFloat(radius * 2)
@@ -78,8 +78,8 @@ public struct Ball {
     }
 
     internal mutating func update() {
-        position.x += velocity.dx
-        position.y += velocity.dy
+        position.x += velocity.x
+        position.y += velocity.y
     }
 }
 
@@ -98,11 +98,11 @@ public class Field {
             NSLog("Updating size of field: old:\(parameters.size), new:\(newValue)")
             if parameters.size != newValue {
                 // Scale balls to new position and size.
-                let scale = parameters.size.width != 0 ? Float(newValue.width / parameters.size.width) : 1
+                let scale = parameters.size.x != 0 ? Float(newValue.x / parameters.size.x) : 1
                 balls = balls.map {
                     let r = $0.radius * scale
                     let p = randomPoint(forBallWithRadius: r)
-                    let v = Vector(dx: $0.velocity.dx * scale, dy: $0.velocity.dy * scale)
+                    let v = Float2($0.velocity.x * scale, $0.velocity.y * scale)
                     return Ball(radius: r, position: p, velocity: v)
                 }
 
@@ -141,16 +141,16 @@ public class Field {
 
             if !selfBounds.contains(balls[i].position.CGPoint) {
                 // Degenerate case. If the ball finds itself outside the bounds of the field, plop it back in the center.
-                balls[i].position = Point(x: Float(selfBounds.midX), y: Float(selfBounds.midY))
+                balls[i].position = Float2(x: Float(selfBounds.midX), y: Float(selfBounds.midY))
             } else {
                 // Do collision detection with walls.
                 let ballBounds = balls[i].bounds
                 if !selfBounds.contains(ballBounds) {
                     if ballBounds.minX < selfBounds.minX || ballBounds.maxX > selfBounds.maxX {
-                        balls[i].velocity.dx *= -1
+                        balls[i].velocity.x *= -1
                     }
                     if ballBounds.minY < selfBounds.minY || ballBounds.maxY > selfBounds.maxY {
-                        balls[i].velocity.dy *= -1
+                        balls[i].velocity.y *= -1
                     }
                 }
             }
@@ -163,7 +163,7 @@ public class Field {
 
         let dx = Float(5 - Int(arc4random_uniform(10)))
         let dy = Float(5 - Int(arc4random_uniform(10)))
-        let velocity = Vector(dx: dx, dy: dy)
+        let velocity = Float2(dx, dy)
 
         let ball = Ball(radius: radius, position: position, velocity: velocity)
         balls.append(ball)
@@ -178,14 +178,14 @@ public class Field {
         balls.removeAll(keepingCapacity: true)
     }
 
-    private func randomPoint(forBallWithRadius radius: Float) -> Point {
+    private func randomPoint(forBallWithRadius radius: Float) -> Float2 {
         guard Float(bounds.width) > radius && Float(bounds.height) > radius else {
-            return Point()
+            return Float2()
         }
         let insetBounds = bounds.insetBy(dx: CGFloat(radius), dy: CGFloat(radius))
         let x = Float(UInt32(insetBounds.minX) + arc4random_uniform(UInt32(insetBounds.width)))
         let y = Float(UInt32(insetBounds.minY) + arc4random_uniform(UInt32(insetBounds.height)))
-        let position = Point(x: x, y: y)
+        let position = Float2(x: x, y: y)
         return position
     }
 
@@ -205,7 +205,7 @@ public class Field {
         }
 
         if let parametersBuffer = parametersBuffer {
-            parameters.numberOfBalls = UInt16(balls.count)
+            parameters.numberOfBalls = UInt32(balls.count)
             self.parameters.write(to: parametersBuffer)
         }
     }

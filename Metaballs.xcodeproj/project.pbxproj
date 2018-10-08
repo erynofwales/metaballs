@@ -29,6 +29,8 @@
 		C0FF7C992168062C0081B781 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3A91F2E91D900E68524 /* Shaders.metal */; };
 		C0FF7C9A2168062C0081B781 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B906D41F45432700B5F89B /* Preferences.swift */; };
 		C0FF7C9B2168062C0081B781 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */; };
+		C0FF7C9D216A6DE00081B781 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0FF7C9C216A6DE00081B781 /* Math.swift */; };
+		C0FF7C9E216A6DE00081B781 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0FF7C9C216A6DE00081B781 /* Math.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +80,7 @@
 		C0BBE3AB1F2E941200E68524 /* Renderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		C0CE7BFF1F362C3F001516B6 /* Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
 		C0DF1D781F3789DC0038B0A0 /* Memory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Memory.swift; sourceTree = "<group>"; };
+		C0FF7C9C216A6DE00081B781 /* Math.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +170,7 @@
 				C0BBE3A31F2E81C700E68524 /* Metaballs.swift */,
 				C0CE7BFF1F362C3F001516B6 /* Geometry.swift */,
 				C0DF1D781F3789DC0038B0A0 /* Memory.swift */,
+				C0FF7C9C216A6DE00081B781 /* Math.swift */,
 				C0BBE3AB1F2E941200E68524 /* Renderer.swift */,
 				C0BBE3A91F2E91D900E68524 /* Shaders.metal */,
 				C0B906D41F45432700B5F89B /* Preferences.swift */,
@@ -345,6 +349,7 @@
 			files = (
 				C0FF7C992168062C0081B781 /* Shaders.metal in Sources */,
 				C0FF7C9A2168062C0081B781 /* Preferences.swift in Sources */,
+				C0FF7C9E216A6DE00081B781 /* Math.swift in Sources */,
 				C0FF7C972168062C0081B781 /* Memory.swift in Sources */,
 				C0FF7C9B2168062C0081B781 /* PreferencesViewController.swift in Sources */,
 				C0B906E91F455D1A00B5F89B /* MetaballsSaverView.swift in Sources */,
@@ -367,6 +372,7 @@
 				C0FF7C912168062B0081B781 /* Renderer.swift in Sources */,
 				C0FF7C932168062B0081B781 /* Preferences.swift in Sources */,
 				C0BBE36B1F2E816500E68524 /* AppDelegate.swift in Sources */,
+				C0FF7C9D216A6DE00081B781 /* Math.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

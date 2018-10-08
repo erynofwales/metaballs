@@ -42,7 +42,7 @@ extension UserDefaults {
     public var colorStyle: ColorStyle? {
         get {
             let value = integer(forKey: "colorStyle")
-            if let colorStyle = ColorStyle(rawValue: UInt16(value)) {
+            if let colorStyle = ColorStyle(rawValue: UInt32(value)) {
                 return colorStyle
             }
             return nil

@@ -38,13 +38,11 @@ typedef enum {
 } ColorStyle;
 
 typedef struct {
-    short2 size;
-    ushort numberOfBalls;
-
-    ushort colorStyle;
+    packed_uint2 size;
+    uint numberOfBalls;
+    uint colorStyle;
     float target;
     float feather;
-
     float4 colors[4];
 } Parameters;
 
@@ -90,12 +88,12 @@ sampleToColorShader(RasterizerData in               [[stage_in]],
             out = singleColor(sample, target, feather, parameters.colors[0]);
             break;
         case Gradient2Horizontal: {
-            const float blend = in.position.x / parameters.size.x;
+            const float blend = in.position.x / parameters.size[0];
             out = gradient2(sample, target, feather, blend, parameters.colors[0], parameters.colors[1]);
             break;
         }
         case Gradient2Vertical: {
-            const float blend = in.position.y / parameters.size.y;
+            const float blend = in.position.y / parameters.size[1];
             out = gradient2(sample, target, feather, blend, parameters.colors[0], parameters.colors[1]);
             break;
         }

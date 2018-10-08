@@ -8,44 +8,13 @@
 
 import Cocoa
 import Foundation
+import simd
 
 extension UnsafeMutableRawPointer {
     func writeAndAdvance<T>(value: inout T) -> UnsafeMutableRawPointer {
         let stride = MemoryLayout.stride(ofValue: value)
         copyMemory(from: &value, byteCount: stride)
         return advanced(by: stride)
-    }
-}
-
-/// Metal's float4 type. 4 bytes per float, 16 bytes total, 16 byte aligned.
-public struct Float4 {
-    public var x: Float = 0
-    public var y: Float = 0
-    public var z: Float = 0
-    public var w: Float = 0
-
-    public init() { }
-
-    public init(_ x: Float, _ y: Float, _ z: Float, _ w: Float) {
-        self.x = x
-        self.y = y
-        self.z = z
-        self.w = w
-    }
-
-    public init(r: Float, g: Float, b: Float, a: Float) {
-        x = r
-        y = g
-        z = b
-        w = a
-    }
-
-    init(color: NSColor) {
-        if let convertedColor = color.usingColorSpace(NSColorSpace.deviceRGB) {
-            self.init(Float(convertedColor.redComponent), Float(convertedColor.greenComponent), Float(convertedColor.blueComponent), Float(convertedColor.alphaComponent))
-        } else {
-            self.init()
-        }
     }
 }
 

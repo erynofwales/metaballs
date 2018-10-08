@@ -1,0 +1,63 @@
+//
+//  Math.swift
+//  Metaballs
+//
+//  Created by Eryn Wells on 9/22/18.
+//  Copyright © 2018 Eryn Wells. All rights reserved.
+//
+
+import Cocoa
+import Foundation
+import simd
+
+public typealias Float2 = packed_float2
+public typealias Float3 = float3
+public typealias Float4 = float4
+public typealias Matrix3x3 = float3x3
+public typealias Matrix4x4 = float4x4
+
+extension Float2 {
+    var CGPoint: CGPoint {
+        return CoreGraphics.CGPoint(x: CGFloat(x), y: CGFloat(y))
+    }
+}
+
+extension Float2: CustomStringConvertible {
+    public var description: String {
+        return "(\(x), \(y))"
+    }
+}
+
+extension Float4 {
+    public init(r: Float, g: Float, b: Float, a: Float) {
+        self.init(r, g, b, a)
+    }
+
+    public init(color: NSColor) {
+        if let convertedColor = color.usingColorSpace(NSColorSpace.deviceRGB) {
+            self.init(Float(convertedColor.redComponent), Float(convertedColor.greenComponent), Float(convertedColor.blueComponent), Float(convertedColor.alphaComponent))
+        } else {
+            self.init()
+        }
+    }
+}
+
+extension Matrix4x4 {
+    /// Create a 4x4 orthographic projection matrix with the provided 6-tuple.
+    /// @see https://en.wikipedia.org/wiki/Orthographic_projection
+    static func orthographicProjection(top: Float32, left: Float32, bottom: Float32, right: Float32, near: Float32, far: Float32) -> Matrix4x4 {
+        let rows = [
+            Float4(2.0 / (right - left), 0.0, 0.0, -(right + left) / (right - left)),
+            Float4(0.0, 2.0 / (top - bottom), 0.0, -(top + bottom) / (top - bottom)),
+            Float4(0.0, 0.0, -2.0 / (far - near), -(far + near) / (far - near)),
+            Float4(0.0, 0.0, 0.0, 1.0)
+        ]
+        return Matrix4x4(rows)
+    }
+}
+
+extension CGSize {
+    init(size: Size) {
+        self.init(width: CGFloat(size.x), height: CGFloat(size.y))
+    }
+}
