@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C0BBE3661F2E816500E68524"
                BuildableName = "Metaballs.app"
-               BlueprintName = "Metaballs"
+               BlueprintName = "Metaballs-macOS"
                ReferencedContainer = "container:Metaballs.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -44,7 +44,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C0BBE3661F2E816500E68524"
             BuildableName = "Metaballs.app"
-            BlueprintName = "Metaballs"
+            BlueprintName = "Metaballs-macOS"
             ReferencedContainer = "container:Metaballs.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -67,7 +67,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C0BBE3661F2E816500E68524"
             BuildableName = "Metaballs.app"
-            BlueprintName = "Metaballs"
+            BlueprintName = "Metaballs-macOS"
             ReferencedContainer = "container:Metaballs.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -86,7 +86,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C0BBE3661F2E816500E68524"
             BuildableName = "Metaballs.app"
-            BlueprintName = "Metaballs"
+            BlueprintName = "Metaballs-macOS"
             ReferencedContainer = "container:Metaballs.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
