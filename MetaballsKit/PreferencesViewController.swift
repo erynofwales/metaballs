@@ -14,6 +14,10 @@ private struct StyleItem {
     let name: String
     let tag: Int
     let colorNames: [String]
+
+    var allowsRotation: Bool {
+        return colorNames.count > 1
+    }
 }
 
 public class PreferencesViewController: NSViewController {
@@ -42,6 +46,14 @@ public class PreferencesViewController: NSViewController {
 
     private var colorStackView = NSStackView()
     private var colorViews = [ColorView]()
+
+    private lazy var colorRotationSlider: RotationSliderView = {
+        let rotationSlider = RotationSliderView(label: NSLocalizedString("Color θ", comment: "name of color rotation slider"))
+        rotationSlider.slider.target = self
+        rotationSlider.slider.action = #selector(PreferencesViewController.sliderDidUpdate(sender:))
+        rotationSlider.slider.floatValue = self.defaults.colorRotation
+        return rotationSlider
+    }()
 
     private lazy var targetSlider: SliderView = {
         let targetSlider = SliderView(label: NSLocalizedString("Target", comment: "name of the target slider"))
@@ -135,6 +147,7 @@ public class PreferencesViewController: NSViewController {
             colorStackView.addArrangedSubview(colorView)
             colorViews.append(colorView)
         }
+        colorStackView.addArrangedSubview(colorRotationSlider)
 
         colorStackView.addArrangedSubview(targetSlider)
         colorStackView.addArrangedSubview(featherSlider)
@@ -217,6 +230,9 @@ public class PreferencesViewController: NSViewController {
                 colorView.isHidden = true
             }
         }
+
+        // Hide the color rotation slider if there's only one color
+        colorRotationSlider.isHidden = styleItem.colorNames.count == 1
     }
 
     func postColorNotification() {
@@ -229,6 +245,7 @@ public class PreferencesViewController: NSViewController {
         }
         info["target"] = targetSlider.slider.floatValue
         info["feather"] = featherSlider.slider.floatValue
+        info["colorRotation"] = colorRotationSlider.slider.floatValue
         NotificationCenter.default.post(name: PreferencesDidChange_Color, object: nil, userInfo: info)
     }
 }
@@ -298,6 +315,21 @@ class SliderView: ParameterView {
 
     init(label: String) {
         super.init(frame: NSRect(), control: NSSlider(), label: label)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+class RotationSliderView: SliderView {
+    override init(label: String) {
+        super.init(label: label)
+
+        let slider = control as! NSSlider
+        slider.minValue = -Double.pi
+        slider.maxValue = Double.pi
+        slider.numberOfTickMarks = 5
     }
 
     required init?(coder: NSCoder) {

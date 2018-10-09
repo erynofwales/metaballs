@@ -49,7 +49,7 @@ public struct Parameters {
     public var color2 = Float4()
     public var color3 = Float4()
 
-    public var colorRotation = Matrix2x2(1.0)
+    public var colorTransform = Matrix3x3(1.0)
 
     public var colorStyle: ColorStyle {
         get {
@@ -300,6 +300,19 @@ public class Field {
         if let feather = userInfo["feather"] as? Float {
             parameters.feather = feather
             defaults.feather = feather
+            didChange = true
+        }
+
+        if let rotation = userInfo["colorRotation"] as? Float {
+            // Create a transform matrix to handle it
+            let dx = Float(size.x) / 2.0
+            let dy = Float(size.y) / 2.0
+            let translate = Matrix3x3.translation(dx: dx, dy: dy)
+            let rotate = Matrix3x3.rotation(angle: rotation)
+            let invTranslate = Matrix3x3.translation(dx: -dx, dy: -dy)
+            parameters.colorTransform = invTranslate * rotate * translate
+            // Save the value to defaults
+            defaults.colorRotation = rotation
             didChange = true
         }
 

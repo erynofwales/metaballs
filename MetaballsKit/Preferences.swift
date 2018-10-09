@@ -92,6 +92,21 @@ extension UserDefaults {
         }
     }
 
+    public var colorRotation: Float {
+        get {
+            if let obj = object(forKey: "colorRotation") as? NSNumber {
+                return obj.floatValue
+            } else {
+                let defaultValue: Float = 0.0
+                set(defaultValue, forKey: "colorRotation")
+                return defaultValue
+            }
+        }
+        set {
+            set(newValue, forKey: "colorRotation")
+        }
+    }
+
     func float4(forKey key: String) -> Float4? {
         guard let values = array(forKey: key) as? [Float], values.count >= 4 else {
             return nil

@@ -43,12 +43,20 @@ extension Float4 {
     }
 }
 
-extension Matrix2x2 {
-    static func rotation(theta: Float) -> Matrix2x2 {
+extension Matrix3x3 {
+    static func rotation(angle theta: Float) -> Matrix3x3 {
         return self.init(rows: [
-            Float2(cos(theta), -sin(theta)),
-            Float2(sin(theta),  cos(theta)),
+            Float3(cos(theta), -sin(theta), 0.0),
+            Float3(sin(theta),  cos(theta), 0.0),
+            Float3(0, 0, 1),
         ])
+    }
+
+    static func translation(dx: Float, dy: Float) -> Matrix3x3 {
+        var mat = self.init(1.0)
+        mat.columns.2.x = dx
+        mat.columns.2.y = dy
+        return mat
     }
 }
 
