@@ -307,9 +307,9 @@ public class Field {
             // Create a transform matrix to handle it
             let dx = Float(size.x) / 2.0
             let dy = Float(size.y) / 2.0
-            let translate = Matrix3x3.translation(dx: dx, dy: dy)
+            let translate = Matrix3x3.translation(dx: -dx, dy: -dy)
             let rotate = Matrix3x3.rotation(angle: rotation)
-            let invTranslate = Matrix3x3.translation(dx: -dx, dy: -dy)
+            let invTranslate = Matrix3x3.translation(dx: dx, dy: dy)
             parameters.colorTransform = invTranslate * rotate * translate
             // Save the value to defaults
             defaults.colorRotation = rotation

@@ -89,7 +89,8 @@ sampleToColorShader(RasterizerData in               [[stage_in]],
             out = singleColor(sample, target, feather, parameters.colors[0]);
             break;
         case Gradient2Horizontal: {
-            const float blend = in.position.x / parameters.size[0];
+            const float3 transformedColor = (parameters.colorTransform * float3(in.position.xy, 1.0));
+            const float blend = transformedColor.x / parameters.size[0];
             out = gradient2(sample, target, feather, blend, parameters.colors[0], parameters.colors[1]);
             break;
         }
