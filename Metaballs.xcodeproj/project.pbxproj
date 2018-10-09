@@ -36,6 +36,16 @@
 		C0FF7CAB216AFD840081B781 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0FF7CA9216AFD840081B781 /* Main.storyboard */; };
 		C0FF7CAD216AFD890081B781 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C0FF7CAC216AFD890081B781 /* Assets.xcassets */; };
 		C0FF7CB0216AFD890081B781 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C0FF7CAE216AFD890081B781 /* LaunchScreen.storyboard */; };
+		C0FF7CB5216B002E0081B781 /* Metaballs.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3A31F2E81C700E68524 /* Metaballs.swift */; };
+		C0FF7CB6216B002E0081B781 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CE7BFF1F362C3F001516B6 /* Geometry.swift */; };
+		C0FF7CB7216B002E0081B781 /* Memory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DF1D781F3789DC0038B0A0 /* Memory.swift */; };
+		C0FF7CB8216B002E0081B781 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0FF7C9C216A6DE00081B781 /* Math.swift */; };
+		C0FF7CB9216B002E0081B781 /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3AB1F2E941200E68524 /* Renderer.swift */; };
+		C0FF7CBA216B002E0081B781 /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = C0BBE3A91F2E91D900E68524 /* Shaders.metal */; };
+		C0FF7CBB216B002E0081B781 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B906D41F45432700B5F89B /* Preferences.swift */; };
+		C0FF7CBC216B002E0081B781 /* PreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */; };
+		C0FF7CBF216B00570081B781 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0FF7CBD216B00570081B781 /* MetalKit.framework */; };
+		C0FF7CC0216B00570081B781 /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0FF7CBE216B00570081B781 /* Metal.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +103,8 @@
 		C0FF7CAC216AFD890081B781 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C0FF7CAF216AFD890081B781 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C0FF7CB1216AFD890081B781 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C0FF7CBD216B00570081B781 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/MetalKit.framework; sourceTree = DEVELOPER_DIR; };
+		C0FF7CBE216B00570081B781 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/Metal.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +135,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0FF7CBF216B00570081B781 /* MetalKit.framework in Frameworks */,
+				C0FF7CC0216B00570081B781 /* Metal.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -213,6 +227,8 @@
 		C0BBE3A61F2E893A00E68524 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C0FF7CBE216B00570081B781 /* Metal.framework */,
+				C0FF7CBD216B00570081B781 /* MetalKit.framework */,
 				C0ABCC401F50A560004A0290 /* ScreenSaver.framework */,
 				C0BBE3A71F2E893A00E68524 /* MetalKit.framework */,
 			);
@@ -455,8 +471,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0FF7CBA216B002E0081B781 /* Shaders.metal in Sources */,
+				C0FF7CB5216B002E0081B781 /* Metaballs.swift in Sources */,
+				C0FF7CB6216B002E0081B781 /* Geometry.swift in Sources */,
+				C0FF7CB9216B002E0081B781 /* Renderer.swift in Sources */,
 				C0FF7CA8216AFD840081B781 /* ViewController.swift in Sources */,
+				C0FF7CBC216B002E0081B781 /* PreferencesViewController.swift in Sources */,
+				C0FF7CB7216B002E0081B781 /* Memory.swift in Sources */,
 				C0FF7CA6216AFD840081B781 /* AppDelegate.swift in Sources */,
+				C0FF7CB8216B002E0081B781 /* Math.swift in Sources */,
+				C0FF7CBB216B002E0081B781 /* Preferences.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -651,7 +675,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 78372RE6B4;
-				INFOPLIST_FILE = Metaballs/Info.plist;
+				INFOPLIST_FILE = "Metaballs-macOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.erynwells.Metaballs;
 				PRODUCT_NAME = Metaballs;
@@ -666,7 +690,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 78372RE6B4;
-				INFOPLIST_FILE = Metaballs/Info.plist;
+				INFOPLIST_FILE = "Metaballs-macOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = me.erynwells.Metaballs;
 				PRODUCT_NAME = Metaballs;
