@@ -13,6 +13,7 @@ import simd
 public typealias Float2 = packed_float2
 public typealias Float3 = float3
 public typealias Float4 = float4
+public typealias Matrix2x2 = float2x2
 public typealias Matrix3x3 = float3x3
 public typealias Matrix4x4 = float4x4
 
@@ -39,6 +40,15 @@ extension Float4 {
         } else {
             self.init()
         }
+    }
+}
+
+extension Matrix2x2 {
+    static func rotation(theta: Float) -> Matrix2x2 {
+        return self.init(rows: [
+            Float2(cos(theta), -sin(theta)),
+            Float2(sin(theta),  cos(theta)),
+        ])
     }
 }
 

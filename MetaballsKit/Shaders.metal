@@ -44,6 +44,7 @@ typedef struct {
     float target;
     float feather;
     float4 colors[4];
+    float2x2 colorRotation;
 } Parameters;
 
 typedef float3 Ball;

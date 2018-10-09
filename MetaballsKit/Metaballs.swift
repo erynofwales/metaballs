@@ -49,6 +49,8 @@ public struct Parameters {
     public var color2 = Float4()
     public var color3 = Float4()
 
+    public var colorRotation = Matrix2x2(1.0)
+
     public var colorStyle: ColorStyle {
         get {
             return ColorStyle(rawValue: _colorStyle)!
@@ -234,9 +236,6 @@ public class Field {
                 var r = ball.radius
                 ptr = write(value: &r, to: ptr)
                 ptr = ptr.advanced(by: 4)   // Skip 4 bytes to maintain alignment.
-//                if idx == 0 {
-//                    print("Populated ball \(idx): x:\(ball.position.x), y:\(ball.position.y), r:\(r)")
-//                }
                 idx += 1
             }
         }
