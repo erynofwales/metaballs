@@ -16,14 +16,10 @@ public enum MetaballsError: Error {
 public enum ColorStyle: UInt32 {
     /// Single flat color
     case singleColor = 1
-    /// Two color horizontal gradient
-    case gradient2Horizontal = 2
-    /// Two color vertical gradient
-    case gradient2Vertical = 3
-    /// Four color gradient from corners
-    case gradient4Corners = 4
-    /// Four color gradient from middle of sides
-    case gradient4Sides = 5
+    /// Two color gradient
+    case gradient2 = 2
+    /// Four color gradient
+    case gradient4 = 4
 }
 
 public struct Parameters {

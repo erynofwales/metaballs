@@ -13,7 +13,7 @@ class ViewController: NSViewController, RendererDelegate {
     private static func defaultParameters() -> Parameters {
         var p = Parameters()
         let defaults = UserDefaults.standard
-        let style = defaults.colorStyle ?? .gradient2Horizontal
+        let style = defaults.colorStyle ?? .gradient2
         p.colorStyle = style
         let color0 = defaults.color0 ?? Float4(0.50, 0.79, 1, 1)
         p.color0 = color0

@@ -25,15 +25,17 @@ public class PreferencesViewController: NSViewController {
         return [
             StyleItem(name: NSLocalizedString("Single Color", comment: "single color menu item"),
                       tag: Int(ColorStyle.singleColor.rawValue),
-                      colorNames: [NSLocalizedString("Color", comment: "single color name")]),
-            StyleItem(name: NSLocalizedString("Two Color Gradient — Horizontal", comment: "two color horizontal gradient menu item"),
-                      tag: Int(ColorStyle.gradient2Horizontal.rawValue),
-                      colorNames: [NSLocalizedString("Right", comment: "two color horizontal gradient, color 1"),
-                                   NSLocalizedString("Left", comment: "two color horizontal gradient, color 2")]),
-            StyleItem(name: NSLocalizedString("Two Color Gradient — Vertical", comment: "two color vertical gradient menu item"),
-                      tag: Int(ColorStyle.gradient2Vertical.rawValue),
-                      colorNames: [NSLocalizedString("Top", comment: "two color vertical gradient, color 1"),
-                                   NSLocalizedString("Bottom", comment: "two color vertical gradient, color 2")]),
+                      colorNames: [NSLocalizedString("A", comment: "first color")]),
+            StyleItem(name: NSLocalizedString("Two Color Gradient", comment: "two color gradient menu item"),
+                      tag: Int(ColorStyle.gradient2.rawValue),
+                      colorNames: [NSLocalizedString("A", comment: "first color"),
+                                   NSLocalizedString("B", comment: "second color")]),
+            StyleItem(name: NSLocalizedString("Four Color Gradient", comment: "four color gradient menu item"),
+                      tag: Int(ColorStyle.gradient4.rawValue),
+                      colorNames: [NSLocalizedString("A", comment: "first color"),
+                                   NSLocalizedString("B", comment: "second color"),
+                                   NSLocalizedString("C", comment: "third color"),
+                                   NSLocalizedString("D", comment: "fourth color")]),
         ]
     }
 

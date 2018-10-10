@@ -27,14 +27,10 @@ typedef struct {
 typedef enum {
     /// Single flat color
     SingleColor = 1,
-    /// Two color horizontal gradient
-    Gradient2Horizontal = 2,
-    /// Two color vertical gradient
-    Gradient2Vertical = 3,
-    /// Four color gradient from corners
-    Gradient4Corners = 4,
-    /// Four color gradient from middle of sides
-    Gradient4Sides = 5,
+    /// Two color gradient
+    Gradient2 = 2,
+    /// Four color gradient
+    Gradient4 = 4,
 } ColorStyle;
 
 typedef struct {
@@ -88,18 +84,25 @@ sampleToColorShader(RasterizerData in               [[stage_in]],
         case SingleColor:
             out = singleColor(sample, target, feather, parameters.colors[0]);
             break;
-        case Gradient2Horizontal: {
-            const float3 transformedColor = (parameters.colorTransform * float3(in.position.xy, 1.0));
+        case Gradient2: {
+            const float3 transformedColor = parameters.colorTransform * float3(in.position.xy, 1.0);
             const float blend = transformedColor.x / parameters.size[0];
-            out = gradient2(sample, target, feather, blend, parameters.colors[0], parameters.colors[1]);
+            const float4 color = mix(parameters.colors[0], parameters.colors[1], blend);
+            out = singleColor(sample, target, feather, color);
             break;
         }
-        case Gradient2Vertical: {
-            const float blend = in.position.y / parameters.size[1];
-            out = gradient2(sample, target, feather, blend, parameters.colors[0], parameters.colors[1]);
+        case Gradient4: {
+            const float3 transformedColorCoords = parameters.colorTransform * float3(in.position.xy, 1.0);
+            const float2 blend = float2(transformedColorCoords.x / parameters.size[0],
+                                        transformedColorCoords.y / parameters.size[1]);
+            const float4 color = mix(mix(parameters.colors[0], parameters.colors[2], blend.y),
+                                     mix(parameters.colors[1], parameters.colors[3], blend.y),
+                                     blend.x);
+            out = singleColor(sample, target, feather, color);
             break;
         }
     }
+
 
     return out;
 }
@@ -147,7 +150,7 @@ gradient2(float sample,
           float4 fromColor,
           float4 toColor)
 {
-    float4 blendedColor = averageTwoColors(normalizedBlend, fromColor, toColor);
+    float4 blendedColor = mix(fromColor, toColor, normalizedBlend);
     float4 out = singleColor(sample, target, feather, blendedColor);
     return out;
 }
