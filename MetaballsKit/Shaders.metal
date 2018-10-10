@@ -62,11 +62,9 @@ float sampleAtPoint(float2, constant Ball*, int);
 
 #pragma mark - Color Samplers
 float4 singleColor(float, float, float, float4);
-float4 gradient2(float, float, float, float, float4, float4);
 
 #pragma mark - Helpers
 float mapValueFromRangeOntoRange(float, float, float, float, float);
-float4 averageTwoColors(float, float4, float4);
 
 #pragma mark - Fragment
 
@@ -142,19 +140,6 @@ singleColor(float sample,
     return out;
 }
 
-float4
-gradient2(float sample,
-          float target,
-          float feather,
-          float normalizedBlend,
-          float4 fromColor,
-          float4 toColor)
-{
-    float4 blendedColor = mix(fromColor, toColor, normalizedBlend);
-    float4 out = singleColor(sample, target, feather, blendedColor);
-    return out;
-}
-
 float
 mapValueFromRangeOntoRange(float value,
                            float inputStart,
@@ -165,21 +150,4 @@ mapValueFromRangeOntoRange(float value,
     const float slope = (outputEnd - outputStart) / (inputEnd - inputStart);
     float output = outputStart + slope * (value - inputStart);
     return output;
-}
-
-/// Compute the color at a given point along a 1-dimensional gradient. This averages the two colors. This function doesn't treat alpha. The returned color will have an alpha of 1.
-/// @param coordinate A value between 0 and 1, a point along the gradient.
-/// @param leftColor The color at the extreme left of the gradient.
-/// @param rightColor The color at the extreme right of the gradient.
-/// @return A color, a blend of `leftColor` and `rightColor` at the given point along the axis.
-float4
-averageTwoColors(float coordinate,
-                 float4 leftColor,
-                 float4 rightColor)
-{
-    const float invCoordinate = 1.0 - coordinate;
-    const float r = (coordinate * leftColor.x + invCoordinate * rightColor.x) / 2.0;
-    const float g = (coordinate * leftColor.y + invCoordinate * rightColor.y) / 2.0;
-    const float b = (coordinate * leftColor.z + invCoordinate * rightColor.z) / 2.0;
-    return float4(r, g, b, 1.0);
 }
