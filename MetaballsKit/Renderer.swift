@@ -34,41 +34,21 @@ public class Renderer: NSObject, MTKViewDelegate {
             let view = delegate.metalView
             view.device = device
 
-            do {
-                let bundle = Bundle(for: type(of: self))
-                let library = try device.makeDefaultLibrary(bundle: bundle)
-                let vertexShader = library.makeFunction(name: "passthroughVertexShader")
-                let fragmentShader = library.makeFunction(name: "sampleToColorShader")
+            configure(pixelPipelineWithView: view)
 
-                let pipelineStateDescriptor = MTLRenderPipelineDescriptor()
-                pipelineStateDescriptor.label = "Render Pipeline"
-                pipelineStateDescriptor.vertexFunction = vertexShader
-                pipelineStateDescriptor.fragmentFunction = fragmentShader
-                if let renderAttachment = pipelineStateDescriptor.colorAttachments[0] {
-                    renderAttachment.pixelFormat = view.colorPixelFormat
-                    // Pulled all this from SO. I don't know what it means, but it makes the alpha channel work.
-                    // TODO: Learn what this means???
-                    // https://stackoverflow.com/q/43727335/1174185
-                    renderAttachment.isBlendingEnabled = true
-                    renderAttachment.alphaBlendOperation = .add
-                    renderAttachment.rgbBlendOperation = .add
-                    renderAttachment.sourceRGBBlendFactor = .sourceAlpha
-                    renderAttachment.sourceAlphaBlendFactor = .sourceAlpha
-                    renderAttachment.destinationRGBBlendFactor = .oneMinusSourceAlpha
-                    renderAttachment.destinationAlphaBlendFactor = .oneMinusSourceAlpha
-                }
-                renderPipelineState = try device.makeRenderPipelineState(descriptor: pipelineStateDescriptor)
-
-                try delegate.field.setupMetal(withDevice: device)
-            } catch let e {
-                fatalError("\(e)")
-            }
+            try! delegate.field.setupMetal(withDevice: device)
         }
     }
 
     private var device: MTLDevice
+
+    private lazy var library: MTLLibrary? = {
+        let bundle = Bundle(for: type(of: self))
+        return try? device.makeDefaultLibrary(bundle: bundle)
+    }()
+
     private var commandQueue: MTLCommandQueue
-    private var renderPipelineState: MTLRenderPipelineState? = nil
+    private var pixelPipeline: MTLRenderPipelineState?
 
     override public init() {
         guard let device = MTLCreateSystemDefaultDevice() else {
@@ -87,6 +67,40 @@ public class Renderer: NSObject, MTKViewDelegate {
     public convenience init(delegate: RendererDelegate) throws {
         self.init()
         self.delegate = delegate
+    }
+
+    private func configure(pixelPipelineWithView view: MTKView) {
+        guard let library = library else {
+            fatalError("Couldn't get Metal library")
+        }
+
+        let vertexShader = library.makeFunction(name: "passthroughVertexShader")
+        let fragmentShader = library.makeFunction(name: "sampleToColorShader")
+
+        let pipelineDesc = MTLRenderPipelineDescriptor()
+        pipelineDesc.label = "Pixel Pipeline"
+        pipelineDesc.vertexFunction = vertexShader
+        pipelineDesc.fragmentFunction = fragmentShader
+        if let renderAttachment = pipelineDesc.colorAttachments[0] {
+            renderAttachment.pixelFormat = view.colorPixelFormat
+            // Pulled all this from SO. I don't know what it means, but it makes the alpha channel work.
+            // TODO: Learn what this means???
+            // https://stackoverflow.com/q/43727335/1174185
+            renderAttachment.isBlendingEnabled = true
+            renderAttachment.alphaBlendOperation = .add
+            renderAttachment.rgbBlendOperation = .add
+            renderAttachment.sourceRGBBlendFactor = .sourceAlpha
+            renderAttachment.sourceAlphaBlendFactor = .sourceAlpha
+            renderAttachment.destinationRGBBlendFactor = .oneMinusSourceAlpha
+            renderAttachment.destinationAlphaBlendFactor = .oneMinusSourceAlpha
+        }
+
+        do {
+            pixelPipeline = try device.makeRenderPipelineState(descriptor: pipelineDesc)
+        } catch let e {
+            print("Couldn't set up pixel pipeline! \(e)")
+            pixelPipeline = nil
+        }
     }
 
     /// MARK: - MTKViewDelegate
@@ -118,7 +132,7 @@ public class Renderer: NSObject, MTKViewDelegate {
             var didEncode = false
 
             if let renderPass = view.currentRenderPassDescriptor,
-               let renderPipelineState = renderPipelineState,
+               let renderPipelineState = pixelPipeline,
                let encoder = buffer.makeRenderCommandEncoder(descriptor: renderPass) {
                 encoder.label = "Render Pass"
                 encoder.setViewport(MTLViewport(originX: 0.0, originY: 0.0, width: Double(view.drawableSize.width), height: Double(view.drawableSize.height), znear: -1.0, zfar: 1.0))
