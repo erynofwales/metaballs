@@ -34,7 +34,7 @@ public class Renderer: NSObject, MTKViewDelegate {
             let view = delegate.metalView
             view.device = device
 
-            configure(pixelPipelineWithView: view)
+            configure(pixelPipelineWithPixelFormta: view.colorPixelFormat)
 
             try! delegate.field.setupMetal(withDevice: device)
         }
@@ -69,7 +69,7 @@ public class Renderer: NSObject, MTKViewDelegate {
         self.delegate = delegate
     }
 
-    private func configure(pixelPipelineWithView view: MTKView) {
+    private func configure(pixelPipelineWithPixelFormta pixelFormat: MTLPixelFormat) {
         guard let library = library else {
             fatalError("Couldn't get Metal library")
         }
@@ -82,7 +82,7 @@ public class Renderer: NSObject, MTKViewDelegate {
         pipelineDesc.vertexFunction = vertexShader
         pipelineDesc.fragmentFunction = fragmentShader
         if let renderAttachment = pipelineDesc.colorAttachments[0] {
-            renderAttachment.pixelFormat = view.colorPixelFormat
+            renderAttachment.pixelFormat = pixelFormat
             // Pulled all this from SO. I don't know what it means, but it makes the alpha channel work.
             // TODO: Learn what this means???
             // https://stackoverflow.com/q/43727335/1174185
