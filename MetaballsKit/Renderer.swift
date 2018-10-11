@@ -181,8 +181,10 @@ public class Renderer: NSObject, MTKViewDelegate {
                 didEncode = true
             }
 
+            let pass = renderPass.copy() as! MTLRenderPassDescriptor
+            pass.colorAttachments[0].loadAction = .load
             if let pipeline = marchingSquaresPipeline,
-               let encoder = buffer.makeRenderCommandEncoder(descriptor: renderPass) {
+               let encoder = buffer.makeRenderCommandEncoder(descriptor: pass) {
                 encoder.label = "Marching Squares Render"
                 encoder.setRenderPipelineState(pipeline)
                 encoder.setVertexBytes(points, length: points.count * MemoryLayout<Vertex>.stride, index: 0)
