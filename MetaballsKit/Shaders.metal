@@ -151,3 +151,11 @@ mapValueFromRangeOntoRange(float value,
     float output = outputStart + slope * (value - inputStart);
     return output;
 }
+
+#pragma mark - Geometry Shader
+
+fragment float4
+passthroughFragmentShader(RasterizerData in [[stage_in]])
+{
+    return float4(1.0);
+}
