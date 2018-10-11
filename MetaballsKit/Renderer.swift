@@ -35,7 +35,7 @@ public class Renderer: NSObject, MTKViewDelegate {
             view.device = device
 
             configurePixelPipeline(withPixelFormat: view.colorPixelFormat)
-            configureMarchingSquaresPipeline()
+            configureMarchingSquaresPipeline(withPixelFormat: view.colorPixelFormat)
 
             try! delegate.field.setupMetal(withDevice: device)
         }
@@ -105,7 +105,7 @@ public class Renderer: NSObject, MTKViewDelegate {
         }
     }
 
-    private func configureMarchingSquaresPipeline() {
+    private func configureMarchingSquaresPipeline(withPixelFormat pixelFormat: MTLPixelFormat) {
         guard let library = library else {
             fatalError("Couldn't get Metal library")
         }
@@ -117,6 +117,19 @@ public class Renderer: NSObject, MTKViewDelegate {
         pipelineDesc.label = "Marching Squares Pipeline"
         pipelineDesc.vertexFunction = vertexShader
         pipelineDesc.fragmentFunction = fragmentShader
+        if let renderAttachment = pipelineDesc.colorAttachments[0] {
+            renderAttachment.pixelFormat = pixelFormat
+            // Pulled all this from SO. I don't know what it means, but it makes the alpha channel work.
+            // TODO: Learn what this means???
+            // https://stackoverflow.com/q/43727335/1174185
+            renderAttachment.isBlendingEnabled = true
+            renderAttachment.alphaBlendOperation = .add
+            renderAttachment.rgbBlendOperation = .add
+            renderAttachment.sourceRGBBlendFactor = .sourceAlpha
+            renderAttachment.sourceAlphaBlendFactor = .sourceAlpha
+            renderAttachment.destinationRGBBlendFactor = .oneMinusSourceAlpha
+            renderAttachment.destinationAlphaBlendFactor = .oneMinusSourceAlpha
+        }
 
         do {
             marchingSquaresPipeline = try device.makeRenderPipelineState(descriptor: pipelineDesc)
@@ -150,20 +163,30 @@ public class Renderer: NSObject, MTKViewDelegate {
 
         field.update()
 
-        if let buffer = commandQueue.makeCommandBuffer() {
-            buffer.label = "Render"
+        if let buffer = commandQueue.makeCommandBuffer(),
+           let renderPass = view.currentRenderPassDescriptor {
+            buffer.label = "Metaballs Command Buffer"
             var didEncode = false
 
-            if let renderPass = view.currentRenderPassDescriptor,
-               let renderPipelineState = pixelPipeline,
+            if let pipeline = pixelPipeline,
                let encoder = buffer.makeRenderCommandEncoder(descriptor: renderPass) {
-                encoder.label = "Render Pass"
+                encoder.label = "Pixel Render"
                 encoder.setViewport(MTLViewport(originX: 0.0, originY: 0.0, width: Double(view.drawableSize.width), height: Double(view.drawableSize.height), znear: -1.0, zfar: 1.0))
-                encoder.setRenderPipelineState(renderPipelineState)
+                encoder.setRenderPipelineState(pipeline)
                 encoder.setVertexBytes(points, length: points.count * MemoryLayout<Vertex>.stride, index: 0)
                 encoder.setFragmentBuffer(field.parametersBuffer, offset: 0, index: 0)
                 encoder.setFragmentBuffer(field.ballBuffer, offset: 0, index: 1)
                 encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
+                encoder.endEncoding()
+                didEncode = true
+            }
+
+            if let pipeline = marchingSquaresPipeline,
+               let encoder = buffer.makeRenderCommandEncoder(descriptor: renderPass) {
+                encoder.label = "Marching Squares Render"
+                encoder.setRenderPipelineState(pipeline)
+                encoder.setVertexBytes(points, length: points.count * MemoryLayout<Vertex>.stride, index: 0)
+                encoder.drawPrimitives(type: .line, vertexStart: 0, vertexCount: 6)
                 encoder.endEncoding()
                 didEncode = true
             }
