@@ -34,7 +34,8 @@ public class Renderer: NSObject, MTKViewDelegate {
             let view = delegate.metalView
             view.device = device
 
-            configure(pixelPipelineWithPixelFormta: view.colorPixelFormat)
+            configurePixelPipeline(withPixelFormat: view.colorPixelFormat)
+            configureMarchingSquaresPipeline()
 
             try! delegate.field.setupMetal(withDevice: device)
         }
@@ -49,6 +50,7 @@ public class Renderer: NSObject, MTKViewDelegate {
 
     private var commandQueue: MTLCommandQueue
     private var pixelPipeline: MTLRenderPipelineState?
+    private var marchingSquaresPipeline: MTLRenderPipelineState?
 
     override public init() {
         guard let device = MTLCreateSystemDefaultDevice() else {
@@ -69,7 +71,7 @@ public class Renderer: NSObject, MTKViewDelegate {
         self.delegate = delegate
     }
 
-    private func configure(pixelPipelineWithPixelFormta pixelFormat: MTLPixelFormat) {
+    private func configurePixelPipeline(withPixelFormat pixelFormat: MTLPixelFormat) {
         guard let library = library else {
             fatalError("Couldn't get Metal library")
         }
@@ -100,6 +102,27 @@ public class Renderer: NSObject, MTKViewDelegate {
         } catch let e {
             print("Couldn't set up pixel pipeline! \(e)")
             pixelPipeline = nil
+        }
+    }
+
+    private func configureMarchingSquaresPipeline() {
+        guard let library = library else {
+            fatalError("Couldn't get Metal library")
+        }
+
+        let vertexShader = library.makeFunction(name: "passthroughVertexShader")
+        let fragmentShader = library.makeFunction(name: "passthroughFragmentShader")
+
+        let pipelineDesc = MTLRenderPipelineDescriptor()
+        pipelineDesc.label = "Marching Squares Pipeline"
+        pipelineDesc.vertexFunction = vertexShader
+        pipelineDesc.fragmentFunction = fragmentShader
+
+        do {
+            marchingSquaresPipeline = try device.makeRenderPipelineState(descriptor: pipelineDesc)
+        } catch let e {
+            print("Couldn't set up marching squares pipeline! \(e)")
+            marchingSquaresPipeline = nil
         }
     }
 
