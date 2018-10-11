@@ -115,8 +115,11 @@ public class Renderer: NSObject, MTKViewDelegate {
 
         if let buffer = commandQueue.makeCommandBuffer() {
             buffer.label = "Render"
+            var didEncode = false
 
-            if let renderPass = view.currentRenderPassDescriptor, let renderPipelineState = renderPipelineState, let encoder = buffer.makeRenderCommandEncoder(descriptor: renderPass) {
+            if let renderPass = view.currentRenderPassDescriptor,
+               let renderPipelineState = renderPipelineState,
+               let encoder = buffer.makeRenderCommandEncoder(descriptor: renderPass) {
                 encoder.label = "Render Pass"
                 encoder.setViewport(MTLViewport(originX: 0.0, originY: 0.0, width: Double(view.drawableSize.width), height: Double(view.drawableSize.height), znear: -1.0, zfar: 1.0))
                 encoder.setRenderPipelineState(renderPipelineState)
@@ -125,10 +128,11 @@ public class Renderer: NSObject, MTKViewDelegate {
                 encoder.setFragmentBuffer(field.ballBuffer, offset: 0, index: 1)
                 encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
                 encoder.endEncoding()
+                didEncode = true
+            }
 
-                if let drawable = view.currentDrawable {
-                    buffer.present(drawable)
-                }
+            if didEncode, let drawable = view.currentDrawable {
+                buffer.present(drawable)
             }
             buffer.commit()
         }
