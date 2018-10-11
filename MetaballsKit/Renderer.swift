@@ -46,7 +46,8 @@ public class Renderer: NSObject, MTKViewDelegate {
                 pipelineStateDescriptor.fragmentFunction = fragmentShader
                 if let renderAttachment = pipelineStateDescriptor.colorAttachments[0] {
                     renderAttachment.pixelFormat = view.colorPixelFormat
-                    // Pulled all this from SO. I don't know what all this does...
+                    // Pulled all this from SO. I don't know what it means, but it makes the alpha channel work.
+                    // TODO: Learn what this means???
                     // https://stackoverflow.com/q/43727335/1174185
                     renderAttachment.isBlendingEnabled = true
                     renderAttachment.alphaBlendOperation = .add
