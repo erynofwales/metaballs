@@ -191,7 +191,8 @@ public class Renderer: NSObject, MTKViewDelegate {
                 encoder.label = "Marching Squares Render"
                 encoder.setRenderPipelineState(pipeline)
                 encoder.setVertexBytes(points, length: points.count * MemoryLayout<Vertex>.stride, index: 0)
-                encoder.drawPrimitives(type: .line, vertexStart: 0, vertexCount: 6)
+                encoder.setTriangleFillMode(.lines)
+                encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
                 encoder.endEncoding()
                 didEncode = true
             }
