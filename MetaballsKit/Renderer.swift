@@ -168,6 +168,7 @@ public class Renderer: NSObject, MTKViewDelegate {
             buffer.label = "Metaballs Command Buffer"
             var didEncode = false
 
+            // Render the per-pixel metaballs
             if let pipeline = pixelPipeline,
                let encoder = buffer.makeRenderCommandEncoder(descriptor: renderPass) {
                 encoder.label = "Pixel Render"
@@ -181,6 +182,8 @@ public class Renderer: NSObject, MTKViewDelegate {
                 didEncode = true
             }
 
+            // Render the marching squares version over top of the pixel version.
+            // We need our own render pass descriptor that specifies that we load the results of the previous pass to make this render pass appear on top of the other.
             let pass = renderPass.copy() as! MTLRenderPassDescriptor
             pass.colorAttachments[0].loadAction = .load
             if let pipeline = marchingSquaresPipeline,
