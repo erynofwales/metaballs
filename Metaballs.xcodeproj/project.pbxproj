@@ -677,6 +677,7 @@
 				DEVELOPMENT_TEAM = 78372RE6B4;
 				INFOPLIST_FILE = "Metaballs-macOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_BUNDLE_IDENTIFIER = me.erynwells.Metaballs;
 				PRODUCT_NAME = Metaballs;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
@@ -692,6 +693,7 @@
 				DEVELOPMENT_TEAM = 78372RE6B4;
 				INFOPLIST_FILE = "Metaballs-macOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				PRODUCT_BUNDLE_IDENTIFIER = me.erynwells.Metaballs;
 				PRODUCT_NAME = Metaballs;
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
