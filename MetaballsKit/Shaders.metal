@@ -9,31 +9,31 @@
 #include <metal_stdlib>
 using namespace metal;
 
-typedef struct {
+struct Vertex {
     float2 position;
     float2 textureCoordinate;
-} Vertex;
+};
 
 // From HelloCompute sample code project.
 // Vertex shader outputs and per-fragmeht inputs. Includes clip-space position and vertex outputs interpolated by rasterizer and fed to each fragment genterated by clip-space primitives.
-typedef struct {
+struct RasterizerData {
     // The [[position]] attribute qualifier of this member indicates this value is the clip space position of the vertex when this structure is returned from the vertex shader.
     float4 position [[position]];
 
     // Since this member does not have a special attribute qualifier, the rasterizer will interpolate its value with values of other vertices making up the triangle and pass that interpolated value to the fragment shader for each fragment in that triangle;
     float2 textureCoordinate;
-} RasterizerData;
+};
 
-typedef enum {
+enum ColorStyle {
     /// Single flat color
     SingleColor = 1,
     /// Two color gradient
     Gradient2 = 2,
     /// Four color gradient
     Gradient4 = 4,
-} ColorStyle;
+};
 
-typedef struct {
+struct Parameters {
     packed_uint2 size;
     uint numberOfBalls;
     uint colorStyle;
@@ -41,7 +41,7 @@ typedef struct {
     float feather;
     float4 colors[4];
     float3x3 colorTransform;
-} Parameters;
+};
 
 struct RenderParameters {
     float4x4 projection;
