@@ -178,6 +178,17 @@ public class Field {
         balls.removeAll(keepingCapacity: true)
     }
 
+    func sample(at point: Float2) -> Float {
+        var sample: Float = 0.0;
+        for b in balls {
+            let r2 = b.radius * b.radius
+            let xDiff = point.x - b.position.x
+            let yDiff = point.y - b.position.y
+            sample += r2 / (xDiff * xDiff + yDiff * yDiff)
+        }
+        return sample
+    }
+
     private func randomPoint(forBallWithRadius radius: Float) -> Float2 {
         guard Float(bounds.width) > radius && Float(bounds.height) > radius else {
             return Float2()
