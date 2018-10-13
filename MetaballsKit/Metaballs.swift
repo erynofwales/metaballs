@@ -96,7 +96,9 @@ public class Field {
             NSLog("Updating size of field: old:\(parameters.size), new:\(newValue)")
             if parameters.size != newValue {
                 // Scale balls to new position and size.
-                let scale = parameters.size.x != 0 ? Float(newValue.x / parameters.size.x) : 1
+                let scaleX = parameters.size.x != 0 ? Float(newValue.x / parameters.size.x) : 1
+                let scaleY = parameters.size.y != 0 ? Float(newValue.y / parameters.size.y) : 1
+                let scale = max(scaleX, scaleY)
                 balls = balls.map {
                     let r = $0.radius * scale
                     let p = randomPoint(forBallWithRadius: r)
@@ -131,7 +133,7 @@ public class Field {
         NotificationCenter.default.removeObserver(self, name: PreferencesDidChange_Color, object: nil)
     }
 
-    public func update() {
+    func update() {
         let selfBounds = bounds
         for i in 0..<balls.count {
             // Update position of ball.
@@ -156,7 +158,7 @@ public class Field {
         populateBallBuffer()
     }
 
-    public func add(ballWithRadius radius: Float) {
+    func add(ballWithRadius radius: Float) {
         let position = randomPoint(forBallWithRadius: radius)
 
         let dx = Float(5 - Int(arc4random_uniform(10)))
@@ -172,7 +174,7 @@ public class Field {
         populateBallBuffer()
     }
 
-    public func clear() {
+    func clear() {
         balls.removeAll(keepingCapacity: true)
     }
 
@@ -190,8 +192,8 @@ public class Field {
     // MARK: - Metal Configuration
 
     private var device: MTLDevice?
-    public private(set) var parametersBuffer: MTLBuffer?
-    public private(set) var ballBuffer: MTLBuffer?
+    private(set) var parametersBuffer: MTLBuffer?
+    private(set) var ballBuffer: MTLBuffer?
 
     /// Create the Metal buffer containing basic parameters of the simulation.
     private func populateParametersBuffer() {
