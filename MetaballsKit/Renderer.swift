@@ -19,6 +19,10 @@ public protocol RendererDelegate {
     var metalView: MTKView { get }
 }
 
+private struct RenderParameters {
+    var projection: Matrix4x4
+}
+
 struct Vertex {
     let position: Float2
     let textureCoordinate: Float2
@@ -52,6 +56,8 @@ public class Renderer: NSObject, MTKViewDelegate {
     private var pixelPipeline: MTLRenderPipelineState?
     private var marchingSquaresPipeline: MTLRenderPipelineState?
 
+    private var parametersBuffer: MTLBuffer?
+
     override public init() {
         guard let device = MTLCreateSystemDefaultDevice() else {
             fatalError("Unable to create Metal system device")
@@ -62,6 +68,9 @@ public class Renderer: NSObject, MTKViewDelegate {
 
         self.device = device
         commandQueue = queue
+
+        let parametersLength = MemoryLayout<RenderParameters>.size
+        parametersBuffer = device.makeBuffer(length: parametersLength, options: .storageModeShared)
 
         super.init()
     }
@@ -143,6 +152,13 @@ public class Renderer: NSObject, MTKViewDelegate {
 
     public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         delegate?.renderSize = Size(size: size)
+
+        if let buffer = parametersBuffer {
+            let aspectRatio = Float(size.width / size.height)
+            let projectionMatrix = Matrix4x4.orthographicProjection(top: 1.0, left: -aspectRatio, bottom: -1.0, right: aspectRatio, near: 0.0, far: 1.0)
+            let params = RenderParameters(projection: projectionMatrix)
+            memcpy(buffer.contents(), [params], MemoryLayout<RenderParameters>.size)
+        }
     }
 
     public func draw(in view: MTKView) {
@@ -172,9 +188,9 @@ public class Renderer: NSObject, MTKViewDelegate {
             if let pipeline = pixelPipeline,
                let encoder = buffer.makeRenderCommandEncoder(descriptor: renderPass) {
                 encoder.label = "Pixel Render"
-                encoder.setViewport(MTLViewport(originX: 0.0, originY: 0.0, width: Double(view.drawableSize.width), height: Double(view.drawableSize.height), znear: -1.0, zfar: 1.0))
                 encoder.setRenderPipelineState(pipeline)
                 encoder.setVertexBytes(points, length: points.count * MemoryLayout<Vertex>.stride, index: 0)
+                encoder.setVertexBuffer(parametersBuffer, offset: 0, index: 1)
                 encoder.setFragmentBuffer(field.parametersBuffer, offset: 0, index: 0)
                 encoder.setFragmentBuffer(field.ballBuffer, offset: 0, index: 1)
                 encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
@@ -191,6 +207,7 @@ public class Renderer: NSObject, MTKViewDelegate {
                 encoder.label = "Marching Squares Render"
                 encoder.setRenderPipelineState(pipeline)
                 encoder.setVertexBytes(points, length: points.count * MemoryLayout<Vertex>.stride, index: 0)
+                encoder.setVertexBuffer(parametersBuffer, offset: 0, index: 1)
                 encoder.setTriangleFillMode(.lines)
                 encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
                 encoder.endEncoding()

@@ -43,17 +43,22 @@ typedef struct {
     float3x3 colorTransform;
 } Parameters;
 
+struct RenderParameters {
+    float4x4 projection;
+};
+
 typedef float3 Ball;
 
 #pragma mark - Vertex
 
 vertex RasterizerData
-passthroughVertexShader(uint vid                    [[vertex_id]],
-                        constant Vertex* vertexes   [[buffer(0)]])
+passthroughVertexShader(uint vid [[vertex_id]],
+                        constant Vertex* vertexes [[buffer(0)]],
+                        constant RenderParameters &renderParameters [[buffer(1)]])
 {
     RasterizerData out;
     Vertex v = vertexes[vid];
-    out.position = float4(v.position.xy, 0.0, 1.0);
+    out.position = renderParameters.projection * float4(v.position.xy, 0.0, 1.0);
     out.textureCoordinate = v.textureCoordinate;
     return out;
 }
