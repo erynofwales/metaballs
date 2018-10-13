@@ -56,6 +56,14 @@ public class Renderer: NSObject, MTKViewDelegate {
     private var pixelPipeline: MTLRenderPipelineState?
     private var marchingSquaresPipeline: MTLRenderPipelineState?
 
+    private var pixelGeometry: [Vertex] = [
+        Vertex(position: Float2(x:  1, y: -1), textureCoordinate: Float2(x: 1, y: 0)),
+        Vertex(position: Float2(x: -1, y: -1), textureCoordinate: Float2(x: 0, y: 0)),
+        Vertex(position: Float2(x: -1, y:  1), textureCoordinate: Float2(x: 0, y: 1)),
+        Vertex(position: Float2(x:  1, y: -1), textureCoordinate: Float2(x: 1, y: 0)),
+        Vertex(position: Float2(x: -1, y:  1), textureCoordinate: Float2(x: 0, y: 1)),
+        Vertex(position: Float2(x:  1, y:  1), textureCoordinate: Float2(x: 1, y: 1))
+    ]
     private var parametersBuffer: MTLBuffer?
 
     override public init() {
@@ -148,13 +156,29 @@ public class Renderer: NSObject, MTKViewDelegate {
         }
     }
 
+    private func pixelGeometry(forAspectRatio aspectRatio: Float) -> [Vertex] {
+        return [
+            Vertex(position: Float2(x:  aspectRatio, y: -1), textureCoordinate: Float2(x: 1, y: 0)),
+            Vertex(position: Float2(x: -aspectRatio, y: -1), textureCoordinate: Float2(x: 0, y: 0)),
+            Vertex(position: Float2(x: -aspectRatio, y:  1), textureCoordinate: Float2(x: 0, y: 1)),
+            Vertex(position: Float2(x:  aspectRatio, y: -1), textureCoordinate: Float2(x: 1, y: 0)),
+            Vertex(position: Float2(x: -aspectRatio, y:  1), textureCoordinate: Float2(x: 0, y: 1)),
+            Vertex(position: Float2(x:  aspectRatio, y:  1), textureCoordinate: Float2(x: 1, y: 1))
+        ]
+    }
+
     /// MARK: - MTKViewDelegate
 
     public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         delegate?.renderSize = Size(size: size)
 
+        let aspectRatio = Float(size.width / size.height)
+
+        // Generate a new surface to draw the pixel version on
+        pixelGeometry = pixelGeometry(forAspectRatio: aspectRatio)
+
+        // Reproject with the new aspect ratio.
         if let buffer = parametersBuffer {
-            let aspectRatio = Float(size.width / size.height)
             let projectionMatrix = Matrix4x4.orthographicProjection(top: 1.0, left: -aspectRatio, bottom: -1.0, right: aspectRatio, near: 0.0, far: 1.0)
             let params = RenderParameters(projection: projectionMatrix)
             memcpy(buffer.contents(), [params], MemoryLayout<RenderParameters>.size)
@@ -165,17 +189,6 @@ public class Renderer: NSObject, MTKViewDelegate {
         guard let field = delegate?.field else {
             return
         }
-
-        // Two triangles, plus texture coordinates.
-        let points: [Vertex] = [
-            Vertex(position: Float2(x:  1, y: -1), textureCoordinate: Float2(x: 1, y: 0)),
-            Vertex(position: Float2(x: -1, y: -1), textureCoordinate: Float2(x: 0, y: 0)),
-            Vertex(position: Float2(x: -1, y:  1), textureCoordinate: Float2(x: 0, y: 1)),
-
-            Vertex(position: Float2(x:  1, y: -1), textureCoordinate: Float2(x: 1, y: 0)),
-            Vertex(position: Float2(x: -1, y:  1), textureCoordinate: Float2(x: 0, y: 1)),
-            Vertex(position: Float2(x:  1, y:  1), textureCoordinate: Float2(x: 1, y: 1))
-        ]
 
         field.update()
 
@@ -189,7 +202,7 @@ public class Renderer: NSObject, MTKViewDelegate {
                let encoder = buffer.makeRenderCommandEncoder(descriptor: renderPass) {
                 encoder.label = "Pixel Render"
                 encoder.setRenderPipelineState(pipeline)
-                encoder.setVertexBytes(points, length: points.count * MemoryLayout<Vertex>.stride, index: 0)
+                encoder.setVertexBytes(pixelGeometry, length: pixelGeometry.count * MemoryLayout<Vertex>.stride, index: 0)
                 encoder.setVertexBuffer(parametersBuffer, offset: 0, index: 1)
                 encoder.setFragmentBuffer(field.parametersBuffer, offset: 0, index: 0)
                 encoder.setFragmentBuffer(field.ballBuffer, offset: 0, index: 1)
@@ -206,7 +219,7 @@ public class Renderer: NSObject, MTKViewDelegate {
                let encoder = buffer.makeRenderCommandEncoder(descriptor: pass) {
                 encoder.label = "Marching Squares Render"
                 encoder.setRenderPipelineState(pipeline)
-                encoder.setVertexBytes(points, length: points.count * MemoryLayout<Vertex>.stride, index: 0)
+                encoder.setVertexBytes(pixelGeometry, length: pixelGeometry.count * MemoryLayout<Vertex>.stride, index: 0)
                 encoder.setVertexBuffer(parametersBuffer, offset: 0, index: 1)
                 encoder.setTriangleFillMode(.lines)
                 encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
