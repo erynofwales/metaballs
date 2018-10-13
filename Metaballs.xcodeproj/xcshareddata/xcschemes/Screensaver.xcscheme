@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C0B906DA1F455AD000B5F89B"
-               BuildableName = "MetaballsSaver.saver"
+               BuildableName = "Metaballs.saver"
                BlueprintName = "MetaballsSaver"
                ReferencedContainer = "container:Metaballs.xcodeproj">
             </BuildableReference>
@@ -46,7 +46,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C0B906DA1F455AD000B5F89B"
-            BuildableName = "MetaballsSaver.saver"
+            BuildableName = "Metaballs.saver"
             BlueprintName = "MetaballsSaver"
             ReferencedContainer = "container:Metaballs.xcodeproj">
          </BuildableReference>
@@ -64,7 +64,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C0B906DA1F455AD000B5F89B"
-            BuildableName = "MetaballsSaver.saver"
+            BuildableName = "Metaballs.saver"
             BlueprintName = "MetaballsSaver"
             ReferencedContainer = "container:Metaballs.xcodeproj">
          </BuildableReference>

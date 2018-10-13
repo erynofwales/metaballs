@@ -75,7 +75,7 @@
 		C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
 		C0ABCC401F50A560004A0290 /* ScreenSaver.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScreenSaver.framework; path = System/Library/Frameworks/ScreenSaver.framework; sourceTree = SDKROOT; };
 		C0B906D41F45432700B5F89B /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
-		C0B906DB1F455AD000B5F89B /* MetaballsSaver.saver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MetaballsSaver.saver; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0B906DB1F455AD000B5F89B /* Metaballs.saver */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Metaballs.saver; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0B906E11F455AD000B5F89B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C0B906E81F455D1A00B5F89B /* MetaballsSaverView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetaballsSaverView.swift; sourceTree = "<group>"; };
 		C0BBE3671F2E816500E68524 /* Metaballs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Metaballs.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -172,7 +172,7 @@
 			children = (
 				C0BBE3671F2E816500E68524 /* Metaballs.app */,
 				C0BBE3781F2E816500E68524 /* MetaballsTests.xctest */,
-				C0B906DB1F455AD000B5F89B /* MetaballsSaver.saver */,
+				C0B906DB1F455AD000B5F89B /* Metaballs.saver */,
 				C0FF7CA3216AFD840081B781 /* Metaballs.app */,
 			);
 			name = Products;
@@ -277,7 +277,7 @@
 			);
 			name = MetaballsSaver;
 			productName = MetaballsSaver;
-			productReference = C0B906DB1F455AD000B5F89B /* MetaballsSaver.saver */;
+			productReference = C0B906DB1F455AD000B5F89B /* Metaballs.saver */;
 			productType = "com.apple.product-type.bundle";
 		};
 		C0BBE3661F2E816500E68524 /* Metaballs-macOS */ = {
@@ -535,7 +535,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = me.erynwells.MetaballsSaver;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Metaballs;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = saver;
@@ -555,7 +555,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12;
 				PRODUCT_BUNDLE_IDENTIFIER = me.erynwells.MetaballsSaver;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Metaballs;
 				SWIFT_VERSION = 4.2;
 				WRAPPER_EXTENSION = saver;
 			};
