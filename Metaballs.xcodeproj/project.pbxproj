@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C04CDEB221730A820018C4DA /* Rect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04CDEB121730A820018C4DA /* Rect.swift */; };
+		C04CDEB321730A820018C4DA /* Rect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04CDEB121730A820018C4DA /* Rect.swift */; };
+		C04CDEB421730A820018C4DA /* Rect.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04CDEB121730A820018C4DA /* Rect.swift */; };
 		C0ABCC411F50A560004A0290 /* ScreenSaver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0ABCC401F50A560004A0290 /* ScreenSaver.framework */; };
 		C0B906E91F455D1A00B5F89B /* MetaballsSaverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B906E81F455D1A00B5F89B /* MetaballsSaverView.swift */; };
 		C0B906EA1F455EB300B5F89B /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C0BBE3A71F2E893A00E68524 /* MetalKit.framework */; };
@@ -74,6 +77,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C04CDEB121730A820018C4DA /* Rect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rect.swift; sourceTree = "<group>"; };
 		C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferencesViewController.swift; sourceTree = "<group>"; };
 		C0ABCC401F50A560004A0290 /* ScreenSaver.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScreenSaver.framework; path = System/Library/Frameworks/ScreenSaver.framework; sourceTree = SDKROOT; };
 		C0B906D41F45432700B5F89B /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
@@ -210,6 +214,7 @@
 				C0CE7BFF1F362C3F001516B6 /* Geometry.swift */,
 				C0DF1D781F3789DC0038B0A0 /* Memory.swift */,
 				C0FF7C9C216A6DE00081B781 /* Math.swift */,
+				C04CDEB121730A820018C4DA /* Rect.swift */,
 				C0BBE3AB1F2E941200E68524 /* Renderer.swift */,
 				C0BBE3A91F2E91D900E68524 /* Shaders.metal */,
 				C0B906D41F45432700B5F89B /* Preferences.swift */,
@@ -438,6 +443,7 @@
 				C0FF7C9A2168062C0081B781 /* Preferences.swift in Sources */,
 				C0FF7C9E216A6DE00081B781 /* Math.swift in Sources */,
 				C0FF7CC3217020820081B781 /* MarchingSquares.swift in Sources */,
+				C04CDEB421730A820018C4DA /* Rect.swift in Sources */,
 				C0FF7C972168062C0081B781 /* Memory.swift in Sources */,
 				C0FF7C9B2168062C0081B781 /* PreferencesViewController.swift in Sources */,
 				C0B906E91F455D1A00B5F89B /* MetaballsSaverView.swift in Sources */,
@@ -451,6 +457,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C04CDEB221730A820018C4DA /* Rect.swift in Sources */,
 				C0FF7C8E2168062B0081B781 /* Metaballs.swift in Sources */,
 				C0FF7C922168062B0081B781 /* Shaders.metal in Sources */,
 				C0FF7C942168062B0081B781 /* PreferencesViewController.swift in Sources */,
@@ -481,6 +488,7 @@
 				C0FF7CB5216B002E0081B781 /* Metaballs.swift in Sources */,
 				C0FF7CB6216B002E0081B781 /* Geometry.swift in Sources */,
 				C0FF7CB9216B002E0081B781 /* Renderer.swift in Sources */,
+				C04CDEB321730A820018C4DA /* Rect.swift in Sources */,
 				C0FF7CA8216AFD840081B781 /* ViewController.swift in Sources */,
 				C0FF7CBC216B002E0081B781 /* PreferencesViewController.swift in Sources */,
 				C0FF7CB7216B002E0081B781 /* Memory.swift in Sources */,
