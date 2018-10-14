@@ -66,6 +66,8 @@ public class Renderer: NSObject, MTKViewDelegate {
     ]
     private var parametersBuffer: MTLBuffer?
 
+    private var inFlightSemaphore: DispatchSemaphore
+
     override public init() {
         guard let device = MTLCreateSystemDefaultDevice() else {
             fatalError("Unable to create Metal system device")
@@ -79,6 +81,8 @@ public class Renderer: NSObject, MTKViewDelegate {
 
         let parametersLength = MemoryLayout<RenderParameters>.size
         parametersBuffer = device.makeBuffer(length: parametersLength, options: .storageModeShared)
+
+        inFlightSemaphore = DispatchSemaphore(value: 1)
 
         super.init()
     }
