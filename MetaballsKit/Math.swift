@@ -70,7 +70,7 @@ extension Matrix4x4 {
             Float4(0.0, 0.0, -2.0 / (far - near), -(far + near) / (far - near)),
             Float4(0.0, 0.0, 0.0, 1.0)
         ]
-        return Matrix4x4(rows)
+        return Matrix4x4(rows: rows)
     }
 }
 

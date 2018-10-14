@@ -56,14 +56,7 @@ public class Renderer: NSObject, MTKViewDelegate {
     private var pixelPipeline: MTLRenderPipelineState?
     private var marchingSquaresPipeline: MTLRenderPipelineState?
 
-    private var pixelGeometry: [Vertex] = [
-        Vertex(position: Float2(x:  1, y: -1), textureCoordinate: Float2(x: 1, y: 0)),
-        Vertex(position: Float2(x: -1, y: -1), textureCoordinate: Float2(x: 0, y: 0)),
-        Vertex(position: Float2(x: -1, y:  1), textureCoordinate: Float2(x: 0, y: 1)),
-        Vertex(position: Float2(x:  1, y: -1), textureCoordinate: Float2(x: 1, y: 0)),
-        Vertex(position: Float2(x: -1, y:  1), textureCoordinate: Float2(x: 0, y: 1)),
-        Vertex(position: Float2(x:  1, y:  1), textureCoordinate: Float2(x: 1, y: 1))
-    ]
+    private var pixelGeometry: [Vertex]?
     private var parametersBuffer: MTLBuffer?
 
     private var inFlightSemaphore: DispatchSemaphore
@@ -160,14 +153,17 @@ public class Renderer: NSObject, MTKViewDelegate {
         }
     }
 
-    private func pixelGeometry(forAspectRatio aspectRatio: Float) -> [Vertex] {
+    private func pixelGeometry(forViewSize size: CGSize) -> [Vertex] {
+        let w = Float(size.width)
+        let h = Float(size.height)
         return [
-            Vertex(position: Float2(x:  aspectRatio, y: -1), textureCoordinate: Float2(x: 1, y: 0)),
-            Vertex(position: Float2(x: -aspectRatio, y: -1), textureCoordinate: Float2(x: 0, y: 0)),
-            Vertex(position: Float2(x: -aspectRatio, y:  1), textureCoordinate: Float2(x: 0, y: 1)),
-            Vertex(position: Float2(x:  aspectRatio, y: -1), textureCoordinate: Float2(x: 1, y: 0)),
-            Vertex(position: Float2(x: -aspectRatio, y:  1), textureCoordinate: Float2(x: 0, y: 1)),
-            Vertex(position: Float2(x:  aspectRatio, y:  1), textureCoordinate: Float2(x: 1, y: 1))
+            Vertex(position: Float2(x: w, y: h), textureCoordinate: Float2(x: 1, y: 1)),
+            Vertex(position: Float2(x: 0, y: h), textureCoordinate: Float2(x: 0, y: 1)),
+            Vertex(position: Float2(x: 0, y: 0), textureCoordinate: Float2(x: 0, y: 0)),
+
+            Vertex(position: Float2(x: w, y: h), textureCoordinate: Float2(x: 1, y: 1)),
+            Vertex(position: Float2(x: 0, y: 0), textureCoordinate: Float2(x: 0, y: 0)),
+            Vertex(position: Float2(x: w, y: 0), textureCoordinate: Float2(x: 1, y: 0))
         ]
     }
 
@@ -176,14 +172,12 @@ public class Renderer: NSObject, MTKViewDelegate {
     public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         delegate?.renderSize = Size(size: size)
 
-        let aspectRatio = Float(size.width / size.height)
-
         // Generate a new surface to draw the pixel version on
-        pixelGeometry = pixelGeometry(forAspectRatio: aspectRatio)
+        pixelGeometry = pixelGeometry(forViewSize: size)
 
         // Reproject with the new aspect ratio.
         if let buffer = parametersBuffer {
-            let projectionMatrix = Matrix4x4.orthographicProjection(top: 1.0, left: -aspectRatio, bottom: -1.0, right: aspectRatio, near: 0.0, far: 1.0)
+            let projectionMatrix = Matrix4x4.orthographicProjection(top: 0, left: 0, bottom: Float(size.height), right: Float(size.width), near: -1.0, far: 1.0)
             let params = RenderParameters(projection: projectionMatrix)
             memcpy(buffer.contents(), [params], MemoryLayout<RenderParameters>.size)
         }
@@ -208,6 +202,11 @@ public class Renderer: NSObject, MTKViewDelegate {
         buffer.label = "Metaballs Command Buffer"
 
         field.update()
+
+        if self.pixelGeometry == nil {
+            self.pixelGeometry = self.pixelGeometry(forViewSize: view.drawableSize)
+        }
+        let pixelGeometry = self.pixelGeometry!
 
         if let renderPass = view.currentRenderPassDescriptor {
             // Render the per-pixel metaballs
