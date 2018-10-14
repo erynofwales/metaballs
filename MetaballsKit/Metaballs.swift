@@ -157,8 +157,6 @@ public class Field {
         }
 
         populateBallBuffer()
-        marchingSquares.sampleField()
-        marchingSquares.populateIndexes()
     }
 
     func add(ballWithRadius radius: Float) {
