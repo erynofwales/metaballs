@@ -38,6 +38,8 @@ class ViewController: NSViewController, RendererDelegate {
         }
     }
 
+    var marchingSquares: MarchingSquares
+
     private var renderer: Renderer!
 
     internal var metalView: MTKView {
@@ -47,12 +49,14 @@ class ViewController: NSViewController, RendererDelegate {
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         let params = ViewController.defaultParameters()
         field = Field(parameters: params)
+        marchingSquares = MarchingSquares(field: field)
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
 
     required init?(coder: NSCoder) {
         let params = ViewController.defaultParameters()
         field = Field(parameters: params)
+        marchingSquares = MarchingSquares(field: field)
         super.init(coder: coder)
     }
 
@@ -112,6 +116,7 @@ class ViewController: NSViewController, RendererDelegate {
         }
         set {
             field.size = newValue
+            marchingSquares.fieldDidResize()
         }
     }
 }

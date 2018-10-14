@@ -13,9 +13,10 @@ public enum RendererError: Error {
     case MetalError(String)
 }
 
-public protocol RendererDelegate {
+protocol RendererDelegate {
     var renderSize: Size { get set }
     var field: Field { get }
+    var marchingSquares: MarchingSquares { get }
     var metalView: MTKView { get }
 }
 
@@ -29,7 +30,7 @@ struct Vertex {
 }
 
 public class Renderer: NSObject, MTKViewDelegate {
-    public var delegate: RendererDelegate? = nil {
+    var delegate: RendererDelegate? = nil {
         didSet {
             guard let delegate = delegate else {
                 return
@@ -41,7 +42,8 @@ public class Renderer: NSObject, MTKViewDelegate {
             configurePixelPipeline(withPixelFormat: view.colorPixelFormat)
             configureMarchingSquaresPipeline(withPixelFormat: view.colorPixelFormat)
 
-            try! delegate.field.setupMetal(withDevice: device)
+            delegate.field.setupMetal(withDevice: device)
+            delegate.marchingSquares.setupMetal(withDevice: device)
         }
     }
 
@@ -80,7 +82,7 @@ public class Renderer: NSObject, MTKViewDelegate {
         super.init()
     }
 
-    public convenience init(delegate: RendererDelegate) throws {
+    convenience init(delegate: RendererDelegate) throws {
         self.init()
         self.delegate = delegate
     }
@@ -223,19 +225,21 @@ public class Renderer: NSObject, MTKViewDelegate {
                 didEncode = true
             }
 
-            // Render the marching squares version over top of the pixel version.
-            // We need our own render pass descriptor that specifies that we load the results of the previous pass to make this render pass appear on top of the other.
-            let pass = renderPass.copy() as! MTLRenderPassDescriptor
-            pass.colorAttachments[0].loadAction = .load
-            if let pipeline = marchingSquaresPipeline,
-               let encoder = buffer.makeRenderCommandEncoder(descriptor: pass) {
-                encoder.label = "Marching Squares Render"
-                encoder.setRenderPipelineState(pipeline)
-                encoder.setVertexBuffer(field.marchingSquares.gridGeometry, offset: 0, index: 0)
-                encoder.setVertexBuffer(parametersBuffer, offset: 0, index: 1)
-                encoder.drawPrimitives(type: .line, vertexStart: 0, vertexCount: field.marchingSquares.gridVertexCount)
-                encoder.endEncoding()
-                didEncode = true
+            if let marchingSquares = delegate?.marchingSquares {
+                // Render the marching squares version over top of the pixel version.
+                // We need our own render pass descriptor that specifies that we load the results of the previous pass to make this render pass appear on top of the other.
+                let pass = renderPass.copy() as! MTLRenderPassDescriptor
+                pass.colorAttachments[0].loadAction = .load
+                if let pipeline = marchingSquaresPipeline,
+                    let encoder = buffer.makeRenderCommandEncoder(descriptor: pass) {
+                    encoder.label = "Marching Squares Render"
+                    encoder.setRenderPipelineState(pipeline)
+                    encoder.setVertexBuffer(marchingSquares.gridGeometry, offset: 0, index: 0)
+                    encoder.setVertexBuffer(parametersBuffer, offset: 0, index: 1)
+                    encoder.drawPrimitives(type: .line, vertexStart: 0, vertexCount: marchingSquares.gridVertexCount)
+                    encoder.endEncoding()
+                    didEncode = true
+                }
             }
         }
 

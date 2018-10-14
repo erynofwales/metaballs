@@ -109,7 +109,6 @@ public class Field {
                 // Update Metal state as needed.
                 populateParametersBuffer()
                 populateBallBuffer()
-                marchingSquares.fieldDidResize()
 
                 parameters.size = newValue
             }
@@ -120,9 +119,6 @@ public class Field {
 
     public var defaults = UserDefaults.standard
     private var parameters: Parameters
-    lazy var marchingSquares: MarchingSquares = {
-        return MarchingSquares(field: self)
-    }()
 
     internal var bounds: CGRect {
         return CGRect(origin: CGPoint(), size: CGSize(size: size))
@@ -263,7 +259,7 @@ public class Field {
         return ptr.advanced(by: sizeOfType)
     }
 
-    public func setupMetal(withDevice device: MTLDevice) throws {
+    func setupMetal(withDevice device: MTLDevice) {
         guard self.device == nil else {
             return
         }
@@ -271,7 +267,6 @@ public class Field {
         self.device = device
         populateParametersBuffer()
         populateBallBuffer()
-        marchingSquares.setupMetal(withDevice: device)
     }
 
     // MARK: - Notifications
