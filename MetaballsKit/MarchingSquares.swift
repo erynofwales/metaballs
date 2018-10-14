@@ -13,12 +13,13 @@ class MarchingSquares {
     private var field: Field
     private var sampleGridSize = Size(16)
 
+    private var semaphore: DispatchSemaphore
+
     /// Samples of the field's current state.
-    private(set) var samples: MTLTexture?
+    private(set) var samplesBuffer: MTLBuffer?
     /// Indexes of geometry to render.
     private(set) var indexes: MTLTexture?
 
-    private var lastGridCount: Int = 0
     private(set) var gridGeometry: MTLBuffer?
 
     private var xSamples: Int {
@@ -29,12 +30,15 @@ class MarchingSquares {
         return Int(field.size.y / sampleGridSize.y)
     }
 
+    private var lastSamplesCount = 0
+
     var samplesCount: Int {
         return xSamples * ySamples
     }
 
     init(field: Field) {
         self.field = field
+        semaphore = DispatchSemaphore(value: 1)
     }
 
     func setupMetal(withDevice device: MTLDevice) {
@@ -54,15 +58,16 @@ class MarchingSquares {
     }
 
     func fieldDidResize() {
-        guard let gridGeometry = gridGeometry else {
+        guard let device = gridGeometry?.device else {
             return
         }
-        createGridGeometryBuffer(withDevice: gridGeometry.device)
-        populateGrid(withDevice: gridGeometry.device)
+        populateGrid(withDevice: device)
+        populateSamples(withDevice: device)
+        lastSamplesCount = samplesCount
     }
 
     func populateGrid(withDevice device: MTLDevice) {
-        guard lastGridCount != samplesCount else {
+        guard lastSamplesCount != samplesCount else {
             return
         }
 
@@ -77,7 +82,8 @@ class MarchingSquares {
         for y in 0..<ySamples {
             for x in 0..<xSamples {
                 let transform = Matrix4x4.translation(dx: Float(x) * gridSizeX, dy: Float(y) * gridSizeY, dz: 0.0) * Matrix4x4.scale(x: gridSizeX, y: gridSizeY, z: 1)
-                let rect = Rect(transform: transform, color: Float4(1.0))
+                let color = Float4(r: 0, g: 1, b: 0, a: 1)
+                let rect = Rect(transform: transform, color: color)
                 grid.append(rect)
             }
         }
@@ -88,72 +94,29 @@ class MarchingSquares {
         } else {
             fatalError("Couldn't create buffer for grid rects")
         }
-
-        lastGridCount = samplesCount
     }
 
-    private func createGridGeometryBuffer(withDevice device: MTLDevice) {
-        // Allocate a buffer with enough space for the rect vertex data, and all the rect instances we need to render.
-        // [rect] [rect] ...
+    func populateSamples(withDevice device: MTLDevice) {
+        print("Populating samples buffer with \(samplesCount) values")
 
-    }
+        var samples = [Float]()
+        samples.reserveCapacity(samplesCount)
 
-    func sampleField() {
-        guard let samples = samples else { return }
-
-        let bytesPerRow = samples.width * MemoryLayout<Float>.stride
-
-        for xSample in 0..<samples.width {
-            let x = Float(xSample * Int(sampleGridSize.x))
-            for ySample in 0..<samples.height {
-                let y = Float(ySample * Int(sampleGridSize.y))
-                let sample = [field.sample(at: Float2(x: x, y: y))]
-
-                let origin = MTLOrigin(x: xSample, y: ySample, z: 0)
-                let size = MTLSize(width: 1, height: 1, depth: 1)
-                let region = MTLRegion(origin: origin, size: size)
-                samples.replace(region: region, mipmapLevel: 0, withBytes: sample, bytesPerRow: bytesPerRow)
+        for ys in 0..<ySamples {
+            let y = Float(ys * Int(sampleGridSize.y))
+            for xs in 0..<xSamples {
+                let x = Float(xs * Int(sampleGridSize.x))
+                let sample = field.sample(at: Float2(x: x, y: y))
+                samples.append(sample)
             }
         }
-    }
 
-    func populateIndexes() {
-        guard let indexes = indexes else { return }
-
-        let bytesPerRow = indexes.width * MemoryLayout<UInt8>.stride
-
-        for x in 0..<indexes.width {
-            for y in 0..<indexes.height {
-                guard let samples = getSampleBlock(x: x, y: y) else {
-                    continue
-                }
-
-                let index = (samples[0] > 1.0 ? 0b1000 : 0) +
-                            (samples[1] > 1.0 ? 0b0100 : 0) +
-                            (samples[2] > 1.0 ? 0b0001 : 0) +
-                            (samples[3] > 1.0 ? 0b0010 : 0)
-
-                let origin = MTLOrigin(x: x, y: y, z: 0)
-                let size = MTLSize(width: 1, height: 1, depth: 1)
-                let region = MTLRegion(origin: origin, size: size)
-                let indexArr = [index]
-                indexes.replace(region: region, mipmapLevel: 0, withBytes: indexArr, bytesPerRow: bytesPerRow)
-            }
+        let samplesLength = MemoryLayout<Float>.stride * samplesCount
+        if let buffer = device.makeBuffer(length: MemoryLayout<Float>.stride * samples.count, options: .storageModeShared) {
+            memcpy(buffer.contents(), samples, samplesLength)
+            samplesBuffer = buffer
+        } else {
+            fatalError("Couldn't create buffer for samples")
         }
-    }
-
-    private func getSampleBlock(x: Int, y: Int) -> [Float]? {
-        guard let samples = samples else {
-            return nil
-        }
-
-        var block: [Float] = [0, 0, 0, 0]
-        let bytesPerRow = samples.width * MemoryLayout<Float>.stride
-        let origin = MTLOrigin(x: x, y: y, z: 0)
-        let size = MTLSize(width: 2, height: 2, depth: 1)
-        let region = MTLRegion(origin: origin, size: size)
-        samples.getBytes(&block, bytesPerRow: bytesPerRow, from: region, mipmapLevel: 0)
-
-        return block
     }
 }

@@ -45,6 +45,7 @@ public class Renderer: NSObject, MTKViewDelegate {
             delegate.field.setupMetal(withDevice: device)
             delegate.marchingSquares.setupMetal(withDevice: device)
             delegate.marchingSquares.populateGrid(withDevice: device)
+            delegate.marchingSquares.populateSamples(withDevice: device)
         }
     }
 
@@ -207,6 +208,9 @@ public class Renderer: NSObject, MTKViewDelegate {
         buffer.label = "Metaballs Command Buffer"
 
         field.update()
+        if let ms = delegate?.marchingSquares {
+            ms.populateSamples(withDevice: device)
+        }
 
         if self.pixelGeometry == nil {
             self.pixelGeometry = self.pixelGeometry(forViewSize: view.drawableSize)
@@ -215,24 +219,24 @@ public class Renderer: NSObject, MTKViewDelegate {
 
         if let renderPass = view.currentRenderPassDescriptor {
             // Render the per-pixel metaballs
-            if let pipeline = pixelPipeline,
-               let encoder = buffer.makeRenderCommandEncoder(descriptor: renderPass) {
-                encoder.label = "Pixel Render"
-                encoder.setRenderPipelineState(pipeline)
-                encoder.setVertexBytes(pixelGeometry, length: pixelGeometry.count * MemoryLayout<Vertex>.stride, index: 0)
-                encoder.setVertexBuffer(parametersBuffer, offset: 0, index: 1)
-                encoder.setFragmentBuffer(field.parametersBuffer, offset: 0, index: 0)
-                encoder.setFragmentBuffer(field.ballBuffer, offset: 0, index: 1)
-                encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
-                encoder.endEncoding()
-                didEncode = true
-            }
+//            if let pipeline = pixelPipeline,
+//               let encoder = buffer.makeRenderCommandEncoder(descriptor: renderPass) {
+//                encoder.label = "Pixel Render"
+//                encoder.setRenderPipelineState(pipeline)
+//                encoder.setVertexBytes(pixelGeometry, length: pixelGeometry.count * MemoryLayout<Vertex>.stride, index: 0)
+//                encoder.setVertexBuffer(parametersBuffer, offset: 0, index: 1)
+//                encoder.setFragmentBuffer(field.parametersBuffer, offset: 0, index: 0)
+//                encoder.setFragmentBuffer(field.ballBuffer, offset: 0, index: 1)
+//                encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
+//                encoder.endEncoding()
+//                didEncode = true
+//            }
 
             if let marchingSquares = delegate?.marchingSquares {
                 // Render the marching squares version over top of the pixel version.
                 // We need our own render pass descriptor that specifies that we load the results of the previous pass to make this render pass appear on top of the other.
                 let pass = renderPass.copy() as! MTLRenderPassDescriptor
-                pass.colorAttachments[0].loadAction = .load
+//                pass.colorAttachments[0].loadAction = .load
                 if let pipeline = marchingSquaresPipeline,
                     let encoder = buffer.makeRenderCommandEncoder(descriptor: pass) {
                     encoder.label = "Marching Squares Grid Render"
@@ -240,7 +244,7 @@ public class Renderer: NSObject, MTKViewDelegate {
                     encoder.setVertexBytes(Rect.geometry, length: MemoryLayout<Vertex>.stride * Rect.geometry.count, index: 0)
                     encoder.setVertexBuffer(marchingSquares.gridGeometry, offset: 0, index: 1)
                     encoder.setVertexBuffer(parametersBuffer, offset: 0, index: 2)
-                    encoder.setTriangleFillMode(.lines)
+                    encoder.setFragmentBuffer(marchingSquares.samplesBuffer, offset: 0, index: 0)
                     encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: Rect.geometry.count, instanceCount: marchingSquares.samplesCount)
                     encoder.endEncoding()
                     didEncode = true

@@ -19,6 +19,7 @@ struct RasterizerData {
     float4 position [[position]];
     float4 color;
     float2 textureCoordinate;
+    int instance;
 };
 
 vertex RasterizerData
@@ -34,12 +35,17 @@ gridVertexShader(constant Vertex *vertexes [[buffer(0)]],
 
     RasterizerData out;
     out.position = renderParameters.projection * rect.transform * float4(v.position.xy, 0, 1);
+    out.color = rect.color;
     out.textureCoordinate = v.textureCoordinate;
+    out.instance = instid;
     return out;
 }
 
 fragment float4
-gridFragmentShader(RasterizerData in [[stage_in]])
+gridFragmentShader(RasterizerData in [[stage_in]],
+                   constant float *samples [[buffer(0)]])
 {
-    return in.color;
+    int instance = in.instance;
+    float sample = samples[instance];
+    return sample > 1.0 ? in.color : float4(0);
 }
