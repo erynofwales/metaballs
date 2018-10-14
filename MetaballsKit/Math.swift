@@ -58,6 +58,13 @@ extension Matrix3x3 {
         mat.columns.2.y = dy
         return mat
     }
+
+    static func scale(x: Float, y: Float) -> Matrix3x3 {
+        var mat = self.init(1.0)
+        mat.columns.0.x = x
+        mat.columns.1.y = y
+        return mat
+    }
 }
 
 extension Matrix4x4 {
