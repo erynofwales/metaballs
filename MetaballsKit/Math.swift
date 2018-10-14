@@ -29,6 +29,12 @@ extension Float2: CustomStringConvertible {
     }
 }
 
+extension Float3 {
+    func dot(other: Float3) -> Float3 {
+        return Float3(x * other.x, y * other.y, z * other.z)
+    }
+}
+
 extension Float4 {
     public init(r: Float, g: Float, b: Float, a: Float) {
         self.init(r, g, b, a)
@@ -67,6 +73,12 @@ extension Matrix3x3 {
     }
 }
 
+extension Matrix3x3 {
+    static func *(left: Matrix3x3, right: Matrix3x3) -> Matrix3x3 {
+        return matrix_multiply(left, right)
+    }
+}
+
 extension Matrix4x4 {
     /// Create a 4x4 orthographic projection matrix with the provided 6-tuple.
     /// @see https://en.wikipedia.org/wiki/Orthographic_projection
@@ -78,6 +90,28 @@ extension Matrix4x4 {
             Float4(0.0, 0.0, 0.0, 1.0)
         ]
         return Matrix4x4(rows: rows)
+    }
+
+    static func translation(dx: Float, dy: Float, dz: Float) -> Matrix4x4 {
+        var mat = self.init(1.0)
+        mat.columns.3.x = dx
+        mat.columns.3.y = dy
+        mat.columns.3.z = dz
+        return mat
+    }
+
+    static func scale(x: Float, y: Float, z: Float) -> Matrix4x4 {
+        var mat = self.init(1.0)
+        mat.columns.0.x = x
+        mat.columns.1.y = y
+        mat.columns.2.z = z
+        return mat
+    }
+}
+
+extension Matrix4x4 {
+    static func *(left: Matrix4x4, right: Matrix4x4) -> Matrix4x4 {
+        return matrix_multiply(left, right)
     }
 }
 
