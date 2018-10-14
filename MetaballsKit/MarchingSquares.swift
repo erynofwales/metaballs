@@ -11,13 +11,14 @@ import Metal
 
 class MarchingSquares {
     private var field: Field
-    private var sampleGridSize: Size
+    private var sampleGridSize = Size(16)
 
     /// Samples of the field's current state.
     private(set) var samples: MTLTexture?
     /// Indexes of geometry to render.
     private(set) var indexes: MTLTexture?
 
+    private var lastGridCount: Int = 0
     private(set) var gridGeometry: MTLBuffer?
 
     private var xSamples: Int {
@@ -28,83 +29,73 @@ class MarchingSquares {
         return Int(field.size.y / sampleGridSize.y)
     }
 
-    private var xGridlinesCount: Int {
-        let xSamples = Int(field.size.x / sampleGridSize.x)
-        return xSamples - 1
-    }
-
-    private var yGridlinesCount: Int {
-        let ySamples = Int(field.size.y / sampleGridSize.y)
-        return ySamples - 1
-    }
-
-    var gridVertexCount: Int {
-        return xGridlinesCount * 2 + yGridlinesCount * 2
+    var samplesCount: Int {
+        return xSamples * ySamples
     }
 
     init(field: Field) {
         self.field = field
-        sampleGridSize = Size(16)
     }
 
     func setupMetal(withDevice device: MTLDevice) {
-        guard xSamples > 1 && ySamples > 1 else {
-            return
-        }
-
-        let samplesDesc = MTLTextureDescriptor()
-        samplesDesc.textureType = .type2D
-        samplesDesc.width = xSamples
-        samplesDesc.height = ySamples
-        samplesDesc.pixelFormat = .r32Float
-        samples = device.makeTexture(descriptor: samplesDesc)
-
-        let indexesDesc = MTLTextureDescriptor()
-        indexesDesc.textureType = .type2D
-        indexesDesc.width = xSamples - 1
-        indexesDesc.height = ySamples - 1
-        indexesDesc.pixelFormat = .a8Unorm
-        indexes = device.makeTexture(descriptor: indexesDesc)
-
-        let gridGeometryLength = MemoryLayout<Vertex>.stride * gridVertexCount
-        gridGeometry = device.makeBuffer(length: gridGeometryLength, options: .storageModeShared)
-        populateGridGeometryBuffer()
+//        let samplesDesc = MTLTextureDescriptor()
+//        samplesDesc.textureType = .type2D
+//        samplesDesc.width = xSamples
+//        samplesDesc.height = ySamples
+//        samplesDesc.pixelFormat = .r32Float
+//        samples = device.makeTexture(descriptor: samplesDesc)
+//
+//        let indexesDesc = MTLTextureDescriptor()
+//        indexesDesc.textureType = .type2D
+//        indexesDesc.width = xSamples - 1
+//        indexesDesc.height = ySamples - 1
+//        indexesDesc.pixelFormat = .a8Unorm
+//        indexes = device.makeTexture(descriptor: indexesDesc)
     }
 
     func fieldDidResize() {
         guard let gridGeometry = gridGeometry else {
             return
         }
-        let gridGeometryLength = MemoryLayout<Vertex>.stride * gridVertexCount
-        self.gridGeometry = gridGeometry.device.makeBuffer(length: gridGeometryLength, options: .storageModeShared)
-        populateGridGeometryBuffer()
+        createGridGeometryBuffer(withDevice: gridGeometry.device)
+        populateGrid(withDevice: gridGeometry.device)
     }
 
-    private func populateGridGeometryBuffer() {
-        guard let gridGeometry = gridGeometry else {
+    func populateGrid(withDevice device: MTLDevice) {
+        guard lastGridCount != samplesCount else {
             return
         }
 
-        print("Rebuilding gridlines")
+        print("Populating grid with (\(xSamples), \(ySamples)) samples")
 
-        var vertices = [Vertex]()
+        let gridSizeX = Float(sampleGridSize.x)
+        let gridSizeY = Float(sampleGridSize.y)
 
-        let fieldSizeX = Float(field.size.x)
-        let fieldSizeY = Float(field.size.y)
+        var grid = [Rect]()
+        grid.reserveCapacity(samplesCount)
 
-        for x in 1..<xSamples {
-            let xCoord = Float(x * Int(sampleGridSize.x))
-            vertices.append(Vertex(position: Float2(xCoord, 0), textureCoordinate: Float2()))
-            vertices.append(Vertex(position: Float2(xCoord, fieldSizeY), textureCoordinate: Float2()))
+        for y in 0..<ySamples {
+            for x in 0..<xSamples {
+                let transform = Matrix4x4.translation(dx: Float(x) * gridSizeX, dy: Float(y) * gridSizeY, dz: 0.0) * Matrix4x4.scale(x: gridSizeX, y: gridSizeY, z: 1)
+                let rect = Rect(transform: transform, color: Float4(1.0))
+                grid.append(rect)
+            }
         }
 
-        for y in 1..<ySamples {
-            let yCoord = Float(y * Int(sampleGridSize.y))
-            vertices.append(Vertex(position: Float2(0, yCoord), textureCoordinate: Float2()))
-            vertices.append(Vertex(position: Float2(fieldSizeX, yCoord), textureCoordinate: Float2()))
+        if let buffer = device.makeBuffer(length: MemoryLayout<Rect>.stride * samplesCount, options: .storageModeShared) {
+            memcpy(buffer.contents(), grid, MemoryLayout<Rect>.stride * grid.count)
+            gridGeometry = buffer
+        } else {
+            fatalError("Couldn't create buffer for grid rects")
         }
 
-        memcpy(gridGeometry.contents(), vertices, MemoryLayout<Vertex>.stride * vertices.count)
+        lastGridCount = samplesCount
+    }
+
+    private func createGridGeometryBuffer(withDevice device: MTLDevice) {
+        // Allocate a buffer with enough space for the rect vertex data, and all the rect instances we need to render.
+        // [rect] [rect] ...
+
     }
 
     func sampleField() {
