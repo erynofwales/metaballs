@@ -19,6 +19,16 @@ class ViewController: NSViewController, RendererDelegate {
         p.color0 = color0
         let color1 = defaults.color1 ?? Float4(0.88, 0.50, 1, 1)
         p.color1 = color1
+        let color2 = defaults.color2 ?? Float4(0.24, 0.66, 1, 1)
+        p.color2 = color2
+        let color3 = defaults.color3 ?? Float4(0.61, 0.61, 1, 1)
+        p.color3 = color3
+        let rotation = defaults.colorRotation
+        p.colorTransform = Matrix3x3.rotation(angle: rotation)
+        let feather = defaults.feather
+        p.feather = feather
+        let target = defaults.target
+        p.target = target 
         return p
     }
 
