@@ -48,18 +48,17 @@ class MarchingSquares {
     func sampleField() {
         guard let samples = samples else { return }
 
-        let xSamples = Int(field.size.x / sampleGridSize.x)
-        let ySamples = Int(field.size.y / sampleGridSize.y)
-        for xSample in 0..<xSamples {
+        let bytesPerRow = samples.width * MemoryLayout<Float>.stride
+
+        for xSample in 0..<samples.width {
             let x = Float(xSample * Int(sampleGridSize.x))
-            for ySample in 0..<ySamples {
+            for ySample in 0..<samples.height {
                 let y = Float(ySample * Int(sampleGridSize.y))
                 let sample = [field.sample(at: Float2(x: x, y: y))]
 
                 let origin = MTLOrigin(x: xSample, y: ySample, z: 0)
                 let size = MTLSize(width: 1, height: 1, depth: 1)
                 let region = MTLRegion(origin: origin, size: size)
-                let bytesPerRow = samples.width * MemoryLayout<Float>.stride
                 samples.replace(region: region, mipmapLevel: 0, withBytes: sample, bytesPerRow: bytesPerRow)
             }
         }
