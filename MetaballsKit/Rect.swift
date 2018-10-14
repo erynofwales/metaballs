@@ -21,5 +21,6 @@ struct Rect {
         ]
     }
 
-    var transform: Matrix3x3
+    var transform: Matrix4x4
+    var color: Float4
 }

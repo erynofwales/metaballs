@@ -44,6 +44,7 @@ public class Renderer: NSObject, MTKViewDelegate {
 
             delegate.field.setupMetal(withDevice: device)
             delegate.marchingSquares.setupMetal(withDevice: device)
+            delegate.marchingSquares.populateGrid(withDevice: device)
         }
     }
 
@@ -126,11 +127,13 @@ public class Renderer: NSObject, MTKViewDelegate {
             fatalError("Couldn't get Metal library")
         }
 
-        let vertexShader = library.makeFunction(name: "passthroughVertexShader")
-        let fragmentShader = library.makeFunction(name: "passthroughFragmentShader")
+        guard let vertexShader = library.makeFunction(name: "gridVertexShader"),
+              let fragmentShader = library.makeFunction(name: "gridFragmentShader") else {
+            fatalError("Couldn't get marching squares vertex or fragment function from library")
+        }
 
         let pipelineDesc = MTLRenderPipelineDescriptor()
-        pipelineDesc.label = "Marching Squares Pipeline"
+        pipelineDesc.label = "Grid Pipeline"
         pipelineDesc.vertexFunction = vertexShader
         pipelineDesc.fragmentFunction = fragmentShader
         if let renderAttachment = pipelineDesc.colorAttachments[0] {
@@ -232,11 +235,13 @@ public class Renderer: NSObject, MTKViewDelegate {
                 pass.colorAttachments[0].loadAction = .load
                 if let pipeline = marchingSquaresPipeline,
                     let encoder = buffer.makeRenderCommandEncoder(descriptor: pass) {
-                    encoder.label = "Marching Squares Render"
+                    encoder.label = "Marching Squares Grid Render"
                     encoder.setRenderPipelineState(pipeline)
-                    encoder.setVertexBuffer(marchingSquares.gridGeometry, offset: 0, index: 0)
-                    encoder.setVertexBuffer(parametersBuffer, offset: 0, index: 1)
-                    encoder.drawPrimitives(type: .line, vertexStart: 0, vertexCount: marchingSquares.gridVertexCount)
+                    encoder.setVertexBytes(Rect.geometry, length: MemoryLayout<Vertex>.stride * Rect.geometry.count, index: 0)
+                    encoder.setVertexBuffer(marchingSquares.gridGeometry, offset: 0, index: 1)
+                    encoder.setVertexBuffer(parametersBuffer, offset: 0, index: 2)
+                    encoder.setTriangleFillMode(.lines)
+                    encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: Rect.geometry.count, instanceCount: marchingSquares.samplesCount)
                     encoder.endEncoding()
                     didEncode = true
                 }

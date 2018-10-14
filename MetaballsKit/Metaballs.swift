@@ -263,7 +263,7 @@ public class Field {
         guard self.device == nil else {
             return
         }
-        NSLog("Setting up Metal")
+        print("Setting up Metal")
         self.device = device
         populateParametersBuffer()
         populateBallBuffer()
