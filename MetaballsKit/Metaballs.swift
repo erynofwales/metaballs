@@ -119,6 +119,9 @@ public class Field {
 
     public var defaults = UserDefaults.standard
     private var parameters: Parameters
+    private lazy var marchingSquares: MarchingSquares = {
+        return MarchingSquares(field: self)
+    }()
 
     internal var bounds: CGRect {
         return CGRect(origin: CGPoint(), size: CGSize(size: size))
@@ -155,7 +158,10 @@ public class Field {
                 }
             }
         }
+
         populateBallBuffer()
+        marchingSquares.sampleField()
+        marchingSquares.populateIndexes()
     }
 
     func add(ballWithRadius radius: Float) {
@@ -264,6 +270,7 @@ public class Field {
         self.device = device
         populateParametersBuffer()
         populateBallBuffer()
+        marchingSquares.setupMetal(withDevice: device)
     }
 
     // MARK: - Notifications

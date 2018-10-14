@@ -26,12 +26,15 @@ class MarchingSquares {
     func setupMetal(withDevice device: MTLDevice) {
         let xSamples = Int(field.size.x / sampleGridSize.x)
         let ySamples = Int(field.size.y / sampleGridSize.y)
+        guard xSamples > 1 && ySamples > 1 else {
+            return
+        }
 
         let samplesDesc = MTLTextureDescriptor()
         samplesDesc.textureType = .type2D
         samplesDesc.width = xSamples
         samplesDesc.height = ySamples
-        samplesDesc.pixelFormat = .depth32Float
+        samplesDesc.pixelFormat = .r32Float
         samples = device.makeTexture(descriptor: samplesDesc)
 
         let indexesDesc = MTLTextureDescriptor()
@@ -60,5 +63,45 @@ class MarchingSquares {
                 samples.replace(region: region, mipmapLevel: 0, withBytes: sample, bytesPerRow: bytesPerRow)
             }
         }
+    }
+
+    func populateIndexes() {
+        guard let indexes = indexes else { return }
+
+        let bytesPerRow = indexes.width * MemoryLayout<UInt8>.stride
+
+        for x in 0..<indexes.width {
+            for y in 0..<indexes.height {
+                guard let samples = getSampleBlock(x: x, y: y) else {
+                    continue
+                }
+
+                let index = (samples[0] > 1.0 ? 0b1000 : 0) +
+                            (samples[1] > 1.0 ? 0b0100 : 0) +
+                            (samples[2] > 1.0 ? 0b0001 : 0) +
+                            (samples[3] > 1.0 ? 0b0010 : 0)
+
+                let origin = MTLOrigin(x: x, y: y, z: 0)
+                let size = MTLSize(width: 1, height: 1, depth: 1)
+                let region = MTLRegion(origin: origin, size: size)
+                let indexArr = [index]
+                indexes.replace(region: region, mipmapLevel: 0, withBytes: indexArr, bytesPerRow: bytesPerRow)
+            }
+        }
+    }
+
+    private func getSampleBlock(x: Int, y: Int) -> [Float]? {
+        guard let samples = samples else {
+            return nil
+        }
+
+        var block: [Float] = [0, 0, 0, 0]
+        let bytesPerRow = samples.width * MemoryLayout<Float>.stride
+        let origin = MTLOrigin(x: x, y: y, z: 0)
+        let size = MTLSize(width: 2, height: 2, depth: 1)
+        let region = MTLRegion(origin: origin, size: size)
+        samples.getBytes(&block, bytesPerRow: bytesPerRow, from: region, mipmapLevel: 0)
+
+        return block
     }
 }
