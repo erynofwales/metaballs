@@ -155,6 +155,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C0943E7E2173F669000CA76A /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				C04CDEB92173ABE50018C4DA /* ShaderTypes.hh */,
+				C04CDEB52173ABD50018C4DA /* MarchingSquares.metal */,
+				C0BBE3A91F2E91D900E68524 /* Shaders.metal */,
+			);
+			path = Shaders;
+			sourceTree = "<group>";
+		};
 		C0B906DC1F455AD000B5F89B /* Screensaver */ = {
 			isa = PBXGroup;
 			children = (
@@ -216,14 +226,12 @@
 			children = (
 				C0BBE3A31F2E81C700E68524 /* Metaballs.swift */,
 				C0FF7CC1217020820081B781 /* MarchingSquares.swift */,
-				C04CDEB52173ABD50018C4DA /* MarchingSquares.metal */,
-				C04CDEB92173ABE50018C4DA /* ShaderTypes.hh */,
+				C0943E7E2173F669000CA76A /* Shaders */,
 				C0CE7BFF1F362C3F001516B6 /* Geometry.swift */,
 				C0DF1D781F3789DC0038B0A0 /* Memory.swift */,
 				C0FF7C9C216A6DE00081B781 /* Math.swift */,
 				C04CDEB121730A820018C4DA /* Rect.swift */,
 				C0BBE3AB1F2E941200E68524 /* Renderer.swift */,
-				C0BBE3A91F2E91D900E68524 /* Shaders.metal */,
 				C0B906D41F45432700B5F89B /* Preferences.swift */,
 				C091616F1F3F5AE6009C4263 /* PreferencesViewController.swift */,
 			);
