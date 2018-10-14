@@ -7,12 +7,8 @@
 //
 
 #include <metal_stdlib>
+#include "ShaderTypes.hh"
 using namespace metal;
-
-struct Vertex {
-    float2 position;
-    float2 textureCoordinate;
-};
 
 // From HelloCompute sample code project.
 // Vertex shader outputs and per-fragmeht inputs. Includes clip-space position and vertex outputs interpolated by rasterizer and fed to each fragment genterated by clip-space primitives.
@@ -41,10 +37,6 @@ struct Parameters {
     float feather;
     float4 colors[4];
     float3x3 colorTransform;
-};
-
-struct RenderParameters {
-    float4x4 projection;
 };
 
 typedef float3 Ball;
