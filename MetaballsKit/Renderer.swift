@@ -193,14 +193,18 @@ public class Renderer: NSObject, MTKViewDelegate {
         guard let field = delegate?.field else {
             return
         }
+        guard let buffer = commandQueue.makeCommandBuffer() else {
+            return
+        }
+
+        var didEncode = false
+
+
+        buffer.label = "Metaballs Command Buffer"
 
         field.update()
 
-        if let buffer = commandQueue.makeCommandBuffer(),
-           let renderPass = view.currentRenderPassDescriptor {
-            buffer.label = "Metaballs Command Buffer"
-            var didEncode = false
-
+        if let renderPass = view.currentRenderPassDescriptor {
             // Render the per-pixel metaballs
             if let pipeline = pixelPipeline,
                let encoder = buffer.makeRenderCommandEncoder(descriptor: renderPass) {
@@ -230,11 +234,11 @@ public class Renderer: NSObject, MTKViewDelegate {
                 encoder.endEncoding()
                 didEncode = true
             }
-
-            if didEncode, let drawable = view.currentDrawable {
-                buffer.present(drawable)
-            }
-            buffer.commit()
         }
+
+        if didEncode, let drawable = view.currentDrawable {
+            buffer.present(drawable)
+        }
+        buffer.commit()
     }
 }
