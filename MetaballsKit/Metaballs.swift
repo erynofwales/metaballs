@@ -233,7 +233,7 @@ public class Field {
     private func populateBallBuffer() {
         if ballBuffer == nil && balls.count > 0 {
             guard let device = self.device else { return }
-            let sizeOfBall = 16     // A Ball in shader-land is a float3, which takes 16 bytes.
+            let sizeOfBall = MemoryLayout<Float3>.stride     // A Ball in shader-land is a float3, which takes 16 bytes.
             let length = balls.count * sizeOfBall
             NSLog("Making ball buffer, length:\(length)")
             ballBuffer = device.makeBuffer(length: length, options: [])
