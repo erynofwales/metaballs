@@ -109,6 +109,7 @@ public class Field {
                 // Update Metal state as needed.
                 populateParametersBuffer()
                 populateBallBuffer()
+                marchingSquares.fieldDidResize()
 
                 parameters.size = newValue
             }
@@ -119,7 +120,7 @@ public class Field {
 
     public var defaults = UserDefaults.standard
     private var parameters: Parameters
-    private lazy var marchingSquares: MarchingSquares = {
+    lazy var marchingSquares: MarchingSquares = {
         return MarchingSquares(field: self)
     }()
 

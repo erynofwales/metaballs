@@ -145,6 +145,8 @@ singleColor(float sample,
     return out;
 }
 
+#pragma mark - Helpers
+
 float
 mapValueFromRangeOntoRange(float value,
                            float inputStart,

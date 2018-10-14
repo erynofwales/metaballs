@@ -18,14 +18,36 @@ class MarchingSquares {
     /// Indexes of geometry to render.
     private(set) var indexes: MTLTexture?
 
+    private(set) var gridGeometry: MTLBuffer?
+
+    private var xSamples: Int {
+        return Int(field.size.x / sampleGridSize.x)
+    }
+
+    private var ySamples: Int {
+        return Int(field.size.y / sampleGridSize.y)
+    }
+
+    private var xGridlinesCount: Int {
+        let xSamples = Int(field.size.x / sampleGridSize.x)
+        return xSamples - 1
+    }
+
+    private var yGridlinesCount: Int {
+        let ySamples = Int(field.size.y / sampleGridSize.y)
+        return ySamples - 1
+    }
+
+    var gridVertexCount: Int {
+        return xGridlinesCount * 2 + yGridlinesCount * 2
+    }
+
     init(field: Field) {
         self.field = field
         sampleGridSize = Size(16)
     }
 
     func setupMetal(withDevice device: MTLDevice) {
-        let xSamples = Int(field.size.x / sampleGridSize.x)
-        let ySamples = Int(field.size.y / sampleGridSize.y)
         guard xSamples > 1 && ySamples > 1 else {
             return
         }
@@ -43,6 +65,46 @@ class MarchingSquares {
         indexesDesc.height = ySamples - 1
         indexesDesc.pixelFormat = .a8Unorm
         indexes = device.makeTexture(descriptor: indexesDesc)
+
+        let gridGeometryLength = MemoryLayout<Vertex>.stride * gridVertexCount
+        gridGeometry = device.makeBuffer(length: gridGeometryLength, options: .storageModeShared)
+        populateGridGeometryBuffer()
+    }
+
+    func fieldDidResize() {
+        guard let gridGeometry = gridGeometry else {
+            return
+        }
+        let gridGeometryLength = MemoryLayout<Vertex>.stride * gridVertexCount
+        self.gridGeometry = gridGeometry.device.makeBuffer(length: gridGeometryLength, options: .storageModeShared)
+        populateGridGeometryBuffer()
+    }
+
+    private func populateGridGeometryBuffer() {
+        guard let gridGeometry = gridGeometry else {
+            return
+        }
+
+        print("Rebuilding gridlines")
+
+        var vertices = [Vertex]()
+
+        let fieldSizeX = Float(field.size.x)
+        let fieldSizeY = Float(field.size.y)
+
+        for x in 1..<xSamples {
+            let xCoord = Float(x * Int(sampleGridSize.x))
+            vertices.append(Vertex(position: Float2(xCoord, 0), textureCoordinate: Float2()))
+            vertices.append(Vertex(position: Float2(xCoord, fieldSizeY), textureCoordinate: Float2()))
+        }
+
+        for y in 1..<ySamples {
+            let yCoord = Float(y * Int(sampleGridSize.y))
+            vertices.append(Vertex(position: Float2(0, yCoord), textureCoordinate: Float2()))
+            vertices.append(Vertex(position: Float2(fieldSizeX, yCoord), textureCoordinate: Float2()))
+        }
+
+        memcpy(gridGeometry.contents(), vertices, MemoryLayout<Vertex>.stride * vertices.count)
     }
 
     func sampleField() {

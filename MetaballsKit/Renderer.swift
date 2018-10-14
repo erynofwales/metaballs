@@ -231,10 +231,9 @@ public class Renderer: NSObject, MTKViewDelegate {
                let encoder = buffer.makeRenderCommandEncoder(descriptor: pass) {
                 encoder.label = "Marching Squares Render"
                 encoder.setRenderPipelineState(pipeline)
-                encoder.setVertexBytes(pixelGeometry, length: pixelGeometry.count * MemoryLayout<Vertex>.stride, index: 0)
+                encoder.setVertexBuffer(field.marchingSquares.gridGeometry, offset: 0, index: 0)
                 encoder.setVertexBuffer(parametersBuffer, offset: 0, index: 1)
-                encoder.setTriangleFillMode(.lines)
-                encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: 6)
+                encoder.drawPrimitives(type: .line, vertexStart: 0, vertexCount: field.marchingSquares.gridVertexCount)
                 encoder.endEncoding()
                 didEncode = true
             }
