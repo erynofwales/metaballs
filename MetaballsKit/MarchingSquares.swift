@@ -97,8 +97,6 @@ class MarchingSquares {
     }
 
     func populateSamples(withDevice device: MTLDevice) {
-        print("Populating samples buffer with \(samplesCount) values")
-
         var samples = [Float]()
         samples.reserveCapacity(samplesCount)
 
