@@ -199,6 +199,11 @@ public class Renderer: NSObject, MTKViewDelegate {
 
         var didEncode = false
 
+        // Make sure we attempt to enqueue more than one buffer at a time.
+        inFlightSemaphore.wait()
+        buffer.addCompletedHandler { _ in
+            self.inFlightSemaphore.signal()
+        }
 
         buffer.label = "Metaballs Command Buffer"
 
