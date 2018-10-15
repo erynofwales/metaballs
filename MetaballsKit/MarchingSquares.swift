@@ -205,3 +205,134 @@ class MarchingSquares {
         encoder.endEncoding()
     }
 }
+
+struct Variants {
+    static let geometry: [Float] = [
+        // 0: no triangles
+        // 1: lower left corner, 1 triangle
+        -1.0, -1.0, 0.0,
+        0.0, -1.0, 0.0,
+        -1.0,  0.0, 0.0,
+        // 2: lower right corner, 1 triangle
+        1.0, -1.0, 0.0,
+        1.0,  0.0, 0.0,
+        0.0, -1.0, 0.0,
+        // 3: bottom half, 2 triangles
+        -1.0,  0.0, 0.0,
+        -1.0, -1.0, 0.0,
+        1.0,  0.0, 0.0,
+        1.0, -1.0, 0.0,
+        // 4: top right corner, 1 triangle
+        1.0,  1.0, 0.0,
+        0.0,  1.0, 0.0,
+        1.0,  0.0, 0.0,
+        // 5: top right and bottom left, 4 triangles
+        -1.0,  0.0, 0.0,
+        0.0,  1.0, 0.0,
+        -1.0, -1.0, 0.0,
+        1.0,  1.0, 0.0,
+        0.0, -1.0, 0.0,
+        1.0,  0.0, 0.0,
+        // 6: right half, 2 triangles
+        1.0, -1.0, 0.0,
+        1.0,  1.0, 0.0,
+        0.0, -1.0, 0.0,
+        0.0,  1.0, 0.0,
+        // 7: bottom right corner 7/8ths, 3 triangles
+        -1.0,  0.0, 0.0,
+        0.0,  1.0, 0.0,
+        -1.0, -1.0, 0.0,
+        1.0,  1.0, 0.0,
+        1.0, -1.0, 0.0,
+        // 8: top left corner, 1 triangle
+        -1.0,  1.0, 0.0,
+        0.0,  1.0, 0.0,
+        -1.0,  0.0, 0.0,
+        // 9: left half, 2 triangles
+        -1.0,  1.0, 0.0,
+        0.0,  1.0, 0.0,
+        -1.0, -1.0, 0.0,
+        0.0, -1.0, 0.0,
+        // 10: top left and bottom right, 4 triangles
+        -1.0,  0.0, 0.0,
+        0.0, -1.0, 0.0,
+        -1.0,  1.0, 0.0,
+        1.0, -1.0, 0.0,
+        0.0,  1.0, 0.0,
+        1.0,  0.0, 0.0,
+        // 11: bottom left corner 7/8th, 3 triangles
+        1.0,  0.0, 0.0,
+        0.0,  1.0, 0.0,
+        1.0, -1.0, 0.0,
+        -1.0,  1.0, 0.0,
+        -1.0, -1.0, 0.0,
+        // 12: top half, 2 triangles
+        -1.0,  1.0, 0.0,
+        1.0,  1.0, 0.0,
+        -1.0,  0.0, 0.0,
+        1.0,  0.0, 0.0,
+        // 13: top left corner 7/8ths, 3 triangles
+        0.0, -1.0, 0.0,
+        1.0,  0.0, 0.0,
+        -1.0, -1.0, 0.0,
+        1.0,  1.0, 0.0,
+        -1.0,  1.0, 0.0,
+        // 14: top right corner 7/8th, 3 triangles
+        -1.0,  0.0, 0.0,
+        0.0, -1.0, 0.0,
+        -1.0,  1.0, 0.0,
+        1.0, -1.0, 0.0,
+        1.0,  1.0, 0.0,
+        // 15: full, 2 triangles
+        -1.0, -1.0, 0.0,
+        1.0, -1.0, 0.0,
+        -1.0,  1.0, 0.0,
+        1.0,  1.0, 0.0,
+        ]
+
+    static func numberOfTriangles(for variation: UInt) -> UInt {
+        switch variation {
+        case 0: return 0
+        case 1: return 1
+        case 2: return 1
+        case 3: return 2
+        case 4: return 1
+        case 5: return 4
+        case 6: return 2
+        case 7: return 3
+        case 8: return 1
+        case 9: return 2
+        case 10: return 4
+        case 11: return 3
+        case 12: return 2
+        case 13: return 3
+        case 14: return 3
+        case 15: return 2
+        default: return 0
+        }
+    }
+
+    static func startingIndex(for variation: UInt) -> UInt {
+        switch variation {
+        case 0: return 0
+        case 1: return 0
+        case 2: return 3
+        case 3: return 6
+        case 4: return 10
+        case 5: return 13
+        case 6: return 19
+        case 7: return 23
+        case 8: return 28
+        case 9: return 31
+        case 10: return 35
+        case 11: return 41
+        case 12: return 46
+        case 13: return 50
+        case 14: return 55
+        case 15: return 60
+        default: return 0
+        }
+    }
+
+    var buffer: MTLBuffer?
+}
