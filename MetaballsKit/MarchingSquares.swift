@@ -55,18 +55,36 @@ class MarchingSquares {
             fatalError("Error building compute pipeline state for sampling kernel: \(e)")
         }
 
+        createParametersBuffer(withDevice: device)
+        createSamplesBuffer(withDevice: device)
+    }
+
+    func createParametersBuffer(withDevice device: MTLDevice) {
+        // TODO: I'm cheating on this cause I didn't want to make a parallel struct in Swift and deal with alignment crap. >_> I should make a real struct for this.
         let parametersLength = MemoryLayout<simd.packed_int2>.stride * 3 + MemoryLayout<simd.uint>.stride
         parametersBuffer = device.makeBuffer(length: parametersLength, options: .storageModeShared)
-        populateParametersBuffer()
+    }
+
+    func createSamplesBuffer(withDevice device: MTLDevice) {
+        // Only reallocate the buffer if the length changed.
+        let samplesLength = MemoryLayout<Float>.stride * samplesCount
+        guard samplesBuffer?.length != samplesLength else {
+            return
+        }
+        samplesBuffer = device.makeBuffer(length: samplesLength, options: .storageModePrivate)
+        if samplesBuffer == nil {
+            fatalError("Couldn't create samplesBuffer!")
+        }
     }
 
     func fieldDidResize() {
-        guard let device = gridGeometry?.device else {
+        // Please just get the device from somewhere. 😅
+        guard let device = gridGeometry?.device ?? samplesBuffer?.device else {
             return
         }
         populateParametersBuffer()
         populateGrid(withDevice: device)
-        populateSamples(withDevice: device)
+        createSamplesBuffer(withDevice: device)
         lastSamplesCount = samplesCount
     }
 
@@ -75,6 +93,7 @@ class MarchingSquares {
             print("Tried to copy parameters buffer before buffer was allocated!")
             return
         }
+        // TODO: I'm cheating on this cause I didn't want to make a parallel struct in Swift and deal with alignment crap. >_> I should make a real struct for this.
         let params: [uint] = [
             field.size.x, field.size.y,
             uint(xSamples), uint(ySamples),
@@ -111,26 +130,6 @@ class MarchingSquares {
             gridGeometry = buffer
         } else {
             fatalError("Couldn't create buffer for grid rects")
-        }
-    }
-
-    func populateSamples(withDevice device: MTLDevice) {
-//        var samples = [Float]()
-//        samples.reserveCapacity(samplesCount)
-
-//        for ys in 0..<ySamples {
-//            let y = Float(ys * Int(sampleGridSize.y))
-//            for xs in 0..<xSamples {
-//                let x = Float(xs * Int(sampleGridSize.x))
-//                let sample = field.sample(at: Float2(x: x, y: y))
-//                samples.append(sample)
-//            }
-//        }
-
-        let samplesLength = MemoryLayout<Float>.stride * samplesCount
-        samplesBuffer = device.makeBuffer(length: samplesLength, options: .storageModePrivate)
-        if samplesBuffer == nil {
-            fatalError("Couldn't create samplesBuffer!")
         }
     }
 

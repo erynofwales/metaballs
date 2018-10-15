@@ -45,7 +45,6 @@ public class Renderer: NSObject, MTKViewDelegate {
             delegate.field.setupMetal(withDevice: device)
             delegate.marchingSquares.setupMetal(withDevice: device, library: library)
             delegate.marchingSquares.populateGrid(withDevice: device)
-            delegate.marchingSquares.populateSamples(withDevice: device)
         }
     }
 

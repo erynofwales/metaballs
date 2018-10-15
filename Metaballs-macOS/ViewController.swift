@@ -76,6 +76,9 @@ class ViewController: NSViewController, RendererDelegate {
 
     override func viewWillAppear() {
         super.viewWillAppear()
+
+        view.window?.makeFirstResponder(self)
+
         renderer.mtkView(metalView, drawableSizeWillChange: metalView.drawableSize)
         for _ in 1...10 {
             addBallWithRandomRadius()
@@ -91,6 +94,14 @@ class ViewController: NSViewController, RendererDelegate {
         for _ in 1...10 {
             addBallWithRandomRadius()
         }
+    }
+
+    override func keyDown(with event: NSEvent) {
+        print("key down: \(event)")
+    }
+
+    override var acceptsFirstResponder: Bool {
+        return true
     }
 
     // MARK: - Private
