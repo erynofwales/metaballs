@@ -8,6 +8,7 @@
 
 import Foundation
 import Metal
+import simd
 
 class MarchingSquares {
     private var field: Field
@@ -15,10 +16,13 @@ class MarchingSquares {
 
     private var semaphore: DispatchSemaphore
 
+    private var samplingPipeline: MTLComputePipelineState?
+
+    private var parametersBuffer: MTLBuffer?
     /// Samples of the field's current state.
     private(set) var samplesBuffer: MTLBuffer?
     /// Indexes of geometry to render.
-    private(set) var indexes: MTLTexture?
+    private(set) var indexBuffer: MTLBuffer?
 
     private(set) var gridGeometry: MTLBuffer?
 
@@ -41,29 +45,43 @@ class MarchingSquares {
         semaphore = DispatchSemaphore(value: 1)
     }
 
-    func setupMetal(withDevice device: MTLDevice) {
-//        let samplesDesc = MTLTextureDescriptor()
-//        samplesDesc.textureType = .type2D
-//        samplesDesc.width = xSamples
-//        samplesDesc.height = ySamples
-//        samplesDesc.pixelFormat = .r32Float
-//        samples = device.makeTexture(descriptor: samplesDesc)
-//
-//        let indexesDesc = MTLTextureDescriptor()
-//        indexesDesc.textureType = .type2D
-//        indexesDesc.width = xSamples - 1
-//        indexesDesc.height = ySamples - 1
-//        indexesDesc.pixelFormat = .a8Unorm
-//        indexes = device.makeTexture(descriptor: indexesDesc)
+    func setupMetal(withDevice device: MTLDevice, library: MTLLibrary) {
+        guard let samplingFunction = library.makeFunction(name: "samplingKernel") else {
+            fatalError("Couldn't get samplingKernel function from library")
+        }
+        do {
+            samplingPipeline = try device.makeComputePipelineState(function: samplingFunction)
+        } catch let e {
+            fatalError("Error building compute pipeline state for sampling kernel: \(e)")
+        }
+
+        let parametersLength = MemoryLayout<simd.packed_int2>.stride * 3 + MemoryLayout<simd.uint>.stride
+        parametersBuffer = device.makeBuffer(length: parametersLength, options: .storageModeShared)
+        populateParametersBuffer()
     }
 
     func fieldDidResize() {
         guard let device = gridGeometry?.device else {
             return
         }
+        populateParametersBuffer()
         populateGrid(withDevice: device)
         populateSamples(withDevice: device)
         lastSamplesCount = samplesCount
+    }
+
+    func populateParametersBuffer() {
+        guard let buffer = parametersBuffer else {
+            print("Tried to copy parameters buffer before buffer was allocated!")
+            return
+        }
+        let params: [uint] = [
+            field.size.x, field.size.y,
+            uint(xSamples), uint(ySamples),
+            sampleGridSize.x, sampleGridSize.y,
+            uint(field.balls.count)
+        ]
+        memcpy(buffer.contents(), params, MemoryLayout<uint>.stride * params.count)
     }
 
     func populateGrid(withDevice device: MTLDevice) {
@@ -97,24 +115,45 @@ class MarchingSquares {
     }
 
     func populateSamples(withDevice device: MTLDevice) {
-        var samples = [Float]()
-        samples.reserveCapacity(samplesCount)
+//        var samples = [Float]()
+//        samples.reserveCapacity(samplesCount)
 
-        for ys in 0..<ySamples {
-            let y = Float(ys * Int(sampleGridSize.y))
-            for xs in 0..<xSamples {
-                let x = Float(xs * Int(sampleGridSize.x))
-                let sample = field.sample(at: Float2(x: x, y: y))
-                samples.append(sample)
-            }
-        }
+//        for ys in 0..<ySamples {
+//            let y = Float(ys * Int(sampleGridSize.y))
+//            for xs in 0..<xSamples {
+//                let x = Float(xs * Int(sampleGridSize.x))
+//                let sample = field.sample(at: Float2(x: x, y: y))
+//                samples.append(sample)
+//            }
+//        }
 
         let samplesLength = MemoryLayout<Float>.stride * samplesCount
-        if let buffer = device.makeBuffer(length: MemoryLayout<Float>.stride * samples.count, options: .storageModeShared) {
-            memcpy(buffer.contents(), samples, samplesLength)
-            samplesBuffer = buffer
-        } else {
-            fatalError("Couldn't create buffer for samples")
+        samplesBuffer = device.makeBuffer(length: samplesLength, options: .storageModePrivate)
+        if samplesBuffer == nil {
+            fatalError("Couldn't create samplesBuffer!")
         }
+    }
+
+    func encodeSamplingKernel(intoBuffer buffer: MTLCommandBuffer) {
+        guard let samplingPipeline = samplingPipeline else {
+            print("Encode called before sampling pipeline was set up!")
+            return
+        }
+        guard let encoder = buffer.makeComputeCommandEncoder() else {
+            print("Couldn't create compute encoder")
+            return
+        }
+        encoder.label = "Sample Field"
+        encoder.setComputePipelineState(samplingPipeline)
+        encoder.setBuffer(parametersBuffer, offset: 0, index: 0)
+        encoder.setBuffer(field.ballBuffer, offset: 0, index: 1)
+        encoder.setBuffer(samplesBuffer, offset: 0, index: 2)
+
+        // Dispatch!
+        let gridSize = MTLSize(width: xSamples, height: ySamples, depth: 1)
+        let threadgroupSize = MTLSize(width: xSamples, height: 1, depth: 1)
+        encoder.dispatchThreads(gridSize, threadsPerThreadgroup: threadgroupSize)
+
+        encoder.endEncoding()
     }
 }

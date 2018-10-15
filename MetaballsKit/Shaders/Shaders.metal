@@ -39,8 +39,6 @@ struct Parameters {
     float3x3 colorTransform;
 };
 
-typedef float3 Ball;
-
 #pragma mark - Vertex
 
 vertex RasterizerData

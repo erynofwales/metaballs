@@ -10,6 +10,17 @@
 #include "ShaderTypes.hh"
 using namespace metal;
 
+struct MarchingSquaresParameters {
+    /// Field size in pixels.
+    packed_uint2 pixelSize;
+    /// Field size in grid units.
+    packed_uint2 gridSize;
+    /// Size of a cell in pixels.
+    packed_uint2 cellSize;
+    /// Number of balls in the array above.
+    uint ballsCount;
+};
+
 struct Rect {
     float4x4 transform;
     float4 color;
@@ -21,6 +32,37 @@ struct RasterizerData {
     float2 textureCoordinate;
     int instance;
 };
+
+kernel void
+generateGridGeometry()
+{
+}
+
+/// Sample the field at regularly spaced intervals and populate `samples` with the resulting values.
+kernel void
+samplingKernel(constant MarchingSquaresParameters &parameters [[buffer(0)]],
+               constant Ball *balls [[buffer(1)]],
+               device float *samples [[buffer(2)]],
+               uint2 position [[thread_position_in_grid]])
+{
+    // Find the midpoint of this grid cell.
+    const float2 point = float2(position.x * parameters.cellSize.x + (parameters.cellSize.x / 2.0),
+                                position.y * parameters.cellSize.y + (parameters.cellSize.y / 2.0));
+
+    // Sample the grid.
+    float sample = 0.0;
+    for (uint i = 0; i < parameters.ballsCount; i++) {
+        constant Ball &ball = balls[i];
+        float r2 = ball.z * ball.z;
+        float xDiff = point.x - ball.x;
+        float yDiff = point.y - ball.y;
+        sample += r2 / ((xDiff * xDiff) + (yDiff * yDiff));
+    }
+
+    // Playing a bit fast and loose with these values here. The compute grid is the size of the grid itself, so parameters.gridSize == [[threads_per_grid]].
+    uint idx = position.y * parameters.gridSize.x + position.x;
+    samples[idx] = sample;
+}
 
 vertex RasterizerData
 gridVertexShader(constant Vertex *vertexes [[buffer(0)]],

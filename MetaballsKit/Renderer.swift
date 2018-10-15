@@ -43,7 +43,7 @@ public class Renderer: NSObject, MTKViewDelegate {
             configureMarchingSquaresPipeline(withPixelFormat: view.colorPixelFormat)
 
             delegate.field.setupMetal(withDevice: device)
-            delegate.marchingSquares.setupMetal(withDevice: device)
+            delegate.marchingSquares.setupMetal(withDevice: device, library: library)
             delegate.marchingSquares.populateGrid(withDevice: device)
             delegate.marchingSquares.populateSamples(withDevice: device)
         }
@@ -51,9 +51,9 @@ public class Renderer: NSObject, MTKViewDelegate {
 
     private var device: MTLDevice
 
-    private lazy var library: MTLLibrary? = {
+    private lazy var library: MTLLibrary = {
         let bundle = Bundle(for: type(of: self))
-        return try? device.makeDefaultLibrary(bundle: bundle)
+        return try! device.makeDefaultLibrary(bundle: bundle)
     }()
 
     private var commandQueue: MTLCommandQueue
@@ -90,10 +90,6 @@ public class Renderer: NSObject, MTKViewDelegate {
     }
 
     private func configurePixelPipeline(withPixelFormat pixelFormat: MTLPixelFormat) {
-        guard let library = library else {
-            fatalError("Couldn't get Metal library")
-        }
-
         let vertexShader = library.makeFunction(name: "passthroughVertexShader")
         let fragmentShader = library.makeFunction(name: "sampleToColorShader")
 
@@ -124,10 +120,6 @@ public class Renderer: NSObject, MTKViewDelegate {
     }
 
     private func configureMarchingSquaresPipeline(withPixelFormat pixelFormat: MTLPixelFormat) {
-        guard let library = library else {
-            fatalError("Couldn't get Metal library")
-        }
-
         guard let vertexShader = library.makeFunction(name: "gridVertexShader"),
               let fragmentShader = library.makeFunction(name: "gridFragmentShader") else {
             fatalError("Couldn't get marching squares vertex or fragment function from library")
@@ -209,7 +201,7 @@ public class Renderer: NSObject, MTKViewDelegate {
 
         field.update()
         if let ms = delegate?.marchingSquares {
-            ms.populateSamples(withDevice: device)
+            ms.populateParametersBuffer()
         }
 
         if self.pixelGeometry == nil {
@@ -233,6 +225,9 @@ public class Renderer: NSObject, MTKViewDelegate {
 //            }
 
             if let marchingSquares = delegate?.marchingSquares {
+                // Compute samples first.
+                marchingSquares.encodeSamplingKernel(intoBuffer: buffer)
+
                 // Render the marching squares version over top of the pixel version.
                 // We need our own render pass descriptor that specifies that we load the results of the previous pass to make this render pass appear on top of the other.
                 let pass = renderPass.copy() as! MTLRenderPassDescriptor

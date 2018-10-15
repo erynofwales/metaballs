@@ -11,6 +11,9 @@
 
 #include <metal_stdlib>
 
+/// A Ball is a float 3-tuple: (x, y, r).
+typedef float3 Ball;
+
 struct Vertex {
     float2 position;
     float2 textureCoordinate;
