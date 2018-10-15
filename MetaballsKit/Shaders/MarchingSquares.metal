@@ -64,6 +64,28 @@ samplingKernel(constant MarchingSquaresParameters &parameters [[buffer(0)]],
     samples[idx] = sample;
 }
 
+kernel void
+contouringKernel(constant MarchingSquaresParameters &parameters [[buffer(0)]],
+                 constant float *samples [[buffer(1)]],
+                 device ushort *contourIndexes [[buffer(2)]],
+                 uint position [[thread_position_in_grid]])
+{
+    // Calculate an index based on the samples at the four points around this cell.
+    // If the point is above the threshold, adjust the value accordingly.
+    //      d--c    8--4
+    //      |  | -> |  |
+    //      a--b    1--2
+    uint a = position + parameters.gridSize.x;
+    uint b = position + parameters.gridSize.x + 1;
+    uint c = position + 1;
+    uint d = position;
+    uint index = (samples[d] >= 1.0 ? 0b1000 : 0) +
+                 (samples[c] >= 1.0 ? 0b0100 : 0) +
+                 (samples[b] >= 1.0 ? 0b0010 : 0) +
+                 (samples[a] >= 1.0 ? 0b0001 : 0);
+    contourIndexes[position] = index;
+}
+
 vertex RasterizerData
 gridVertexShader(constant Vertex *vertexes [[buffer(0)]],
                  constant Rect *rects [[buffer(1)]],
@@ -85,9 +107,9 @@ gridVertexShader(constant Vertex *vertexes [[buffer(0)]],
 
 fragment float4
 gridFragmentShader(RasterizerData in [[stage_in]],
-                   constant float *samples [[buffer(0)]])
+                   constant ushort *contourIndexes [[buffer(0)]])
 {
     int instance = in.instance;
-    float sample = samples[instance];
-    return sample > 1.0 ? in.color : float4(0);
+    uint sample = contourIndexes[instance];
+    return sample >= 1 ? in.color : float4(0);
 }

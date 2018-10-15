@@ -226,6 +226,7 @@ public class Renderer: NSObject, MTKViewDelegate {
             if let marchingSquares = delegate?.marchingSquares {
                 // Compute samples first.
                 marchingSquares.encodeSamplingKernel(intoBuffer: buffer)
+                marchingSquares.encodeContouringKernel(intoBuffer: buffer)
 
                 // Render the marching squares version over top of the pixel version.
                 // We need our own render pass descriptor that specifies that we load the results of the previous pass to make this render pass appear on top of the other.
@@ -238,7 +239,7 @@ public class Renderer: NSObject, MTKViewDelegate {
                     encoder.setVertexBytes(Rect.geometry, length: MemoryLayout<Vertex>.stride * Rect.geometry.count, index: 0)
                     encoder.setVertexBuffer(marchingSquares.gridGeometry, offset: 0, index: 1)
                     encoder.setVertexBuffer(parametersBuffer, offset: 0, index: 2)
-                    encoder.setFragmentBuffer(marchingSquares.samplesBuffer, offset: 0, index: 0)
+                    encoder.setFragmentBuffer(marchingSquares.contourIndexesBuffer, offset: 0, index: 0)
                     encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: Rect.geometry.count, instanceCount: marchingSquares.samplesCount)
                     encoder.endEncoding()
                     didEncode = true

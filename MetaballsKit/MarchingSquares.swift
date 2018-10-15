@@ -17,12 +17,13 @@ class MarchingSquares {
     private var semaphore: DispatchSemaphore
 
     private var samplingPipeline: MTLComputePipelineState?
+    private var contouringPipeline: MTLComputePipelineState?
 
     private var parametersBuffer: MTLBuffer?
     /// Samples of the field's current state.
     private(set) var samplesBuffer: MTLBuffer?
     /// Indexes of geometry to render.
-    private(set) var indexBuffer: MTLBuffer?
+    private(set) var contourIndexesBuffer: MTLBuffer?
 
     private(set) var gridGeometry: MTLBuffer?
 
@@ -40,28 +41,39 @@ class MarchingSquares {
         return xSamples * ySamples
     }
 
+    var contourIndexesCount: Int {
+        return (xSamples - 1) * (ySamples - 1)
+    }
+
     init(field: Field) {
         self.field = field
         semaphore = DispatchSemaphore(value: 1)
     }
 
     func setupMetal(withDevice device: MTLDevice, library: MTLLibrary) {
-        guard let samplingFunction = library.makeFunction(name: "samplingKernel") else {
-            fatalError("Couldn't get samplingKernel function from library")
-        }
-        do {
-            samplingPipeline = try device.makeComputePipelineState(function: samplingFunction)
-        } catch let e {
-            fatalError("Error building compute pipeline state for sampling kernel: \(e)")
-        }
-
+        samplingPipeline = createComputePipeline(withFunctionNamed: "samplingKernel", device: device, library: library)
+        contouringPipeline = createComputePipeline(withFunctionNamed: "contouringKernel", device: device, library: library)
         createParametersBuffer(withDevice: device)
         createSamplesBuffer(withDevice: device)
+        createContourIndexesBuffer(withDevice: device)
+    }
+
+    func createComputePipeline(withFunctionNamed functionName: String, device: MTLDevice, library: MTLLibrary) -> MTLComputePipelineState? {
+        guard let function = library.makeFunction(name: functionName) else {
+            print("Couldn't get comput function \"\(functionName)\" from library")
+            return nil
+        }
+        do {
+            return try device.makeComputePipelineState(function: function)
+        } catch let e {
+            print("Error building compute pipeline state: \(e)")
+            return nil
+        }
     }
 
     func createParametersBuffer(withDevice device: MTLDevice) {
         // TODO: I'm cheating on this cause I didn't want to make a parallel struct in Swift and deal with alignment crap. >_> I should make a real struct for this.
-        let parametersLength = MemoryLayout<simd.packed_int2>.stride * 3 + MemoryLayout<simd.uint>.stride
+        let parametersLength = MemoryLayout<packed_int2>.stride * 3 + MemoryLayout<uint>.stride
         parametersBuffer = device.makeBuffer(length: parametersLength, options: .storageModeShared)
     }
 
@@ -74,6 +86,18 @@ class MarchingSquares {
         samplesBuffer = device.makeBuffer(length: samplesLength, options: .storageModePrivate)
         if samplesBuffer == nil {
             fatalError("Couldn't create samplesBuffer!")
+        }
+    }
+
+    func createContourIndexesBuffer(withDevice device: MTLDevice) {
+        // Only reallocate the buffer if the length changed.
+        let length = MemoryLayout<ushort>.stride * contourIndexesCount
+        guard contourIndexesBuffer?.length != length else {
+            return
+        }
+        contourIndexesBuffer = device.makeBuffer(length: length, options: .storageModePrivate)
+        if contourIndexesBuffer == nil {
+            fatalError("Couldn't create contourIndexesBuffer!")
         }
     }
 
@@ -142,6 +166,7 @@ class MarchingSquares {
             print("Couldn't create compute encoder")
             return
         }
+
         encoder.label = "Sample Field"
         encoder.setComputePipelineState(samplingPipeline)
         encoder.setBuffer(parametersBuffer, offset: 0, index: 0)
@@ -151,6 +176,30 @@ class MarchingSquares {
         // Dispatch!
         let gridSize = MTLSize(width: xSamples, height: ySamples, depth: 1)
         let threadgroupSize = MTLSize(width: xSamples, height: 1, depth: 1)
+        encoder.dispatchThreads(gridSize, threadsPerThreadgroup: threadgroupSize)
+
+        encoder.endEncoding()
+    }
+
+    func encodeContouringKernel(intoBuffer buffer: MTLCommandBuffer) {
+        guard let pipeline = contouringPipeline else {
+            print("Encode called before contouring pipeline was set up!")
+            return
+        }
+        guard let encoder = buffer.makeComputeCommandEncoder() else {
+            print("Couldn't create compute encoder")
+            return
+        }
+
+        encoder.label = "Contouring"
+        encoder.setComputePipelineState(pipeline)
+        encoder.setBuffer(parametersBuffer, offset: 0, index: 0)
+        encoder.setBuffer(samplesBuffer, offset: 0, index: 1)
+        encoder.setBuffer(contourIndexesBuffer, offset: 0, index: 2)
+
+        // Dispatch!
+        let gridSize = MTLSize(width: contourIndexesCount, height: 1, depth: 1)
+        let threadgroupSize = MTLSize(width: xSamples - 1, height: 1, depth: 1)
         encoder.dispatchThreads(gridSize, threadsPerThreadgroup: threadgroupSize)
 
         encoder.endEncoding()
