@@ -155,6 +155,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C0896C28217BAE8900639137 /* Math */ = {
+			isa = PBXGroup;
+			children = (
+				C0CE7BFF1F362C3F001516B6 /* Geometry.swift */,
+				C0FF7C9C216A6DE00081B781 /* Math.swift */,
+			);
+			path = Math;
+			sourceTree = "<group>";
+		};
 		C0943E7E2173F669000CA76A /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
@@ -227,9 +236,8 @@
 				C0BBE3A31F2E81C700E68524 /* Metaballs.swift */,
 				C0FF7CC1217020820081B781 /* MarchingSquares.swift */,
 				C0943E7E2173F669000CA76A /* Shaders */,
-				C0CE7BFF1F362C3F001516B6 /* Geometry.swift */,
+				C0896C28217BAE8900639137 /* Math */,
 				C0DF1D781F3789DC0038B0A0 /* Memory.swift */,
-				C0FF7C9C216A6DE00081B781 /* Math.swift */,
 				C04CDEB121730A820018C4DA /* Rect.swift */,
 				C0BBE3AB1F2E941200E68524 /* Renderer.swift */,
 				C0B906D41F45432700B5F89B /* Preferences.swift */,
