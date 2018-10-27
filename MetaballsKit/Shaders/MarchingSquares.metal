@@ -45,6 +45,11 @@ samplingKernel(constant MarchingSquaresParameters &parameters [[buffer(0)]],
                device float *samples [[buffer(2)]],
                uint2 position [[thread_position_in_grid]])
 {
+    if (position.x >= parameters.gridSize.x || position.y >= parameters.gridSize.y)
+    {
+        return;
+    }
+
     // Find the midpoint of this grid cell.
     const float2 point = float2(position.x * parameters.cellSize.x + (parameters.cellSize.x / 2.0),
                                 position.y * parameters.cellSize.y + (parameters.cellSize.y / 2.0));
@@ -68,38 +73,43 @@ kernel void
 contouringKernel(constant MarchingSquaresParameters &parameters [[buffer(0)]],
                  constant float *samples [[buffer(1)]],
                  device ushort *contourIndexes [[buffer(2)]],
-                 uint position [[thread_position_in_grid]])
+                 uint2 position [[thread_position_in_grid]])
 {
+    if (position.x >= (parameters.gridSize.x - 1) || position.y >= (parameters.gridSize.y - 1)) {
+        return;
+    }
+
     // Calculate an index based on the samples at the four points around this cell.
     // If the point is above the threshold, adjust the value accordingly.
     //      d--c    8--4
     //      |  | -> |  |
     //      a--b    1--2
-    uint a = position + parameters.gridSize.x;
-    uint b = position + parameters.gridSize.x + 1;
-    uint c = position + 1;
-    uint d = position;
+    uint rowSize = parameters.gridSize.x - 1;
+    uint d = position.y * rowSize + position.x;
+    uint c = d + 1;
+    uint b = d + rowSize + 1;
+    uint a = d + rowSize;
     uint index = (samples[d] >= 1.0 ? 0b1000 : 0) +
                  (samples[c] >= 1.0 ? 0b0100 : 0) +
                  (samples[b] >= 1.0 ? 0b0010 : 0) +
                  (samples[a] >= 1.0 ? 0b0001 : 0);
-    contourIndexes[position] = index;
+    contourIndexes[d] = index;
 }
 
 vertex RasterizerData
 gridVertexShader(constant Vertex *vertexes [[buffer(0)]],
-                 constant Rect *rects [[buffer(1)]],
+                 constant Rect *cells [[buffer(1)]],
                  constant RenderParameters &renderParameters [[buffer(2)]],
                  uint vid [[vertex_id]],
                  uint instid [[instance_id]])
 {
     Vertex v = vertexes[vid];
 
-    Rect rect = rects[instid];
+    Rect cell = cells[instid];
 
     RasterizerData out;
-    out.position = renderParameters.projection * rect.transform * float4(v.position.xy, 0, 1);
-    out.color = rect.color;
+    out.position = renderParameters.projection * cell.transform * float4(v.position.xy, 0, 1);
+    out.color = cell.color;
     out.textureCoordinate = v.textureCoordinate;
     out.instance = instid;
     return out;

@@ -206,7 +206,7 @@ public class Renderer: NSObject, MTKViewDelegate {
         if self.pixelGeometry == nil {
             self.pixelGeometry = self.pixelGeometry(forViewSize: view.drawableSize)
         }
-        let pixelGeometry = self.pixelGeometry!
+//        let pixelGeometry = self.pixelGeometry!
 
         if let renderPass = view.currentRenderPassDescriptor {
             // Render the per-pixel metaballs
@@ -240,7 +240,7 @@ public class Renderer: NSObject, MTKViewDelegate {
                     encoder.setVertexBuffer(marchingSquares.gridGeometry, offset: 0, index: 1)
                     encoder.setVertexBuffer(parametersBuffer, offset: 0, index: 2)
                     encoder.setFragmentBuffer(marchingSquares.contourIndexesBuffer, offset: 0, index: 0)
-                    encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: Rect.geometry.count, instanceCount: marchingSquares.samplesCount)
+                    encoder.drawPrimitives(type: .triangle, vertexStart: 0, vertexCount: Rect.geometry.count, instanceCount: marchingSquares.contourIndexesCount)
                     encoder.endEncoding()
                     didEncode = true
                 }

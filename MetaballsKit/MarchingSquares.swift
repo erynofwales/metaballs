@@ -35,11 +35,15 @@ class MarchingSquares {
     private(set) var gridGeometry: MTLBuffer?
 
     private var xSamples: Int {
-        return Int(field.size.x / sampleGridSize.x)
+        let xSize = field.size.x / sampleGridSize.x
+        let xRem = field.size.x % sampleGridSize.x
+        return Int(xSize + (sampleGridSize.x - xRem))
     }
 
     private var ySamples: Int {
-        return Int(field.size.y / sampleGridSize.y)
+        let ySize = field.size.y / sampleGridSize.y
+        let yRem = field.size.y % sampleGridSize.y
+        return Int(ySize + (sampleGridSize.y - yRem))
     }
 
     private var lastSamplesCount = 0
@@ -49,8 +53,11 @@ class MarchingSquares {
     }
 
     var contourIndexesCount: Int {
-        return (xSamples - 1) * (ySamples - 1)
+        return samplesCount
     }
+
+    /// Threadgroup size for the compute kernels.
+    private let threadgroupSize = MTLSize(width: 16, height: 16, depth: 1)
 
     init(field: Field) {
         self.field = field
@@ -136,6 +143,7 @@ class MarchingSquares {
 
     func populateGrid(withDevice device: MTLDevice) {
         guard lastSamplesCount != samplesCount else {
+            print("Populate requested, but lastSampleCount(\(lastSamplesCount) == samplesCount(\(samplesCount))")
             return
         }
 
@@ -181,9 +189,7 @@ class MarchingSquares {
         encoder.setBuffer(samplesBuffer, offset: 0, index: 2)
 
         // Dispatch!
-        // TODO: Kernel threadgroup size limit is 256. Figure out how to make this work.
-        let gridSize = MTLSize(width: xSamples, height: ySamples, depth: 1)
-        let threadgroupSize = MTLSize(width: xSamples, height: 1, depth: 1)
+        let gridSize = computeGridSize(forCellGridSize: Size(x: UInt32(xSamples), y: UInt32(ySamples)))
         encoder.dispatchThreads(gridSize, threadsPerThreadgroup: threadgroupSize)
 
         encoder.endEncoding()
@@ -206,11 +212,23 @@ class MarchingSquares {
         encoder.setBuffer(contourIndexesBuffer, offset: 0, index: 2)
 
         // Dispatch!
-        let gridSize = MTLSize(width: contourIndexesCount, height: 1, depth: 1)
-        let threadgroupSize = MTLSize(width: xSamples - 1, height: 1, depth: 1)
+        let gridSize = computeGridSize(forCellGridSize: Size(x: UInt32(xSamples - 1), y: UInt32(ySamples - 1)))
         encoder.dispatchThreads(gridSize, threadsPerThreadgroup: threadgroupSize)
 
         encoder.endEncoding()
+    }
+
+    /// Grid size for the compute kernels.
+    func computeGridSize(forCellGridSize gridSize: Size) -> MTLSize {
+        let xs = Int(gridSize.x)
+        let ys = Int(gridSize.y)
+        let xrem = xs % threadgroupSize.width
+        let yrem = ys % threadgroupSize.height
+        // Our compute grid size is the next multiple of threadgroupSize larger than the current cell grid size.
+        let gridSize = MTLSize(width: xs + (threadgroupSize.width - xrem),
+                               height: ys + (threadgroupSize.height - yrem),
+                               depth: 1)
+        return gridSize
     }
 }
 
