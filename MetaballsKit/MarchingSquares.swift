@@ -34,6 +34,8 @@ class MarchingSquares {
 
     private(set) var gridGeometry: MTLBuffer?
 
+    private let variants = Variants()
+
     private var xSamples: Int {
         let xSize = field.size.x / sampleGridSize.x
         let xRem = field.size.x % sampleGridSize.x
@@ -67,6 +69,7 @@ class MarchingSquares {
     func setupMetal(withDevice device: MTLDevice, library: MTLLibrary) {
         samplingPipeline = createComputePipeline(withFunctionNamed: "samplingKernel", device: device, library: library)
         contouringPipeline = createComputePipeline(withFunctionNamed: "contouringKernel", device: device, library: library)
+        variants.setupMetal(withDevice: device)
         createParametersBuffer(withDevice: device)
         createSamplesBuffer(withDevice: device)
         createContourIndexesBuffer(withDevice: device)
@@ -232,7 +235,7 @@ class MarchingSquares {
     }
 }
 
-struct Variants {
+fileprivate class Variants {
     static let geometry: [Float] = [
         // 0: no triangles
         // 1: lower left corner, 1 triangle
@@ -365,26 +368,19 @@ struct Variants {
     }
 
     static func startingIndex(for variation: UInt) -> UInt {
-        switch variation {
-        case 0: return 0
-        case 1: return 0
-        case 2: return 3
-        case 3: return 6
-        case 4: return 10
-        case 5: return 13
-        case 6: return 19
-        case 7: return 23
-        case 8: return 28
-        case 9: return 31
-        case 10: return 35
-        case 11: return 41
-        case 12: return 46
-        case 13: return 50
-        case 14: return 55
-        case 15: return 60
-        default: return 0
+        var idx = UInt(0)
+        for i in 0..<variation {
+            idx += numberOfTriangles(for: i) * 3
         }
+        return idx
     }
 
     var buffer: MTLBuffer?
+
+    func setupMetal(withDevice device: MTLDevice) {
+        let bufferLength = MemoryLayout<Float>.stride * Variants.geometry.count
+        if let buffer = device.makeBuffer(bytes: Variants.geometry, length: bufferLength, options: .storageModeShared) {
+            self.buffer = buffer
+        }
+    }
 }
