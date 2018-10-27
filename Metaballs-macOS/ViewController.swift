@@ -97,7 +97,20 @@ class ViewController: NSViewController, RendererDelegate {
     }
 
     override func keyDown(with event: NSEvent) {
-        print("key down: \(event)")
+        switch event.charactersIgnoringModifiers {
+        case .some("["):
+            let size = marchingSquares.sampleGridSize
+            if size.x > 2 {
+                marchingSquares.sampleGridSize = Size(size.x / 2)
+            }
+        case .some("]"):
+            let size = marchingSquares.sampleGridSize
+            if size.x < 32 {
+                marchingSquares.sampleGridSize = Size(size.x * 2)
+            }
+        default:
+            print("key down: \(event)")
+        }
     }
 
     override var acceptsFirstResponder: Bool {

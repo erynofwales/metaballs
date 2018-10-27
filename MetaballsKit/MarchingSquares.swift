@@ -12,11 +12,18 @@ import simd
 
 class MarchingSquares {
     private var field: Field
-    private var sampleGridSize = Size(16)
+
+    var sampleGridSize = Size(16) {
+        didSet {
+            fieldDidResize()
+        }
+    }
 
     private var semaphore: DispatchSemaphore
 
+    /// Compute pipeline for sampling the field.
     private var samplingPipeline: MTLComputePipelineState?
+    /// Compute pipeline for calculating the contours based on a grid of samples.
     private var contouringPipeline: MTLComputePipelineState?
 
     private var parametersBuffer: MTLBuffer?
