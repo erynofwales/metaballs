@@ -174,13 +174,14 @@ class MarchingSquares {
             return
         }
 
-        encoder.label = "Sample Field"
+        encoder.label = "Sampling"
         encoder.setComputePipelineState(samplingPipeline)
         encoder.setBuffer(parametersBuffer, offset: 0, index: 0)
         encoder.setBuffer(field.ballBuffer, offset: 0, index: 1)
         encoder.setBuffer(samplesBuffer, offset: 0, index: 2)
 
         // Dispatch!
+        // TODO: Kernel threadgroup size limit is 256. Figure out how to make this work.
         let gridSize = MTLSize(width: xSamples, height: ySamples, depth: 1)
         let threadgroupSize = MTLSize(width: xSamples, height: 1, depth: 1)
         encoder.dispatchThreads(gridSize, threadsPerThreadgroup: threadgroupSize)
